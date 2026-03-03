@@ -1,0 +1,520 @@
+<style>
+
+  .fixed_header {
+    max-width: 930px;
+    min-width: 730px;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: 12px !important;
+  }
+
+    .fixed_header tbody {
+      display: block;
+      width: 100%;
+      overflow: auto;
+      height: 90px;
+    }
+
+    .fixed_header thead tr {
+      display: block;
+      color: black;
+    }
+
+    .fixed_header thead {
+      background: black;
+      color: #fff;
+    }
+
+    .fixed_header th, .fixed_header td {
+      padding: 5px;
+      text-align: left;
+      /*max-width: 155px;
+      min-width: 120px*/
+      width:12.28%;
+    }
+
+
+
+
+
+
+  body {
+    font-size: 0.9em;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  thead {
+    color: black;
+  }
+
+  thead, tbody {
+    display: block;
+  }
+
+  table > thead > tr > th {
+    vertical-align: bottom;
+    border: 2px solid #f1f1f1;
+  }
+
+  th, td {
+    padding: 7px 2px 5px 4px !important;
+    width: 930px;
+    box-sizing: border-box;
+  }
+
+  tbody {
+    height: 90px;
+    overflow-y: scroll
+  }
+
+  button:hover {
+    background-color: #00b2ff;
+    color: white;
+  }
+
+
+  fieldset.scheduler-border {
+    border: 1px groove #ddd !important;
+    padding: 0 1.4em 1.4em 1.4em !important;
+    margin: 0 0 1.5em 0 !important;
+    -webkit-box-shadow: 0px 0px 0px 0px #000;
+    box-shadow: 0px 0px 0px 0px #000;
+  }
+
+  legend.scheduler-border {
+    font-size: 1.2em !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    width: auto;
+    padding: 0 10px;
+    border-bottom: none;
+  }
+
+  /*loader Div*/
+
+  .loader {
+    border: 5px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 5px solid #808080;
+    width: 40px;
+    height: 40px;
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+  }
+
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% {
+      -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  /*loader Div close*/
+
+</style>
+
+<!--Page Load Spinner Open-->
+<ngx-spinner bdColor="rgba(51,51,51,0.8)"
+             size="medium"
+             color="#fff"
+             type="ball-scale-multiple">
+  <p style="font-size: 20px; color: white">Loading...</p>
+</ngx-spinner>
+
+<!--Page Load Spinner Close-->
+<!-- 
+<div class="slideshow-container">
+  <div class="mySlides">
+    <img src="./assets/images/img_nature_wide.jpg" style="width:100%">
+  </div>
+
+  <div class="mySlides">
+    <img src="./assets/images/img_snow_wide.jpg" style="width:100%">
+  </div>
+
+  <div class="mySlides">
+    <img src="./assets/images/img_mountains_wide.jpg" style="width:100%">
+  </div>
+
+  <a class="prev" (click)="plusSlides(-1)">&#10094;</a>
+  <a class="next" (click)="plusSlides(1)">&#10095;</a>
+</div> -->
+<div class="slideshow-container" *ngIf="isBannerExists">
+  <div *ngFor="let item of BannerList; let i = index" class="mySlides" [ngClass]="{'slideActive': i==0}">
+    <img [src]="item.BannerPath" style="width:100%">
+  </div>
+  <a class="prev" (click)="plusSlides(-1)">&#10094;</a>
+  <a class="next" (click)="plusSlides(1)">&#10095;</a>
+</div>
+
+<!-- Light blue -->
+<!--[ngStyle]="{'background' : 'url('+BackgroundImage+') right -150px bottom'}" [ngClass]="{'relativeBackground': !isGrid}"-->
+<div class="fntFmly" *ngIf="WrongUrl" 
+     [ngStyle]="!isGrid ? RelativeBackground : DefaultViewbackground">
+  <!--[ngStyle]="isGrid ? DefaultViewbackground : {'relativeBackground': !isGrid}" >-->
+  <!--isGrid ? DefaultViewbackground : RelativeBackground-->
+  <div class="container-fluid fntFmly">
+
+    <div class="row">
+      <div class="col-lg-4 col-md-4"></div>
+      <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="col-xs-3">
+        </div>
+        <div class="col-xs-6">
+
+        </div>
+        <div class="col-xs-3">
+
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-4"></div>
+    </div>
+
+
+    <div class="row">
+      <div class="col-lg-1 col-md-1 col-sm-1"></div>
+      <div class="col-lg-11 col-md-11 col-sm-11 col-xs-12">
+        <h3 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">{{lblWelcome}}</h3>
+        <br>
+        <div class="row">
+          <div class="col-lg-6 col-md-10 col-sm-10 col-xs-12" style="margin-top:-8px; font-size: 13.5px; color: black; color: #524d4d !important;">
+            {{lblWelcomePage1}}
+          </div>
+          <div class="col-lg-6 col-md-10 col-sm-10 col-xs-12" style="margin-top:-8px; font-size: 13.5px; color: black; color: #524d4d !important;">
+          </div>
+        </div>
+
+        <br />
+        <div class="row" style="display:none;">
+          <div class="col-lg-6 col-md-10 col-sm-10 col-xs-12" style="margin-top:-8px; font-size: 13.5px; color: black; color: #524d4d !important;">
+            {{lblWelcomePage2}}
+          </div>
+          <div class="col-lg-6 col-md-10 col-sm-10 col-xs-12" style="margin-top:-8px; font-size: 13.5px; color: black; color: #524d4d !important;">
+          </div>
+        </div>
+
+        <br>
+        <span [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
+          <p style="font-size:17px; margin-bottom:-5px; "> <!--Vacancies you can apply for-->{{lblWelcomeHeading1}} </p>
+        </span>
+        <br>
+        <div *ngIf="ShowCompany">
+          <p style="float: left; font-size: 13px; margin-top: 4px;"> Organization &nbsp;&nbsp;&nbsp;</p>
+          <select [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="selectpicker form-control fontSize12" (change)="onChange()" [(ngModel)]="SelectedCompany" name="SponsorShipCategory" id="SponsorShipCategory" style="border-radius:0px; max-width: 15% !important; width: auto; height:28px !important">
+            <option *ngFor="let item of AssociatedCompaniesDropdown" [ngValue]="item.Id">{{ item.Name }}</option>
+          </select>
+          <br />
+        </div>
+        <div id="home" class="fntFmly" style="opacity: 0.9;filter: alpha(opacity=90); width: 77%;" *ngIf="showTable">
+          <table style="margin-bottom:8px;">
+            <tbody style="overflow: hidden; height: auto;">
+              <tr>
+                <td style="text-align:left;">
+                  <input *ngIf="isJobAvailable" [(ngModel)]="textToFilter" id='srchTxt' class="srchTxt" (keyup.enter)="fnFilterJob(textToFilter)" type="text" placeholder="search for vacancies...">
+                  <select *ngIf="isJobAvailable" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="selectpicker form-control fontSize12" [(ngModel)]="searchFilter" name="searchFilter" id="searchFilter" style="border-radius:0px; float: left; width: 75px; height:26px !important; margin-left: 6px; padding: 2px">
+                    <option value="0">{{lblAll}}</option>
+                    <option value="JobTitle">{{JobTitle}}</option>
+                    <option value="Location">{{lblLocation}}</option>
+                    <option *ngIf="ShowCompanyInfo" value="CompanyName">{{lblCompany}}</option>
+                  </select>
+                  <img *ngIf="isJobAvailable" (click)="fnFilterJob(textToFilter)" style="padding: 6px; float: left; cursor: pointer;" src="./assets/images/searchIconBlue.png">
+                </td>
+                <!--<td [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="viewStyle">
+                  <div *ngIf="isGrid" [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                       class="View-Normal" id="imgNormalView" (click)="SaveGridViewStyle(0)"></div>
+                  <div *ngIf="!isGrid"
+                       [ngStyle]="{'outline-color': ThemeFontColor ? ThemeFontColor  :
+                       DefaultFontColor, 'background': ThemeFontColor ? ThemeFontColor  : DefaultFontColor}"
+                       class="View-Normal-Selected" id="imgNormalView"></div>
+                   <div *ngIf="!isGrid"
+                       [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                       class="View-Grid" id="imgGridView" (click)="SaveGridViewStyle(1)">
+                    <hr *ngFor="let item of HRLooping" class="View-Grid-Lines"
+                        [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" />
+                  </div>
+                  <div *ngIf="isGrid"
+                       [ngStyle]="{'outline-color': ThemeFontColor ? ThemeFontColor  : DefaultFontColor,
+                       'background': ThemeFontColor ? ThemeFontColor  : DefaultFontColor}"
+                       class="View-Grid-Selected" id="imgGridView" (click)="SaveGridViewStyle(1)">
+                    <hr *ngFor="let item of HRLooping" class="View-Grid-Lines" style="border-color:white;" />
+                  </div> 
+                </td>-->
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="!isGrid" class='normalView'>
+            <table *ngIf="!filteredJobs || filteredJobs.length <= 0" style="width:100%;font-size: 12px;">
+              <tbody style="overflow-y:hidden;">
+                <tr style="width:100%; display: block;">
+                  <td style="width:100%; text-align: center; display: block;">
+                    <h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="fntFmly">
+                      {{'No Vacancies'}}
+                    </h5>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div *ngFor="let a of filteredJobs; let i = index">
+
+              <hr style="border-top: 1px solid" [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" />
+              <h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
+                {{i+1}} -
+                <div class="click-to-top" style="position: relative;max-width: unset;cursor:pointer;">
+                  <a data-toggle="modal" style="color:unset;" data-target="#MPRCODE1"
+                     data-backdrop="static" data-keyboard="false" (click)="GetMPRDetail(a); ForSelectedRowColor();">
+                    {{a?.JobTitle}}
+                    <span style="width: 100px !important; height: 19px !important; bottom: 5px !important;
+                              right: -106px !important; padding-top: 4px;">View Job Details</span>
+                  </a>
+                </div>
+              </h5>
+              <h6 *ngIf="a?.Location && a?.Location.trim().toUpperCase() !== 'N/A'" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                  class="subHeadOpac">
+                <!--Head office Islamabad-->{{a?.Location}}
+              </h6>
+              <div *ngIf="ShowCompanyInfo && HideOrganization != true" class="otherDetailsNormalView"><b>{{lblCompany}}: &nbsp;&nbsp;</b>{{a?.CompanyName}}</div>
+              <div *ngIf="HideJobAttributeName == true" class="otherDetailsNormalView"><b>{{lblJobAttributeName}}: &nbsp;&nbsp;</b>{{a?.JobAttributeName}}</div>
+              <div *ngIf="HideJobCode != true" class="otherDetailsNormalView"><b>{{lblJobCode}}: &nbsp;&nbsp;</b>{{a?.JobCode}}</div>
+              <!--<div class="otherDetailsNormalView"><b>{{JobTitle}}: &nbsp;&nbsp;</b>{{a?.JobTitle}}</div>-->
+
+              <div *ngIf="HideTotalPositions != true" class="otherDetailsNormalView"><b>{{lblTotalPositions}}: &nbsp;&nbsp;</b>{{a?.TotalPositions}}</div>
+              <div class="otherDetailsNormalView"><b>{{lblApplicationDeadline}}: &nbsp;&nbsp;</b>{{a?.ApplicationDeadline}}</div>
+              <table>
+                <tbody style="overflow: hidden; height: auto;">
+                  <tr>
+                    <td style="text-align:left;">
+                      <button type="button" style="cursor:pointer; width:auto; vertical-align: super !important; width:max-content; margin-left: -5px;"
+                              [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                              class="btn tbl-btn app-btn uppercase"
+                              (click)="GetMPRDetail(a); openSpinner();ForSelectedRowColor()">
+                        {{btnApplyListView}}
+                      </button>
+                    </td>
+                    <td style="text-align:right;">
+                      <span>
+                        <span class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/"
+                              data-layout="button" data-size="small">
+                          <!-- <a (click)="ShareOnSocialMedia('https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse&quote=testing')"-->
+                          <a (click)="ShareOnSocialMedia('https://facebook.com/sharer.php?u=<%link%>,&amp;src=sdkpreparse',a.JobCode,a.JobTitle,a.CompanyId,a.CompanyName)"
+                             class="fb-xfbml-parse-ignore">
+                            <img class="socialMediaClass" style="cursor:pointer;"
+                                 src="./assets/images/SocialMediaIcons/Facebook.png"
+                                  title="Share this job on Facebook">
+                          </a>
+                        </span>
+
+
+                        <span>
+                          <!--https://careers.serena.com.pk/View/JobDetails?JId=2-022020-03--> <!--Job Opening IT Officer at Islamabad Serena Hotel-->
+                          <a (click)="ShareOnSocialMedia('https://twitter.com/intent/tweet?url=<%link%>,2&amp;text=<%text%>&amp;hashtags=serena_hotels',a.JobCode,a.JobTitle,a.CompanyId,a.CompanyName)"
+                             class="twitter-share-button" data-size="large">
+                            <img class="socialMediaClass" style="cursor:pointer;" src="./assets/images/SocialMediaIcons/twitter.png"
+                                title="Share this job on Twitter">
+                          </a>
+                        </span>
+
+                        <span>
+                          <!--<a (click)="ShareOnSocialMedia('http://www.linkedin.com/shareArticle?mini=true&amp;url=https://careers.serena.com.pk/View/JobDetails?JId=2-022020-03,2&amp;title=Job Opening IT Officer at Islamabad Serena Hotel')"-->
+                          <a (click)="ShareOnSocialMedia('http://www.linkedin.com/shareArticle?mini=true&amp;url=<%link%>&amp;title=<%text%>',a.JobCode,a.JobTitle,a.CompanyId,a.CompanyName)"
+                             data-size="large">
+                            <img class="socialMediaClass" style="cursor:pointer;" src="./assets/images/SocialMediaIcons/linkedIn.png"
+                                 title="Share this job on LinkedIn">
+                          </a>
+
+                        </span>
+                      </span>
+                      <!--<img class="socialMediaClass"  style="cursor:pointer;" src="./assets/images/SocialMediaIcons/Facebook.png">
+          <img class="socialMediaClass"  style="cursor:pointer;" src="./assets/images/SocialMediaIcons/twitter.png">
+          <img class="socialMediaClass"  style="cursor:pointer;" src="./assets/images/SocialMediaIcons/linkedIn.png">-->
+
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="ex4" style="height: 142px; margin-bottom: 143px;" *ngIf="isGrid">
+            <table class="table fixed_header" style="margin-bottom: 0px !important;">
+              <thead class="tableHeaderBackground tablePanelHeading" style="font-size: 12px;">
+                <tr>
+                  <th *ngIf="ShowCompanyInfo && HideOrganization != true" class="fntFmly tblHeaderFnt ">
+                    <strong class="fntWght2" style="color: #524d4d !important;">{{lblCompany}}</strong>
+                  </th>
+                  <th *ngIf="HideJobAttributeName == true" class="fntFmly tblHeaderFnt ">
+                    <strong class="fntWght2" style="color: #524d4d !important;">{{lblJobAttributeName}}</strong>
+                  </th>
+
+                  <th *ngIf="HideJobCode != true" class="fntFmly tblHeaderFnt">
+
+                    <strong class="fntWght2" style="color: #524d4d !important;">&nbsp;&nbsp; {{lblJobCode}}</strong>
+                  </th>
+                  <th class="fntFmly tblHeaderFnt">
+
+                    <strong class="fntWght2" style="color: #524d4d !important;"> {{JobTitle}}</strong>
+                  </th>
+                  <!--<th class="fntFmly tblHeaderFnt">
+    <strong class="fntWght2" style="color: #524d4d !important;">  {{Department}}</strong>
+  </th>-->
+                  <th *ngIf="HideTotalPositions != true" class="fntFmly tblHeaderFnt" style="text-align:center">
+                    <strong class="fntWght2" style="color: #524d4d !important;"> {{lblTotalPositions}}</strong>
+                  </th>
+                  <th style="width:14%;" class="fntFmly tblHeaderFnt">
+                    <strong class="fntWght2" style="color: #524d4d !important;"> {{lblApplicationDeadline}}</strong>
+                  </th>
+
+                  <th>&nbsp;&nbsp;&nbsp;</th>
+                  <th>&nbsp;&nbsp;&nbsp;</th>
+
+                </tr>
+              </thead>
+              <tbody class="member">
+                <tr *ngIf="!filteredJobs || filteredJobs.length <= 0" style="font-size: 12px;">
+                  <td colspan="6" style="text-align: center;  width: 2330px !important;">
+                    <span class="fntFmly">
+                      {{Nodata}}
+                    </span>
+                  </td>
+                </tr>
+                <tr *ngFor="let item of filteredJobs" (click)="GetMPRDetail(item); openSpinner();ForSelectedRowColor()">
+                  <td *ngIf="ShowCompanyInfo && HideOrganization != true" class="PdgTop fntWght fntFmly">{{ item.CompanyName }}</td>
+
+                  <td *ngIf="HideJobAttributeName == true" class="PdgTop fntWght fntFmly">{{ item.JobAttributeName }}</td>
+
+
+                  <td *ngIf="HideJobCode != true" class="PdgTop fntWght fntFmly">{{ item.JobCode }}  </td>
+
+
+                  <td class="PdgTop fntWght fntFmly">
+                    <div class="click-to-top" style="position: relative;">
+                      <a>{{ item.JobTitle }}<span style="width: 100px !important;height: 19px !important;right: -100px !important; bottom: 5px !important;cursor:pointer;">View Job Details</span> </a>
+                    </div>
+                  </td>
+                  <!--<td class="PdgTop fntWght fntFmly"> {{ item.Department }}</td>-->
+                  <td *ngIf="HideTotalPositions != true" class="PdgTop fntWght fntFmly" style="text-align:center"> {{ item.TotalPositions }}</td>
+                  <td class="PdgTop fntWght fntFmly"> {{ item.ApplicationDeadline }}</td>
+                  <td style="vertical-align:middle;">
+                    <span>
+                      <span class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/"
+                            data-layout="button" data-size="small">
+                        <!-- <a (click)="ShareOnSocialMedia('https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse&quote=testing')"-->
+                        <a (click)="ShareOnSocialMedia('https://facebook.com/sharer.php?u=<%link%>,&amp;src=sdkpreparse',item.JobCode,item.JobTitle,item.CompanyId,item.CompanyName)"
+                           class="fb-xfbml-parse-ignore">
+                          <img class="socialMediaClass" style="cursor:pointer;"
+                               src="./assets/images/SocialMediaIcons/Facebook.png"
+                                title="Share this job on Facebook">
+                        </a>
+                      </span>
+
+
+                      <span>
+                        <!--https://careers.serena.com.pk/View/JobDetails?JId=2-022020-03--> <!--Job Opening IT Officer at Islamabad Serena Hotel-->
+                        <a (click)="ShareOnSocialMedia('https://twitter.com/intent/tweet?url=<%link%>,2&amp;text=<%text%>&amp;hashtags=serena_hotels',item.JobCode,item.JobTitle,item.CompanyId,item.CompanyName)"
+                           class="twitter-share-button" data-size="large">
+                          <img class="socialMediaClass" style="cursor:pointer;" src="./assets/images/SocialMediaIcons/twitter.png"
+                               title="Share this job on Twitter">
+                        </a>
+                      </span>
+
+                      <span>
+                        <!--<a (click)="ShareOnSocialMedia('http://www.linkedin.com/shareArticle?mini=true&amp;url=https://careers.serena.com.pk/View/JobDetails?JId=2-022020-03,2&amp;title=Job Opening IT Officer at Islamabad Serena Hotel')"-->
+                        <a (click)="ShareOnSocialMedia('http://www.linkedin.com/shareArticle?mini=true&amp;url=<%link%>&amp;title=<%text%>',item.JobCode,item.JobTitle,item.CompanyId,item.CompanyName)"
+                           data-size="large">
+                          <img class="socialMediaClass" style="cursor:pointer;" src="./assets/images/SocialMediaIcons/linkedIn.png"
+                               title="Share this job on LinkedIn">
+                        </a>
+
+                      </span>
+                    </span>
+                  </td>
+                  <td class="fntFmly" style="vertical-align:middle;">
+                    <button type="button" style="vertical-align: super !important;width:auto;"
+                            [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                            class="btn tbl-btn app-btn uppercase" (click)="GetMPRDetail(item); openSpinner();ForSelectedRowColor();">
+                      {{btnApplyListView}}
+                    </button>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="MPRCODE" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+          <button type="button" style="background: none;" class="close" data-dismiss="modal"><img src="assets/images/lookupclose.png"></button>
+          <h4 class="modal-title fntFmly" style="margin-left: 12px; font-size:25px;"><strong [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><!--Job Details-->{{lblJobDetail}}</strong></h4>
+        </div>
+        <div class="modal-body " style="font-size: 11px;">
+
+          <span>
+            <app-generall-popup [MPRDETAIL]="MPRDETAIL" [arrHeadings]="arrHeadings" [forGridData]="forGridData" [Object]="Object" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"></app-generall-popup>
+          </span>
+          <span *ngIf="DisconnectInternet">
+            <label class="forValidation"> Please check your internet connection and try again.</label>
+
+          </span>
+
+
+        </div>
+
+        <div class="modal-footer">
+
+          <div class="btn-position" style="text-align: center;">
+            <span [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" (click)="btnApply_Click(selectedRow)" class="btn app-btn  mr-10 fntFmly clrhover uppercase" data-dismiss="modal">
+              <span class="fa fa-check"></span> {{btnApplyNormalView}}
+            </span>
+            <!--<span class="btn app-btn fntFmly clrhover uppercase" style="cursor:pointer; background-color: #CE7C7C;" data-dismiss="modal">
+              <span class="fa fa-times"></span> {{Close}}
+            </span>-->
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+     
+
+  </div>
+
+
+
+  <!--<div *ngIf="!responseData || responseData.length <= 0" class="loader"></div>-->
+  <!--<div *ngIf="!responseData || responseData.length <= 0" class="loader"></div>-->
+  <!--<img id="BackgroundImageHome" src={{BackgroundImage}} />-->
+  <!--<div style="height: 100px;"
+       [ngStyle]="{'background' : 'url('+BackgroundImage+') bottom'}">-->
+  <!--</div>-->
+  <!--{{BackgroundImage}}
+      <div [ngStyle]="{'background': BackgroundImage}"></div>-->
+  <!--<div [style.background]="'url(' + BackgroundImage + ') no-repeat'"></div>-->
+  <!--<div [innerHtml]="BackgroundImage | sanitizeHtml: 'url'"></div>-->
+</div>
+
+
+
+

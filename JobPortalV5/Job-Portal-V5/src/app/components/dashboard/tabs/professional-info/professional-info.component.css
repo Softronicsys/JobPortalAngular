@@ -1,0 +1,266 @@
+h4,h5{
+  font-weight: bold;
+}
+h6{  
+  margin-bottom: 3px;
+}
+
+.no-gap-label {
+  font-family: Barlow, Medium !important;
+  font-weight: 500;
+  letter-spacing: 0px !important;
+}
+.subHeadOpac{
+  opacity:76%
+}
+.otherDetailsNormalView{
+  color:#524d4d; 
+  font-size: 12px;
+}
+.socialMediaClass{
+  cursor:pointer;
+  opacity: 70%;
+}
+.socialMediaClass:hover{
+  cursor:pointer;
+  opacity: 100%;
+}
+.Subscribed{
+    max-width: 100%;
+    margin-bottom: 5px;
+    font-weight: 700;
+    color:#39B54A;
+    margin-bottom:0px;
+    font-size: 12px;
+}
+.viewStyle{
+  padding: 5px 2px 5px 4px !important;
+  width: 59px;
+  text-align: center;
+  border: 4px solid;
+  border-radius: 2px;
+  display: block;
+  height: 29px;
+}
+.View-Normal{
+  width: 18px;
+  height: 11px;
+  cursor: pointer;
+  border: 2px solid;
+  float: left;
+  border-radius: 2px;
+  margin-left: 0px;
+  /* margin-bottom: 1px; */
+}
+.View-Normal-Selected{
+  width: 18px;
+  height: 11px;
+  border: 2px solid white;
+  outline: 3px solid;
+  float: left;
+  border-radius: 2px;
+  margin-left: 1px;
+  /* margin-bottom: 1px; */
+}
+.View-Grid{
+  width: 18px;
+  height: 11px;
+  cursor: pointer;
+  border: 2px solid;
+  float: right;
+  border-radius: 2px;    
+  margin-right: 2px;
+  /* margin-bottom: 1px; */
+}
+.View-Grid-Selected{
+  width: 18px;
+  height: 11px;
+  border: 2px solid white;
+  outline: 3px solid;
+  float: right;
+  border-radius: 2px;    
+  margin-right: 3px;
+  /* margin-bottom: 1px; */
+}
+.View-Grid-Lines{
+  margin:1px 0px; 
+  width:14px;
+}
+.srchTxt{
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  /* width: 176px; */
+  font-size: 12px;
+  text-align:left; 
+}
+.relativeBackground{
+  height: auto !important;
+  background: url(assets/images/007FFF/LoginBackground.PNG) bottom -22px right -156px no-repeat !important;
+}
+.normalView{
+  /* margin-bottom: 126px !important; */
+  padding-right: 10%;
+  max-height: 256px;
+  overflow: auto;
+  max-width: 96%;
+}
+
+.btnClass:hover {
+  text-decoration: none;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #F1F1F1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #007FFF;
+}
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #007FFF;
+  }
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 18px;
+}
+
+  .switch input {
+    display: none;
+  }
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 10px;
+}
+
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 10px;
+    width: 10px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+  }
+
+/*input:checked + .slider {
+  background-color: #808080;
+}*/
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+.round {
+  border-radius: 20px !important;
+}
+
+
+/* Other Cross Button */
+
+.crossbtn {
+  float: right;
+  margin-top: -25px;
+  cursor: pointer;
+  width: 15px;
+  margin-right: 8px;
+}
+
+/* Custom CSS for the modal */
+.custom-modal .modal-header {
+  background-color: #007bff;
+  color: white;
+  border-bottom: 1px solid #dee2e6;
+  padding: 20px;
+  position: relative; /* Ensure relative positioning for absolute positioning */
+}
+
+.custom-modal .modal-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-bottom: 0; /* Remove default margin */
+}
+
+.custom-modal .btn-close {
+  position: absolute;
+  top: 10px; /* Adjust top position as needed */
+  right: 10px; /* Adjust right position as needed */
+  color: white;
+}
+
+.custom-modal .modal-body {
+  font-size: 2rem;
+  color: #6c757d;
+  padding: 20px;
+}
+
+.custom-modal .modal-footer {
+  background-color: #f8f9fa;
+  border-top: 1px solid #dee2e6;
+  padding: 15px 30px;
+  justify-content: center;
+}
+
+.custom-modal .btn-secondary {
+  background-color: #007bff;
+  border-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  font-size: 13px;
+}
+
+  .custom-modal .btn-secondary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+  }
+
+
+.aligned-row {
+  display: grid;
+  grid-template-columns: 170px auto;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.aligned-row-extra {
+  display: grid;
+  grid-template-columns: 205px auto;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+  .aligned-row span {
+    white-space: nowrap;
+  }

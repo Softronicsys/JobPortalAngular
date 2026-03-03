@@ -1,0 +1,179 @@
+h4,h5{
+  font-weight: bold;
+}
+h6{  
+  margin-bottom: 3px;
+}
+.subHeadOpac{
+  opacity:76%
+}
+.socialMediaClass{
+  cursor:pointer;
+  opacity: 70%;
+}
+.socialMediaClass:hover{
+  cursor:pointer;
+  opacity: 100%;
+}
+.otherDetailsNormalView{
+  color:#524d4d; 
+  font-size: 12px;
+}
+.Subscribed{
+    max-width: 100%;
+    margin-bottom: 5px;
+    font-weight: 700;
+    color:#39B54A;
+    margin-bottom:0px;
+    font-size: 12px;
+}
+
+.disabled-link {
+  pointer-events: none; 
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.viewStyle{
+  padding: 5px 2px 5px 4px !important;
+  width: 59px;
+  text-align: center;
+  border: 4px solid;
+  border-radius: 2px;
+  display: block;
+  height: 29px;
+}
+.View-Normal{
+  width: 18px;
+  height: 11px;
+  cursor: pointer;
+  border: 2px solid;
+  float: left;
+  border-radius: 2px;
+  margin-left: 0px;
+  /* margin-bottom: 1px; */
+}
+.View-Normal-Selected{
+  width: 18px;
+  height: 11px;
+  border: 2px solid white;
+  outline: 3px solid;
+  float: left;
+  border-radius: 2px;
+  margin-left: 1px;
+  /* margin-bottom: 1px; */
+}
+.View-Grid{
+  width: 18px;
+  height: 11px;
+  cursor: pointer;
+  border: 2px solid;
+  float: right;
+  border-radius: 2px;    
+  margin-right: 2px;
+  /* margin-bottom: 1px; */
+}
+.View-Grid-Selected{
+  width: 18px;
+  height: 11px;
+  border: 2px solid white;
+  outline: 3px solid;
+  float: right;
+  border-radius: 2px;    
+  margin-right: 3px;
+  /* margin-bottom: 1px; */
+}
+.View-Grid-Lines{
+  margin:1px 0px; 
+  width:14px;
+}
+
+.srchTxt {
+  cursor: text;
+  outline: unset;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  font-size: 12px;
+  text-align: left;
+  float: left;
+  margin-bottom: 7px;
+}
+  .srchTxt:focus {
+    border-bottom: 2px solid #5c94c6;
+  }
+  .srchTxt:hover {
+    box-shadow: 2px 2px 2px #ade1fd;
+  }
+.relativeBackground{
+  height: auto !important;
+  background: url(assets/images/007FFF/LoginBackground.png) bottom -22px right -156px no-repeat !important;
+}
+.normalView{
+  /* margin-bottom: 126px !important; */
+  padding-right: 10%;
+  max-height: 400px;
+  overflow: auto;
+  max-width: 96%;
+}
+
+#BtnOfferMrgn
+{
+  color: white;
+}
+
+#txtArea {
+  min-width: 92%;
+}
+
+#widthForpop {
+  width: auto !important;
+  position: absolute;
+  transform: translate(-30%, 50%) !important;
+}
+#DeptInOrganization td {
+  width: 30% !important;
+}
+#DeptInOrganization th {
+  width: 30% !important;
+}
+
+.aligned-row {
+  display: grid;
+  grid-template-columns: 130px auto;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.status-container:hover .status-hover-text {
+  opacity: 1;
+}
+
+
+ 
+@media screen and (min-width: 320px) and (max-width: 450px) {
+  #BtnOfferMrgn {
+   margin-bottom: 10px !important;
+
+   }
+  #widthForpop {
+    width: 100% !important;
+    position: inherit;
+    transform: translate(0.5%, 50%) !important;
+  }
+}
+
+@media screen and (min-width: 320px) and (max-width: 750px) {
+
+  #txtArea {
+    min-width: 81%;
+  }
+
+}
+
+@media screen and (min-width: 800px)  {
+
+  pre {
+    width: 1000px;
+  }
+}

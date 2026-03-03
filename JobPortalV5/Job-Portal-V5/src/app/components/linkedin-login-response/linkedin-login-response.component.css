@@ -1,0 +1,202 @@
+.dob-feilds {
+  width: 30%;
+  display: inline;
+  margin-right: 5%;
+}
+
+.signup-btn {
+  border-radius: 20px;
+  color: white;
+  outline: none;
+  font-size: 12px;
+  letter-spacing: 0.8px;
+}
+
+
+  .signup-btn:focus {
+    outline: none;
+  }
+
+
+#BackgroundImageSingup {
+  width: 100%;
+  margin-top: -550px !important;
+}
+
+#smallBoxA {
+  width: 70px !important;
+}
+
+#smallBoxB {
+  width: 85px !important;
+  margin-left: -15px;
+}
+
+#smallBoxC {
+  width: 71px !important;
+  margin-left: -15px;
+}
+
+#smallBoxD {
+  width: 86px !important;
+  margin-left: -22px;
+}
+
+#GenderLbl {
+  margin: 6px 0px 4px -24px;
+}
+
+@media screen and (min-width: 1226px) and (max-width: 1362px) {
+
+  #BackgroundImageSingup {
+    width: 100%;
+    margin-top: -515px !important;
+  }
+}
+
+@media screen and (min-width: 1126px) and (max-width: 1226px) {
+
+  #BackgroundImageSingup {
+    width: 100%;
+    margin-top: -350px !important;
+  }
+}
+
+@media screen and (min-width: 1000px) and (max-width: 1126px) {
+
+  #BackgroundImageSingup {
+    width: 100%;
+    margin-top: -380px !important;
+  }
+}
+
+@media screen and (min-width: 900px) and (max-width: 1000px) {
+
+  #BackgroundImageSingup {
+    width: 100%;
+    margin-top: -280px !important;
+  }
+}
+
+@media screen and (min-width: 800px) and (max-width: 900px) {
+
+  #BackgroundImageSingup {
+    width: 100%;
+    margin-top: -250px !important;
+  }
+}
+
+@media screen and (min-width: 700px) and (max-width: 800px) {
+
+  #BackgroundImageSingup {
+    width: 100%;
+    margin-top: -200px !important;
+  }
+}
+
+@media screen and (min-width: 600px) and (max-width: 700px) {
+
+  #BackgroundImageSingup {
+    width: 100%;
+    margin-top: -170px !important;
+  }
+}
+
+@media screen and (min-width: 500px) and (max-width: 600px) {
+
+  #BackgroundImageSingup {
+    width: 100%;
+    margin-top: -145px !important;
+  }
+}
+
+@media screen and (min-width: 400px) and (max-width: 500px) {
+
+  #BackgroundImageSingup {
+    width: 100%;
+    margin-top: -105px !important;
+  }
+}
+
+@media screen and (min-width: 300px) and (max-width: 400px) {
+
+  #BackgroundImageSingup {
+    width: 100%;
+    margin-top: -105px !important;
+  }
+}
+
+
+@media screen and (min-width: 988px) and (max-width: 1200px) {
+
+  #smallBoxA {
+    width: 100% !important;
+    margin-bottom: 38px;
+  }
+
+  #smallBoxB {
+    width: 100% !important;
+    margin-left: 0px !important;
+    margin-bottom: 38px;
+  }
+
+  #smallBoxC {
+    width: 100% !important;
+    margin-left: 0px !important;
+    margin-bottom: 38px;
+  }
+
+  #smallBoxD {
+    width: 100% !important;
+    margin-left: 0px !important;
+    border-radius: 0px;
+  }
+
+  #GenderLbl {
+    margin-left: -6px;
+  }
+}
+
+@media screen and (min-width: 300px) and (max-width: 988px) {
+
+  #smallBoxA {
+    width: 100% !important;
+    margin-bottom: 38px;
+  }
+
+  #smallBoxB {
+    width: 100% !important;
+    margin-left: 0px !important;
+    margin-bottom: 38px;
+  }
+
+  #smallBoxC {
+    width: 100% !important;
+    margin-left: 0px !important;
+    margin-bottom: 38px;
+  }
+
+  #smallBoxD {
+    width: 100% !important;
+    margin-left: 0px !important;
+    border-radius: 0px;
+  }
+
+  #GenderLbl {
+    margin-left: -6px;
+  }
+}
+
+
+.transformPopup {
+  transform: translate(280px, 0px);
+  top: 30% !important;
+}
+
+@media screen and (min-width: 300px) and (max-width: 500px) {
+
+  .transformPopup {
+    transform: translate(0px, 0px) !important;
+    top: 20% !important;
+  }
+}

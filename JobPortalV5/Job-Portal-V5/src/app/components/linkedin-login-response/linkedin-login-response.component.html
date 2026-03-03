@@ -1,0 +1,265 @@
+ <!--input area starts-->
+<style>
+  button:hover {
+    background-color: #00b2ff;
+    color: white;
+  }
+</style>
+
+<ngx-spinner bdColor="rgba(51,51,51,0.8)"
+             size="medium"
+             color="#fff"
+             type="ball-scale-multiple">
+  <p style="font-size: 20px; color: white">Loading...</p>
+</ngx-spinner>
+
+<div *ngIf="this.IsValidLinkedInResponse == false" class="fntFmly">
+  <div style="text-align:center;height:300px;line-height:300px" class="container-fluid">
+    <label class="forValidation" >&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color:red;font-size:14px !important" class="forValidation"></span>Invalid Token or Token has expired. You are being redirected to a Login page in 5 seconds...</label>
+  </div>
+</div>
+
+<div *ngIf="IsValidLinkedInResponse" class="fntFmly">
+  <div class="container-fluid ">
+
+    <div class="row" style="margin-top: 15px;" id="elementID">
+      <div class="col-lg-4 ">
+      </div>
+      <div class="col-lg-7 ">
+        <label class="forValidation" *ngIf="isMandatoryfields == true" style="float: right !important;">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span style="color:red;font-size:14px !important" class="forValidation">*</span>Please enter mandatory fields.</label>
+        <label class="forValidation" *ngIf="isMandatoryfields1 == true" style="font-size:12px !important;    float: right!important;"> At least one of the two fields, 'ID Card No.' or 'Passport No.' is mandatory.</label>
+      </div>
+      <div class="col-lg-3">
+
+      </div>
+      <div class="col-lg-1">
+      </div>
+    </div>
+
+
+    <div class="row" *ngIf="isShow">
+      <div class="col-lg-1 col-md-1 col-sm-1"></div>
+      <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
+        <div class="row">
+          <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+            <h3 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="font-size:28px;"><!--Tell us about yourself!-->{{"You are almost done to Signup! Just provide few inputs."}}</h3><br />
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+            <span *ngIf="isImageView">
+              <img style="float: right; cursor: pointer !important;border-radius: 100%; width: 80px; height: 80px;" [src]="ImageLinkedIn" />
+            </span>
+          </div>
+        </div>
+        <form>
+          <div class="row fontSize12 BlackTxtClr">
+            <div class="form-group col-lg-4 col-md-4 col-sm-6 col-xs-12">
+              <label for="exampleInputEmail1" class="fntWght"><span style="color:red;" class="mandatoryStar">*</span><!--First Name-->{{lblFirstName}}</label>
+              <input [readonly]="true" type="text" class="form-control" maxlength="50" [ngClass]="{'BorderColor':isMandatoryfields && FirstName == ''}" id="FirstName" placeholder="" [ngModel]="FirstName" name="firstname" style="border-radius:0px;">
+            </div>
+            <div class="form-group col-lg-4 col-md-4 col-sm-6 col-xs-12">
+              <label for="exampleInputEmail1" class="fntWght"><!--Middle Name-->{{lblMiddleName}}</label>
+              <input type="text" class="form-control" maxlength="50" id="MiddleName" placeholder="" [(ngModel)]="MiddleName" name="middleName" style="border-radius:0px;">
+            </div>
+            <div class="form-group col-lg-4 col-md-4 col-sm-6 col-xs-12">
+              <label for="exampleInputEmail1" class="fntWght"><span style="color:red;" class="mandatoryStar">*</span><!--Last Name-->{{lblLastName}}</label>
+              <input [readonly]="true" type="text" class="form-control" maxlength="50" id="LastName" [ngClass]="{'BorderColor':isMandatoryfields && LastName == ''}" placeholder="" name="lastname" [ngModel]="LastName" style="border-radius:0px;">
+            </div>
+          </div>
+
+          <div class="row fontSize12 BlackTxtClr">
+            <div class="row fontSize12 BlackTxtClr" style="margin: 0px !important">
+              <div class="form-group col-lg-4 col-md-4 col-sm-6 col-xs-12" style="padding: 0px;">
+                <label for="exampleInputEmail1" style="display: block;" class="fntWght "><span style="color:red; padding-left: 13px;" class="mandatoryStar" name="date">*</span><!--Date Of Birth-->{{DateofBirth}} </label>
+                <div class="col-lg-3">
+                  <select class="form-control dob-feilds Font-size_dropdown" id="smallBoxA" [ngClass]="{'BorderColor':isMandatoryfields && txtDay == '00'}" [(ngModel)]="txtDay" name="day" style="width:70px; border-radius:0px; font-size:12px !important">
+                    <option value="00">Day</option>
+                    <option value="01">1</option>
+                    <option value="02">2</option>
+                    <option value="03">3</option>
+                    <option value="04">4</option>
+                    <option value="05">5</option>
+                    <option value="06">6</option>
+                    <option value="07">7</option>
+                    <option value="08">8</option>
+                    <option value="09">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                    <option value="25">25</option>
+                    <option value="26">26</option>
+                    <option value="27">27</option>
+                    <option value="28">28</option>
+                    <option value="29">29</option>
+                    <option value="30">30</option>
+                    <option value="31">31</option>
+                  </select>
+                </div>
+                <div class="col-lg-3">
+                  <select class="form-control dob-feilds " id="smallBoxB" [ngClass]="{'BorderColor':isMandatoryfields && txtMonth == '00'}" [(ngModel)]="txtMonth" name="month" style="width:85px; border-radius:0px; margin-left: -15px; font-size:13px !important; font:xx-small">
+                    <option value="00">Month</option>
+                    <option value="01">Jan</option>
+                    <option value="02">Feb</option>
+                    <option value="03">Mar</option>
+                    <option value="04">Apr</option>
+                    <option value="05">May</option>
+                    <option value="06">Jun</option>
+                    <option value="07">Jul</option>
+                    <option value="08">Aug</option>
+                    <option value="09">Sep</option>
+                    <option value="10">Oct</option>
+                    <option value="11">Nov</option>
+                    <option value="12">Dec</option>
+                  </select>
+                </div>
+                <div class="col-lg-3">
+                  <select class="selectpicker form-control fontSize12" id="smallBoxC" [ngClass]="{'BorderColor':isMandatoryfields && Years == '0'}" [(ngModel)]="Years" name="title" placeholder="Year" style="border-radius:0px; margin-left: -15px;">
+                    <option value="0" selected="selected">Year</option>
+                    <option *ngFor="let item of YearsDropdown" [ngValue]="item.Id">{{ item.Name }}</option>
+                  </select>
+                </div>
+
+                <!--[ngClass]="{'BorderColor':isMandatoryfields && genderval== 'N/A'}"-->
+
+                <div class="col-lg-3" style="margin-top: -27px;">
+                  <span><p id="GenderLbl">&nbsp; <!--Gender-->{{Gender}} </p></span>
+                  <select class="selectpicker form-control fontSize12" id="smallBoxD" [(ngModel)]="ddlGenders" name="gender" style="width:86px; border-radius:0px; margin-left: -22px;">
+                    <option *ngFor="let item of GenderDropdown" [ngValue]="item.Id">{{ item.Name }}</option>
+                  </select>
+                </div>
+
+              </div>
+              <div class="form-group col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                <label for="exampleInputEmail1" class="fntWght"><!--ID Card No.-->{{IDCardNo}}</label>
+                <input type="text" class="form-control" maxlength="30" id="IdNumber" placeholder="" [ngClass]="{'BorderColor':isMandatoryfields1 && IdCardNumber == ''}" [(ngModel)]="IdCardNumber" name="IdNumber" style="border-radius:0px;">
+              </div>
+              <div class="form-group col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                <label for="exampleInputEmail1" class="fntWght"><!--Passport No.-->{{PassportNo}}</label>
+                <input type="text" maxlength="30" class="form-control" id="PassportNumber" placeholder="" [ngClass]="{'BorderColor':isMandatoryfields1 && PassportNumber == ''}" name="passportNumber" [(ngModel)]="PassportNumber" style="border-radius:0px;">
+              </div>
+            </div>
+
+
+            <div class="row fontSize12 BlackTxtClr" style="margin: 0px !important">
+              <div class="form-group col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                <label for="exampleInputEmail1" class="fntWght"><span style="color:red;" class="mandatoryStar">*</span><!--Account ID (Email Address)-->{{lblAccountId}}</label>
+                <input [readonly]="true" type="email" class="form-control" maxlength="50" [ngClass]="{'BorderColor':isMandatoryfields && Email == ''}" id="AccountId" placeholder="" name="email" [ngModel]="Email" style="border-radius:0px;" [disabled]="isImageView == true">
+              </div>
+
+               
+
+            </div>
+          </div>
+          <div class="row" style="margin-top: 25px;">
+            <div class="col-lg-4 col-md-4"></div>
+            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+              <button type="submit" (click)="btnPost1_Click();" class="btn btn-block signup-btn clrhover" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><!--SIGN UP-->{{'SIGN IN'}}</button>
+            </div>
+
+            <div class="col-lg-4 col-md-4"></div>
+          </div>
+        </form>
+      </div>
+      <div class="col-lg-1 col-md-1 col-sm-1"></div>
+    </div>
+  </div>
+
+  <!--Popup For Delete-->
+
+  <div class="modal fade transformPopup" id="myModalSingupErr" role="dialog" data-toggle="modal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg fade1">
+      <div class="modal-content" style="width: 340px; ">
+
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+            </div>             
+          </div>
+
+
+
+          <div class="row" style=" margin-top: 5px !important; text-align:center !important;">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+              <p style="text-align: center;" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" [innerHTML]="RestrictMsg"></p>
+
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="generateLink">
+              <label style="text-align: center;"
+                     [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
+                {{genLink12}}
+              </label>
+              <a [innerHTML]="genLink14" style="cursor: pointer !important"
+                 (click)="GenerateLink(); emptyPopup()"></a>
+              <label style="text-align: center;"
+                     [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
+                {{genLink15}}
+              </label>
+
+              <!--<p style="text-align: center;" (click)="GenerateLink(); emptyPopup()" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" [innerHTML]="RestrictMsg1"></p>-->
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="color:red; font-size:14px;">
+              {{MsgValidate}}
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="linkProcessValid">
+
+
+              <p style="text-align: center;" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"> {{LinkMsgGenerate}}</p>
+              <p style="text-align: center;" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"> {{LinkMsgGenerate1}}</p>
+            </div>
+
+
+
+
+          </div>
+
+
+          <div class="row" style=" margin-top: 5px !important;">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group" style="text-align: center;">
+                <a *ngIf="!generateLink" class="btn btn-lg btnTextColor greenBackgroundClr SaveBtn1"
+                   (click)="emptyPopup()" data-dismiss="modal"
+                   [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                   style=" color: white;"><span class="fa fa-check"></span>OK</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!--Popup Close For Delete-->
+
+
+
+</div>
+<!--input area ends-->
+

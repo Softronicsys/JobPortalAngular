@@ -1,0 +1,178 @@
+<style>
+  .fixed_header {
+    width: 1030px;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: 12px !important;
+  }
+
+    .fixed_header tbody {
+      display: block;
+      width: 100%;
+      overflow: auto;
+      /*height: 90px;*/
+      min-height: 20px !important;
+      max-height: 90px !important;
+    }
+
+    .fixed_header thead tr {
+      display: block;
+      color: black;
+    }
+
+    .fixed_header thead {
+      background: black;
+      color: #fff;
+    }
+
+    .fixed_header th, .fixed_header td {
+      padding: 5px;
+      text-align: left;
+      /*width: 171px;*/
+    }
+
+
+
+  body {
+    font-size: 0.9em;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  thead {
+    background-color: #f1f1f1;
+    color: black;
+  }
+
+  thead, tbody {
+    display: block;
+  }
+
+  table > thead > tr > th {
+    vertical-align: bottom;
+    border: 2px solid #f1f1f1;
+  }
+
+  th, td {
+    padding: 7px 2px 5px 4px !important;
+    width: 1040px;
+    box-sizing: border-box;
+  }
+
+  tbody {
+    /*height: 110px;*/
+    overflow-y: scroll
+  }
+
+  .myAlert-bottom-right {
+    position: fixed;
+    bottom: 5px;
+    float: right;
+    width: 30%;
+    text-align: center
+  }
+
+  .alert {
+    display: none;
+  }
+
+  div.fullscreen {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    float: right;
+  }
+
+
+
+  /* tooltip  */
+
+  /*div.click-to-top span {
+    display: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #333;
+    color: #fff;
+  }
+
+  div.click-to-top:hover span {
+    display: block;
+  }*/
+</style>
+
+
+
+
+
+<div class="fntFmly GreyClr">
+
+  <div class="container" style="width:100%;">
+
+    <div class="modal fade" id="ConfirmBox" style="z-index:999999 !important;" role="dialog" #confirmBox>
+      <div class="modal-dialog modal-sm fade1" style="top:33%; transform: translate(0%, 2%);">
+        <div class="modal-content">
+
+          <div class="modal-body">
+
+            <div class="row">
+              <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+              </div>
+              <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+              </div>
+
+              <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+              </div>
+
+
+            </div>
+
+
+
+            <div class="row" style=" margin-top: 5px !important;">
+
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                <p style="text-align: center;">An error occurred, Some features may malfunction. Do you want to reload the page?</p>
+
+              </div>
+
+              <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+
+              </div>
+
+
+            </div>
+
+
+            <div class="row" style=" margin-top: 5px !important;">
+
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group" style="text-align: center;">
+                  <a class="btn btn-lg btnTextColor greenBackgroundClr SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-left: 5px; color: white;" (click)="fnReload()"><span class="fa fa-check"></span> &nbsp;Yes  </a> &nbsp;
+                  <a class="btn btn-lg btnTextColor greenBackgroundClr SaveBtn1 clrhover" data-dismiss="modal" style="color: white;background-color: #F44336;" (click)="noClicked()"> <span class="fa fa-times"></span> &nbsp; No </a>
+                </div>
+              </div>
+
+
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+
+</div>
+
+

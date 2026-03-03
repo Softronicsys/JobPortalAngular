@@ -1,0 +1,259 @@
+h4, h5 {
+  font-weight: bold;
+}
+
+h6 {
+  margin-bottom: 3px;
+}
+
+.subHeadOpac {
+  opacity: 76%
+}
+
+.otherDetailsNormalView {
+  color: #524d4d;
+  font-size: 12px;
+}
+
+.socialMediaClass {
+  cursor: pointer;
+  opacity: 70%;
+}
+
+  .socialMediaClass:hover {
+    cursor: pointer;
+    opacity: 100%;
+  }
+
+.Subscribed {
+  max-width: 100%;
+  margin-bottom: 5px;
+  font-weight: 700;
+  color: #39B54A;
+  margin-bottom: 0px;
+  font-size: 12px;
+}
+
+.viewStyle {
+  padding: 5px 2px 5px 4px !important;
+  width: 59px;
+  text-align: center;
+  border: 4px solid;
+  border-radius: 2px;
+  display: block;
+  height: 29px;
+}
+
+.View-Normal {
+  width: 18px;
+  height: 11px;
+  cursor: pointer;
+  border: 2px solid;
+  float: left;
+  border-radius: 2px;
+  margin-left: 0px;
+  /* margin-bottom: 1px; */
+}
+
+.View-Normal-Selected {
+  width: 18px;
+  height: 11px;
+  border: 2px solid white;
+  outline: 3px solid;
+  float: left;
+  border-radius: 2px;
+  margin-left: 1px;
+  /* margin-bottom: 1px; */
+}
+
+.View-Grid {
+  width: 18px;
+  height: 11px;
+  cursor: pointer;
+  border: 2px solid;
+  float: right;
+  border-radius: 2px;
+  margin-right: 2px;
+  /* margin-bottom: 1px; */
+}
+
+.View-Grid-Selected {
+  width: 18px;
+  height: 11px;
+  border: 2px solid white;
+  outline: 3px solid;
+  float: right;
+  border-radius: 2px;
+  margin-right: 3px;
+  /* margin-bottom: 1px; */
+}
+
+.View-Grid-Lines {
+  margin: 1px 0px;
+  width: 14px;
+}
+
+.srchTxt {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  /* width: 176px; */
+  font-size: 12px;
+  text-align: left;
+}
+
+/*.relativeBackground {
+  height: auto !important;
+  background: url(assets/images/007FFF/LoginBackground.PNG) bottom -22px right -156px no-repeat !important;
+}*/
+
+.normalView {
+  /* margin-bottom: 126px !important; */
+  padding-right: 10%;
+  max-height: 256px;
+  overflow: auto;
+  max-width: 96%;
+}
+
+#myDIV1 {
+  color: green;
+}
+
+.BorderColor {
+  border: thin solid #C1272D !important;
+}
+
+#DocumentLbl {
+  margin-top: 26px;
+  margin-left: -25px;
+}
+
+@media screen and (min-width: 768px) and (max-width: 993px) {
+
+  #DocumentLbl {
+    margin-top: 20px;
+    margin-left: -20px;
+  }
+}
+
+@media screen and (min-width: 280px) and (max-width: 768px) {
+
+  #DocumentLbl {
+    margin-top: 20px;
+    margin-left: 3px
+  }
+}
+
+@media screen and (min-width: 300px) and (max-width: 500px) {
+
+  #forDocumentValid {
+    margin-left: 20px !important;
+  }
+
+  #CloseBtnForMobileView {
+    margin-left: 33px;
+    margin-top: 10px;
+  }
+
+  .ngxmdp .selectorarrow {
+    top: 30px !important;
+    margin-left: -190px !important;
+  }
+
+
+  .displayVideo {
+    display: block !important;
+  }
+}
+
+
+/* tooltip */
+
+container {
+  max-width: 600px;
+  margin: 0 auto;
+  min-height: 450px;
+}
+
+div.click-to-top {
+  display: inline-block;
+  position: relative;
+  max-width: 160px;
+}
+
+  div.click-to-top:hover {
+    z-index: 10;
+  }
+
+  div.click-to-top img {
+    -webkit-transition: all 0.8s;
+    moz-transition: all 0.8s;
+    transition: all 0.8s;
+    width: 130px;
+  }
+
+    div.click-to-top img:hover {
+      width: 140px;
+      z-index: 10;
+    }
+
+  div.click-to-top span {
+    display: none;
+    position: absolute !important;
+    bottom: 20px !important;
+    left: 26px !important;
+    right: -68px !important;
+    background: #808080 !important;
+    color: #fff !important;
+    height: 14px;
+    padding: 1px;
+  }
+
+  div.click-to-top:hover span {
+    display: block;
+  }
+
+#forDocumentValid {
+  margin-left: -20px;
+}
+
+
+/*for video responsive*/
+
+.container {
+  position: relative;
+  width: 100%;
+}
+
+.middle {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 0%;
+  left: 86%;
+  transform: translate(-50%, 75%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.container:hover .video {
+  opacity: 0.3;
+}
+
+.container:hover .middle {
+  opacity: 1;
+}
+
+.text {
+  color: white;
+  cursor: pointer;
+}
+
+.displayNoneForMenu {
+  display: none
+}
+
+
+.displayVideo {
+  display: none;
+}

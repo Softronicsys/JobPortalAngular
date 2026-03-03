@@ -1,0 +1,300 @@
+/* Container anchoring */
+.chatbox-wrapper {
+  position: relative; /* Anchor point for absolute chatbox */
+}
+
+/* Floating Chat Button */
+.chatbox-open {
+  position: absolute;
+  bottom: 20px;
+  right: 10px;
+  /*background-color: #4a90e2; /* Changed to match Web Forms blue */
+  border: none;
+  border-radius: 50%;
+  padding: 18px;
+  color: white;
+  cursor: pointer;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+}
+
+  .chatbox-open:hover {
+    transform: scale(1.1);
+  }
+
+/* Close Button */
+.chatbox-close {
+  position: absolute;
+  bottom: 20px;
+  right: 10px;
+  background-color: #ff4d4d;
+  border: none;
+  border-radius: 50%;
+  padding: 18px;
+  color: white;
+  cursor: pointer;
+  z-index: 1000;
+  font-size: 24px;
+  display: none;
+  transition: transform 0.3s ease;
+}
+
+  .chatbox-close:hover {
+    transform: scale(1.1);
+  }
+
+/* Chatbox Popup */
+.chatbox-popup {
+  position: absolute;
+  bottom: 40px;
+  right: 10px;
+  width: 350px; /* Slightly wider */
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  z-index: 999;
+  margin-bottom: 65px;
+  max-height: 600px; /* Increased height */
+  overflow: hidden; /* Hide scrollbar overflow */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Header */
+.chatbox-popup__header {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  background-color: #4a90e2; /* Web Forms blue */
+  color: white;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  font-weight: 600;
+  font-size: 18px;
+}
+
+  .chatbox-popup__header aside {
+    padding: 0 10px;
+  }
+
+  .chatbox-popup__header .chatbox-popup__avatar {
+    font-size: 28px;
+    color: #ffffff;
+    margin-right: 10px;
+  }
+
+  .chatbox-popup__header small {
+    font-size: 13px;
+    opacity: 0.8;
+  }
+
+/* Main chat messages */
+.chatbox-popup__main {
+  flex: 1;
+  padding: 15px 20px;
+  background: #e9eff7;
+  overflow-y: auto;
+  max-height: 470px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 14px;
+  color: #333;
+}
+
+  /* Scrollbar styling */
+  .chatbox-popup__main::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .chatbox-popup__main::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .chatbox-popup__main::-webkit-scrollbar-thumb {
+    background-color: #4a90e2;
+    border-radius: 3px;
+  }
+
+  /* Message bubbles */
+  .chatbox-popup__main li {
+    max-width: 80%;
+    padding: 10px 14px;
+    border-radius: 15px;
+    line-height: 1.4;
+    word-wrap: break-word;
+    word-break: break-word;
+  }
+
+    /* Agent message (left) */
+    .chatbox-popup__main li.agent-msg {
+      background: #ffffff;
+      color: #333;
+      border: 1px solid #ddd;
+      border-bottom-left-radius: 2px;
+      align-self: flex-start;
+      text-align: left;
+    }
+
+    /* User message (right) */
+    .chatbox-popup__main li.user-msg {
+      background: #4a90e2;
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 2px;
+      text-align: start;
+    }
+
+/* Footer */
+.chatbox-popup__footer {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  border-top: 1px solid #ddd;
+  background: #f0f4f8;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  gap: 10px;
+}
+
+  /* Icons and buttons in footer */
+  .chatbox-popup__footer aside i {
+    font-size: 20px;
+    color: #4a90e2;
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+
+    .chatbox-popup__footer aside i:hover {
+      color: #0071d1;
+    }
+
+  /* Textarea input styling */
+  .chatbox-popup__footer textarea {
+    flex: 1;
+    resize: none;
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1.5px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: white;
+  }
+
+    .chatbox-popup__footer textarea:focus {
+      border-color: #4a90e2;
+    }
+
+  /* Send button styling */
+  .chatbox-popup__footer aside.send-button {
+    color: #4a90e2;
+    font-size: 20px;
+    padding: 6px 8px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+    .chatbox-popup__footer aside.send-button:hover {
+      background-color: #4a90e2;
+      color: white;
+    }
+
+.sendButton {
+  color: #4a90e2;
+  font-size: 20px;
+  padding: 8px;
+  border-radius: 50%;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+}
+
+  .sendButton:hover {
+    background-color: #c5cfd9;
+    color: white;
+  }
+
+/* Responsive */
+@media (max-width: 480px) {
+  .chatbox-popup {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .chatbox-popup__header {
+    font-size: 16px;
+    padding: 10px 15px;
+  }
+
+.chatbox-popup__main {
+  display: flex;
+  flex-direction: column;
+}
+
+  .chatbox-popup__footer {
+    padding: 10px 15px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  li {
+    margin-bottom: 12px;
+    max-width: 80%;
+    line-height: 1.4;
+    padding: 10px 14px;
+    border-radius: 15px;
+    word-wrap: break-word;
+    font-size: 14px;
+  }
+
+  /* User message (right side) */
+  .user-msg {
+    background-color: #4a90e2;
+    color: white;
+    align-self: flex-end !important;
+    margin-left: auto !important;
+    border-bottom-right-radius: 2px;
+    text-align: right !important;
+  }
+
+  .agent-msg {
+    background-color: #ffffff;
+    color: #333;
+    border: 1px solid #ddd;
+    border-bottom-left-radius: 2px;
+    align-self: flex-start !important;
+    margin-right: auto !important;
+    text-align: left !important;
+  }
+  .unread-counter {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 50%;
+    padding: 5px 10px;
+  }
+
+ 
+
+}

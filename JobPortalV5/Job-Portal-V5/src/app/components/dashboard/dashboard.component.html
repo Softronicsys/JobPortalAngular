@@ -1,0 +1,1355 @@
+<style>
+  .address {
+    width: 220px;
+    color: #0079c1;
+    line-height: 1em;
+    font-size: 12px;
+    font-weight: 400;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    word-break: break-all;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+    .address:hover {
+      overflow: visible; 
+      white-space: normal;
+    }
+
+  .tooltip {
+    position: relative;
+    cursor: pointer;
+  }
+
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 120px;
+      background-color: #007FFF;
+      color: white;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px 0;
+      /* Position the tooltip */
+      position: absolute;
+      z-index: 1;
+      top: -5px;
+      left: 105%;
+    }
+
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+    }
+
+
+  nav .badge {
+    display: block;
+    position: absolute;
+    top: 2px;
+    right: 194px;
+    line-height: 9px;
+    height: 15px;
+    padding: 2px 2px 2px 2px;
+    font-family: Barlow Medium !important;
+    color: white;
+    border: 1px solid;
+    border-radius: 10px;
+    width: 15px;
+    font-size: 10px !important;
+  }
+
+  nav .badge {
+    background: red !important;
+    border-color: red !important;
+  }
+
+
+
+
+
+  button:hover {
+    background-color: #00b2ff;
+    color: white;
+  }
+
+  .bd-left {
+    border-left: 0.5px solid #007fff;
+  }
+
+  .setWidth {
+    display: inline-block;
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
+    /*width: auto;*/
+  }
+
+
+  body {
+    font-family: 'Ubuntu', sans-serif;
+    width: 960px;
+    border-radius: 20px
+  }
+
+  p {
+    color: #525252;
+    font-size: 12px;
+  }
+
+  .skillbar {
+    position: relative;
+    display: block;
+    margin-bottom: 15px;
+    width: 86% !important;
+    background: #f1f1f1;
+    height: 30px !important;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -webkit-transition: 0.4s linear;
+    -moz-transition: 0.4s linear;
+    -ms-transition: 0.4s linear;
+    -o-transition: 0.4s linear;
+    transition: 0.4s linear;
+    -webkit-transition-property: width, background-color;
+    -moz-transition-property: width, background-color;
+    -ms-transition-property: width, background-color;
+    -o-transition-property: width, background-color;
+    transition-property: width, background-color;
+  }
+
+  .skillbar-title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 30%;
+    font-weight: bold;
+    font-size: 12px;
+    color: #ffffff;
+    background: #6adcfa;
+    -webkit-border-top-left-radius: 3px;
+    -webkit-border-bottom-left-radius: 4px;
+    -moz-border-radius-topleft: 3px;
+    -moz-border-radius-bottomleft: 3px;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+  }
+
+    .skillbar-title span {
+      display: block;
+      background: rgba(0, 0, 0, 0.1);
+      padding: 0 20px;
+      height: 30px;
+      line-height: 35px;
+      -webkit-border-top-left-radius: 3px;
+      -webkit-border-bottom-left-radius: 3px;
+      -moz-border-radius-topleft: 3px;
+      -moz-border-radius-bottomleft: 3px;
+      border-top-left-radius: 3px;
+      border-bottom-left-radius: 3px;
+    }
+
+  .skillbar-bar {
+    height: 30px;
+    width: 0px;
+    background: #6adcfa;
+    border-radius: 3px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+  }
+
+  .skill-bar-percent {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    font-size: 11px;
+    height: 30px;
+    line-height: 35px;
+    color: #ffffff;
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+
+
+  .mystyle {
+    display: block;
+    background: red;
+  }
+
+
+  .hover-figure {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    margin: auto;
+  }
+
+  .hover-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.2); /* visible by default */
+    color: rgba(255, 255, 255, 0.8); /* visible text */
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+ 
+  .hover-figure:hover .hover-label {
+    background: rgba(0, 0, 0, 0.5);
+    color: rgba(255, 255, 255, 1);
+  }
+
+  .hover-figure:hover .profile-img {
+    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.5);
+  }
+
+
+
+
+
+
+</style>
+
+
+<!--Page Load Spinner Open-->
+<ngx-spinner bdColor="rgba(51,51,51,0.8)"
+             size="medium"
+             color="#fff"
+             type="ball-scale-multiple">
+  <p style="font-size: 20px; color: white">Loading...</p>
+</ngx-spinner>
+<!--Page Load Spinner Close-->
+
+
+
+
+<div class="container-fluid hideScroll_X fntFmly GreyClr" *ngIf="WrongUrl" style="overflow-x: initial;">
+  <div class="row mt-10" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+      <!--<div [ngStyle]="{'background-image': 'url(' + CompanyIdService.CompanyLogoBase64 + ')'}" style="height: 32px; width: 200px; margin: 15px 0px 0px 0px;"></div>-->
+      <!--<img  [src]=getSantizeUrl(CompanyIdService.CompanyLogoBase64) alt=""  class="marginDashboard" >-->
+      <img [src]=getSantizeUrl(CompanyIdService.CompanyLogoBase64) alt="" style="margin-bottom:4px;">
+    </div>
+    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+      <div class="btn-position mt-10">
+        <a style="margin-right: 5px; cursor:pointer;" aria-controls="myJobs" role="tab"
+           data-toggle="tab"
+           [style.visibility]="hideHomeButton == true ? 'hidden' : 'visible'"
+           (click)="onTab_Click('isMyJobActive')" href="#myJobs">
+          <img style="width: 26px;" src={{HomeBackgroundImage}} />
+        </a>
+
+
+        <span>
+          <img (click)="isDeleteButton()" style="margin-bottom: 4px; cursor:pointer;" role="dialog" data-keyboard="false" data-backdrop="static" data-toggle="modal" data-target='#myModalChangePicture' class="profile-img" [src]="updateImg ? url : ProfileImg" />
+          
+          <span *ngIf="isSideBar">
+            &nbsp; &nbsp;<span class="loader" style="margin-top: 9px; float: right; width: 20px !important;  height: 20px !important;"></span>
+
+          </span>
+
+        </span>
+
+        <!-- Modal Change picture-->
+        <div class="modal fade transformPopup" id="myModalChangePicture" role="dialog">
+          <div class="modal-dialog modal-md">
+            <div class="modal-content" style="text-align: left; width: 345px !important">
+              <div class="modal-header" style="border-bottom: 0px solid #e5e5e5;">
+                <!--<button type="button" class="close" style="background:none !important;" (click)="refreshImg();" data-dismiss="modal"><img src="assets/images/lookupclose.png"></button>-->
+                <button type="button" (click)="ResetVal()" class="close" style="background:none !important;" data-dismiss="modal"><img src="assets/images/lookupclose.png"></button>
+                <img style="height: 18px;  margin-top: -5px;" src={{BackgroundImage}} /> &nbsp; <h4 class="modal-title" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="display: initial;"><!--Applicant Picture-->{{lblApplicantPicture}}</h4>
+              </div>
+              <div class="modal-body" style="padding-top: 2px;">
+                <div class="form-group" style="font-size:12px;">
+                  <div>
+                    Picture Formats: <b>.png, .jpg, .jpeg, .gif</b>
+                  </div>
+                  <div>
+                    Max Picture Size: <b>{{PicSizeMB}} MB</b>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <!--<label [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                         id="#bb"
+                         style="cursor: pointer; float: left; margin-left: 40px; text-align: center;
+                          height: 28px !important; width: 95px; padding-top: 3px; border-radius: 20px; font-size: 11px;  font-weight: 500; height: 24px !important; display: table; color: #fff;">
+                    {{Upload}}<input #myInput type="file" accept='image/*'
+                                     (change)="fileChangeEvent($event); onSelectFile($event)"
+                                     style="margin-top: 40px; width: 325px; word-break: break-all;">
+                  </label>-->
+                  <label *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                         id="UploadButton"
+                         style="cursor: pointer; float: left; margin-left: 40px; text-align: center;
+          height: 28px !important; width: 95px; padding-top: 3px; border-radius: 20px; font-size: 11px;  font-weight: 500; height: 24px !important; display: table; color: #fff;">
+                    {{Upload}}<input #myInput type="file" accept='image/*'
+                                     (change)="fileChangeEvent($event); onSelectFile($event)"
+                                     style="margin-top: 40px; width: 325px; word-break: break-all;">
+                  </label>
+                  &nbsp;&nbsp;&nbsp;&nbsp;
+                  <div class="click-to-top">
+                    <a id="DeleteButton" class="glyphicon glyphicon-trash" style="color: red; font-size: 15px; margin-top: 5px;
+                    cursor:pointer;text-decoration: none;" *ngIf="isDeleteHide && (ApprovalStatus == 'R' || ApprovalStatus == null)" (click)="setId3()" data-toggle="modal" data-target="#myModalFordelete2" data-backdrop="static" data-keyboard="false"><span class="forDeleteTooltip">Delete</span></a>
+                  </div>
+                  <br />
+                  <label *ngIf="imageValidationForExtension" style="font-weight: 600;color:red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Attached image format is not valid!</label>
+                  <label *ngIf="imageValidationForSize" style="font-weight: 600;color:red">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Image size cannot be greater than {{PicSizeMB}} MB!</label>
+                  <br />
+
+                  <img [src]="updateImg ? url : ProfileImg" style="margin-bottom: 4px; width:150px;
+   height:150px; float:right; margin-right: 12px; " class="profile-img"
+                       [style.margin-right.px]="isCroppingImg ? '12' : '100'" />
+
+
+                  <div style="width: 180px; height: 130px;" *ngIf="isCroppingImg">
+                    <image-cropper [imageChangedEvent]="imageChangedEvent"
+                                   [maintainAspectRatio]="true"
+                                   [aspectRatio]="4 / 4"
+                                   (imageCropped)="imageCropped($event)"
+                                   (imageLoaded)="imageLoaded()"
+                                   (cropperReady)="cropperReady()"
+                                   (loadImageFailed)="loadImageFailed()" *ngIf="updateImg"></image-cropper>
+                  </div>
+
+                </div>
+
+
+
+                <br />
+
+
+                <div class="row" style="display:flex;">
+                  <div class="col-md-4">
+
+                  </div>
+                  <div class="col-md-4" style="text-align:center !important">
+                    <button  id="SaveButton" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null" class="btn app-btn greenBackgroundClr mr-10 clrhover"
+                            (click)="compress($event)" [disabled]="isDisabled">
+                      {{Save}}
+                    </button>
+                  </div>
+                  <br />
+                  <div class="col-md-4">
+
+                  </div>
+
+
+                </div>
+                <!--</form>-->
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- Popup close -->
+
+        <div style="display:inline">
+          <div class="click-to-top" *ngIf="isname">
+
+            <label class="username setWidth" role="dialog" data-keyboard="false"
+                   data-backdrop="static" data-toggle="modal"
+                   data-target="#myModalChangePicture"
+                   [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                   style="margin-bottom: -10px !important;   padding: 10px 10px 5px 10px;
+              cursor: pointer;">{{Username}}</label>
+
+            <a>
+              <span style="padding: 3px 10px 3px 10px!important;border-radius: 4px !important;
+letter-spacing: 0.4px !important;width: auto !important; height: auto !important;
+bottom: 21px !important; right: 3px !important; cursor: pointer; font-weight: 500 !important;
+text-align: left !important;" [innerHTML]="tooltipName"></span>
+            </a>
+
+          </div>
+          <a class="dropdown">
+            <span class="glyphicon glyphicon-triangle-bottom" id="menu1" data-toggle="dropdown" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-left: 20px; margin-right: -45px; cursor: pointer;"></span>
+            <ul class="dropdown-menu" role="menu" aria-labelledby="menu1" style=" left: 50%; font-size: 12px !important; right: auto; transform: translate(-70%, 0%); min-width: 150px;">
+              <li *ngIf="Multilingual == 'Y'">
+                <a role="menuitem" tabindex="-1" style="cursor:pointer;"><span class="glyphicon glyphicon-globe">  Language </span></a>
+              </li>
+              <li>
+                <a (click)="onTab_Click('isPersonalInfoActive')" href="#personalInfo"
+                   aria-controls="personalInfo" role="tab" data-toggle="tab"
+                   style="cursor:pointer; font-size:12px;">
+                  <span class="glyphicon glyphicon-user" style="font-size: 10px !important;"></span>
+                  &nbsp; &nbsp; View Profile
+                </a>
+              </li>
+              <li *ngIf="CompanyIdService.IsLinkedInLogin !== '1' && isFF !== true">
+                <a tabindex="-1" data-toggle="modal" data-target="#myModalChangePassword"
+                   style="cursor:pointer; font-size:12px;">
+                  <span class="glyphicon glyphicon-lock" style="font-size: 10px !important;"></span>
+                  &nbsp; &nbsp; Change Password
+                </a>
+              </li>
+              <!--<li class="nonClickable" >
+                <a role="menuitem" tabindex="-1" style="cursor:pointer;" > <img src="assets/images/settings1.png" style="height: 16px;">  &nbsp;{{lblSettings}}</a>
+                <ul class="dropdown-menu submenu displayNoneForMenuForWeb" style=" transform: translate(-101%, -100%);"  >
+                  <li ><a tabindex="-1" data-toggle="modal" data-target="#myModalChangePassword" style="cursor:pointer; font-size:12px;"><span class="glyphicon glyphicon-lock" style="font-size: 10px !important;"></span> &nbsp; &nbsp; Change Password</a></li>
+                  <li ><a tabindex="-1" data-toggle="modal" data-target="#myModalChangeEmail" style="cursor:pointer; font-size:12px;"><img src="assets/images/changeEmail1.png" style="height: 13px;"> &nbsp; &nbsp; Change Email</a></li>
+                </ul>
+              </li>-->
+              <!--<li class="displayNoneForMenu">
+                <a tabindex="-1" data-toggle="modal" data-target="#myModalChangePassword" style="cursor:pointer; font-size:12px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-lock" style="font-size: 10px !important;"></span> &nbsp; &nbsp; Change Password</a>
+                <a tabindex="-1" data-toggle="modal" data-target="#myModalChangeEmail" style="cursor:pointer; font-size:12px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="assets/images/changeEmail1.png" style="height: 13px;"> &nbsp; &nbsp; Change Email</a>
+
+              </li>-->
+              <li class="BorderMenu">
+                <a role="menuitem" routerLink='/' tabindex="-1" (click)="emptyIDandCode()">  <span class="glyphicon glyphicon-off"> </span> &nbsp;&nbsp;&nbsp;{{lblLogout}} <!--Logout--> </a>
+              </li>
+            </ul>
+          </a>
+          <br />
+          <label class="username setWidth" *ngIf="IsLastProfileVisible" style="font-size: 12px; font-weight: 300; cursor: pointer; max-width: 180px !important; margin-right: -17px;"> Last updated: {{updateProfService.LastProfileUpdateValue}}</label>
+
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModalChangePassword" role="dialog" data-keyboard="false" data-backdrop="static">
+          <div class="modal-dialog modal-md">
+            <div class="modal-content" style="text-align: left;">
+              <div class="modal-header" style="border-bottom: 0px solid #e5e5e5;">
+                <button type="button" class="close" style="background:none !important;" data-dismiss="modal" (click)="btnPostChangePassword1_Click()"><img src="assets/images/lookupclose.png"></button>
+                <h4 class="modal-title" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><!--Change Password-->{{lblChangePassword}}</h4>
+              </div>
+              <div class="modal-body">
+
+                <div class="row ">
+                  <div class="col-sm-3">
+                    <div class="form-group ">
+
+                    </div>
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="form-group " style="float: right;">
+                      <label style="color:red;" class="forValidation" *ngIf="isMandatoryfields == true"><sup style="color:red;" class="mandatoryStar">*</sup>Please enter mandatory fields</label>
+                      <label style="color:red; " class="forValidation">{{ ChangepasswordErrorMsg }}</label>
+                    </div>
+                  </div>
+                  <div class="col-sm-1">
+                    <div class="form-group ">
+
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="row ">
+                  <div class="col-sm-3">
+                    <div class="form-group">
+
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group ">
+                      <label type="password" class="fntWght fontSize12"><span style="color:red;">*</span><!--Current Password-->{{lblCurrentpassword}}</label>
+                      <input type="password" maxlength="20" [ngClass]="{'BorderColor':isMandatoryfields && CurrentPassword == ''}" class="form-control textColor fontSize12" style="border-radius: 0px !important;" name="currentPassword" [(ngModel)]="CurrentPassword">
+                    </div>
+                  </div>
+
+                  <div class="col-sm-3">
+
+                  </div>
+
+
+                </div>
+
+                <div class="row ">
+                  <div class="col-sm-3">
+                    <div class="form-group ">
+
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group ">
+                      <label for="degree " class="fntWght fontSize12"><span style="color:red; ">*</span><!--New Password-->{{lblNewPassword}}</label>
+                      <input type="password" maxlength="20" [ngClass]="{'BorderColor':isMandatoryfields && NewPassword == ''}" class="form-control textColor fontSize12" style="border-radius: 0px !important;" name="newPassword" [(ngModel)]="NewPassword">
+                    </div>
+                  </div>
+
+                  <div class="col-sm-3">
+
+                  </div>
+
+
+                </div>
+
+
+                <div class="row ">
+                  <div class="col-sm-3 ">
+                    <div class="form-group ">
+                    </div>
+                  </div>
+                  <div class="col-sm-6 ">
+                    <div class="form-group ">
+                      <label for="degree " class="fntWght fontSize12"><span style="color:red; ">*</span><!--Confirm Password-->{{lblConfirmPassword}}</label>
+
+                      <input type="password" maxlength="20" [ngClass]="{'BorderColor':isMandatoryfields && ConfirmPassword == ''}" class="form-control textColor fontSize12" style="border-radius: 0px !important;" name="confirmPassword" [(ngModel)]="ConfirmPassword">
+                    </div>
+                  </div>
+
+                  <div class="col-sm-3 ">
+
+                  </div>
+
+                </div>
+                <div class="row ">
+                  <div class="col-sm-3 ">
+                    <div class="form-group ">
+
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group" align="center">
+                      <a class="btn btn-lg btnTextColor greenBackgroundClr SaveBtn clrhover" (click)="btnPostChangePassword_Click();" style="margin-right: 18px !important;  width:85px !important;">
+                        <span class="glyphicon glyphicon-tower "></span> &nbsp; <!--CHANGE-->{{lblChange}}
+                      </a>
+
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="form-group ">
+
+                    </div>
+                  </div>
+
+                </div>
+
+
+
+
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- Popup close -->
+        <!-- Modal -->
+        <div class="modal fade" id="myModalChangeEmail" role="dialog" data-keyboard="false" data-backdrop="static">
+          <div class="modal-dialog modal-md">
+            <div class="modal-content" style="text-align: left;">
+              <div class="modal-header" style="border-bottom: 0px solid #e5e5e5;">
+                <button type="button" class="close" style="background:none !important;" data-dismiss="modal" (click)="btnPostChangePassword1_Click()"><img src="assets/images/lookupclose.png"></button>
+                <h4 class="modal-title" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">Change Your Registration Email</h4>
+              </div>
+              <div class="modal-body">
+
+                <div class="row ">
+                  <div class="col-sm-2">
+                    <div class="form-group ">
+
+                    </div>
+                  </div>
+                  <div class="col-sm-8">
+                    <div class="form-group " style="float: right;">
+                      <label style="color:red;  float: right;" class="forValidation" *ngIf="isMandatoryfields == true"><sup style="color:red;" class="mandatoryStar">*</sup>Please enter mandatory fields</label>
+                      <label style="color:red;  float: right;" class="forValidation">{{ ChangeEmailErrorMsg }}</label>
+                      <label style="color:red;  float: right;" class="forValidation" *ngIf="EmailValidation1 == true">Please enter valid Email Address</label>
+                      <br />
+                    </div>
+                  </div>
+                  <div class="col-sm-1">
+                    <div class="form-group ">
+
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="row ">
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                    </div>
+                  </div>
+                  <div class="col-sm-6 ">
+                    <div class="form-group ">
+                      <label type="password" class="fntWght fontSize12"><span style="color:red;">*</span>New Email<!--{{lblNewEmail}}--></label><br>
+
+                      <input maxlength="50" type="email" class="form-control textColor fontSize12" [ngClass]="{'BorderColor':isMandatoryfields && ChangeEmail == ''}" style="border-radius: 0px !important;" name="ChangeEmail1" [(ngModel)]="ChangeEmail" id="ChangeEmail">
+                    </div>
+                  </div>
+
+                  <div class="col-sm-3">
+
+                  </div>
+
+                </div>
+
+                <div class="row ">
+                  <div class="col-sm-3">
+                    <div class="form-group ">
+                    </div>
+                  </div>
+                  <div class="col-sm-6 ">
+                    <div class="form-group ">
+                      <label for="degree " class="fntWght fontSize12"><span style="color:red; ">*</span><!--Password-->{{lblPassword}}</label><br>
+
+                      <input type="password" maxlength="20" class="form-control textColor fontSize12" [ngClass]="{'BorderColor':isMandatoryfields && OldPassword == ''}" style="border-radius: 0px !important;" name="OldPassword" [(ngModel)]="OldPassword">
+                    </div>
+                  </div>
+
+                  <div class="col-sm-3">
+
+                  </div>
+
+
+                </div>
+
+
+                <div class="row ">
+                  <div class="col-sm-3 ">
+                    <div class="form-group ">
+
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <div class="form-group" align="center">
+                      <a class="btn btn-lg btnTextColor greenBackgroundClr SaveBtn clrhover" (click)="ChangeEmail_Click()" style="margin-right: 18px !important;  width:85px !important;">
+                        <span class="glyphicon glyphicon-tower "></span> &nbsp; <!--CHANGE-->{{lblChange}}
+                      </a>
+                    </div>
+                  </div>
+                  <div class="col-sm-3">
+                    <div class="form-group ">
+
+                    </div>
+                  </div>
+
+                </div>
+
+
+
+
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <!-- Popup close -->
+
+
+
+
+      </div>
+
+    </div>
+  </div>
+
+
+  <!--Popup open For job Applicant-->
+  <div class="modal fade" id="JobApplicant" role="dialog">
+    <div class="modal-dialog modal-sm fade1">
+      <div class="modal-content" style="width: 380px; height: auto !important; max-height: 400px !important;">
+
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+            </div>
+
+
+          </div>
+
+
+
+          <div class="row" style=" margin-top: 5px !important;">
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+
+            </div>
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-1">
+
+              <p style="text-align: center;" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">{{ ApplyJobMsg }}</p>
+
+            </div>
+
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+
+            </div>
+
+
+          </div>
+
+
+          <!--<div class="row" style=" margin-top: 5px !important;">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group" style="text-align: center;">
+                <a class="btn btn-lg btnTextColor SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-left: 5px; color: white;" (click)="refreshJobCode()"><span class="fa fa-check"></span> &nbsp;OK  </a>
+              </div>
+            </div>
+
+          </div>-->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!--Popup Close For job Applicant-->
+  <!-- For error msg -->
+  <!-- Modal -->
+  <div class="modal fade" id="myModal" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-sm fade1" style=" position: absolute; top: 40%;left: 47%; transform: translate(-50%, -50%) !important;">
+      <div class="modal-content" style="width: 350px !important">
+
+        <div class="modal-body">
+
+          <div class="row">
+
+            <div class="col-lg-12" style="text-align: center;">
+
+              <img class="popupThankLogo" [src]="tickImage" />
+
+            </div>
+
+
+
+          </div>
+
+
+
+          <div class="row" style=" margin-top: 5px !important;">
+
+            <div class="col-lg-12" style="text-align: center;">
+              <label [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="font-size:12px !important;"><strong>{{ ApplyJobMsg }}</strong></label>
+
+            </div>
+
+
+
+          </div>
+          <!--<div class="row">
+
+            <div class="col-lg-12" style="text-align: center;">
+              <a class="btn btnTextColor btn-lg SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" (click)="refreshJobCode()">
+                <span class="fa fa-check"></span> &nbsp;  Ok
+              </a>
+
+            </div>
+          </div>-->
+
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <!--popup for video-->
+
+  <div class="modal fade" id="videoPopup4" role="dialog">
+    <div class="modal-dialog modal-sm fade1" style=" transform: translate(0%, 80%);">
+      <div class="modal-content" style="width: 350px;">
+
+        <div class="modal-body">
+
+          <div class="row" style="text-align:center" *ngIf="isTick">
+
+            <div class="col-lg-12 ">
+
+              <img class="popupThankLogo" [src]="tickImage" />
+
+            </div>
+
+
+          </div>
+
+
+
+          <div class="row" style=" margin-top: 5px !important;">
+
+            <div class="col-lg-12">
+
+              <p style="text-align: center;" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">{{ ApplyJobMsg }}</p>
+
+            </div>
+
+
+
+          </div>
+
+
+          <!--<div class="row">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group" style="text-align: center;">
+                <a class="btn btn-lg btnTextColor SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-left: 5px; color: white;" (click)="removeMsg()"><span class="fa fa-check"></span> &nbsp;OK  </a>
+              </div>
+            </div>
+
+          </div>-->
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!--popup close for video-->
+  <!--Popup For Delete-->
+
+  <div class="modal fade" id="myModalFordelete2" role="dialog">
+    <div class="modal-dialog modal-sm fade1" style=" transform: translate(0%, 200%);">
+      <div class="modal-content" style="width: 345px; height: 105px;">
+
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+            </div>
+
+
+          </div>
+
+
+
+          <div class="row" style=" margin-top: 5px !important;">
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+
+            </div>
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+
+              <p style="text-align: center;">Are you sure you want to delete?</p>
+
+            </div>
+
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+
+            </div>
+
+
+          </div>
+
+
+          <div class="row" style=" margin-top: 5px !important;">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group" style="text-align: center;">
+                <a class="btn btn-lg btnTextColor greenBackgroundClr SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-left: 5px; color: white;" (click)="DeleteImage()"><span class="fa fa-check"></span> &nbsp;Yes  </a> &nbsp;
+                <a class="btn btn-lg btnTextColor greenBackgroundClr SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="color: white;"> <span class="fa fa-times"></span> &nbsp; No </a>
+              </div>
+            </div>
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!--Popup Close For Delete-->
+  <!--Popup1 For Delete-->
+
+  <div class="modal fade" id="myModalFordelete5" role="dialog">
+    <div class="modal-dialog modal-sm fade1" style=" transform: translate(0%, 200%);">
+      <div class="modal-content" style="width: 320px; height: 105px;">
+
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+            </div>
+
+
+          </div>
+
+
+
+          <div class="row" style=" margin-top: 5px !important;">
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+
+            </div>
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+
+              <p style="text-align: center;">Are you sure you want to delete?</p>
+
+            </div>
+
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+
+            </div>
+
+
+          </div>
+
+
+          <div class="row" style=" margin-top: 5px !important;">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group" style="text-align: center;">
+                <a class="btn btn-lg btnTextColor greenBackgroundClr SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-left: 5px; color: white;" (click)="getDeleteFromBlob1()"><span class="fa fa-check"></span> &nbsp;Yes  </a> &nbsp;
+                <a class="btn btn-lg btnTextColor greenBackgroundClr SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="color: white;" (click)="setIdForNo()"> <span class="fa fa-times"></span> &nbsp; No </a>
+              </div>
+            </div>
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!--Popup1 Close For Delete-->
+  <!---------------------------------------------------------------------------------------------->
+  <!--Popup open For job Applicant-->
+  <div class="modal fade" id="JobApplicantMsgTrue" role="dialog">
+    <div class="modal-dialog modal-sm fade1">
+      <div class="modal-content" style="width: 380px; height: auto !important; max-height: 400px !important; position: absolute; top: 40%;left: 48%; transform: translate(-50%, 150%) !important;">
+
+        <div class="modal-body">
+
+          <div class="row" style="text-align:center" *ngIf="isTick">
+
+            <div class="col-lg-12 ">
+
+              <img class="popupThankLogo" [src]="tickImage" />
+
+            </div>
+
+
+          </div>
+
+
+
+          <div class="row" style=" margin-top: 5px !important;">
+
+            <div class="col-lg-12">
+
+              <p style="text-align: center;" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">{{ message }}</p>
+
+            </div>
+
+
+
+          </div>
+
+
+          <!--<div class="row">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group" style="text-align: center;">
+                <a class="btn btn-lg btnTextColor SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-left: 5px; color: white;" (click)="removeMsg()"><span class="fa fa-check"></span> &nbsp;OK  </a>
+              </div>
+            </div>
+
+
+
+
+          </div>-->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!--Popup Close For job Applicant-->
+  <!--Popup open For job Applicant-->
+  <div class="modal fade" id="JobApplicantMsg1False" role="dialog" data-keyboard="false" data-backdrop="static">
+    <div class="modal-dialog modal-sm fade1">
+      <div class="modal-content" style="height: auto !important; max-height: 400px !important; position: absolute; transform: translate(-30%, 35%) !important;">
+
+        <div class="modal-body">
+
+          <div class="row" style="text-align:center" *ngIf="isTick">
+
+            <div class="col-lg-12 ">
+
+              <img class="popupThankLogo" [src]="tickImage" />
+
+            </div>
+
+
+          </div>
+
+
+
+          <div class="row" style=" margin-top: 5px !important;">
+
+            <div class="col-lg-12">
+
+              <pre style="font-family: Barlow,Medium !important; background-color: white !important; border: white !important;white-space: pre-wrap;" [innerHTML]="message" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"></pre>
+
+            </div>
+
+
+
+          </div>
+
+
+          <div class="row">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group" style="text-align: center;">
+                <a class="btn btn-lg btnTextColor SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-left: 5px; color: white;" (click)="removeMsg()"><span class="fa fa-check"></span> &nbsp;OK  </a>
+              </div>
+            </div>
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!--Popup Close For job Applicant-->
+
+
+
+  <div class="row">
+    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 displayVideo">
+      <div class="profile" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]" *ngIf="isProfileCompletion">
+
+        <p class="GreyClr" style="font-size:16px !important;">
+          <!--Profile Completion-->{{lblProfileCompletion}}
+        </p>
+
+        <!-- Profile Strength loader -->
+
+
+
+        <div class="click-to-top" style="width: 98% !important; max-width: 250px !important; cursor: pointer;position: relative;">
+          <div class="skillbar clearfix " [attr.data-percent]="percent" style="margin: 10px 20px 20px 20px; border-radius: 20px !important; font-size:12px;">
+            <!--<div class="skillbar-title" style="background: #007fff; border-radius: 20px !important;"><span style="border-radius: 20px !important;">20%</span></div>-->
+            <div class="skillbar-bar" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="border-radius: 20px !important; color:white; padding: 6px 2px 0px 0px; text-align: right;">{{percent}}</div>
+            <div class="skill-bar-percent" style="border-radius: 20px !important;"></div>
+            <a><span id="rigthForProgressTooltip" style="padding: 4px !important;border-radius: 10px !important;letter-spacing: 0.4px !important;width: 160px !important; height: 150px !important; bottom: -145px !important; cursor: pointer; font-weight: 500 !important; text-align: left !important;" [innerHTML]="percentageToolTip"></span> </a>
+          </div>
+        </div>
+
+
+        <!-- Profile Strength loader close -->
+        <br />
+
+
+      </div>
+
+      <!-- Profile Image -->
+
+      <div style="margin: 15px -15px 0px -15px; text-align: center;" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]" *ngIf="isProfileImage">
+
+        <div class="hover-figure">
+          <img _ngcontent-c2="" (click)="isDeleteButton()" class="profile-img" [src]="updateImg ? url : ProfileImg" role="dialog" data-keyboard="false" data-backdrop="static" data-toggle="modal" data-target="#myModalChangePicture" style=" border-radius: 100%; width: 150px; height: 150px; cursor:pointer;"><br />
+
+          <label class="hover-label" *ngIf="ProfileImg === 'assets/images/defaultProfileImg.png'">
+            <i class="far fa-image"></i> Choose image
+          </label>
+
+        </div>
+
+          <label style="padding: 5px; font-size: 18px !important;overflow-wrap: break-word;">{{Username}}</label>
+
+          <!--<div class="click-to-top">
+      <label class="username setWidth" style="margin-bottom: -5px;max-width: 170px; cursor: pointer; font-weight: 700; padding: 5px; font-size: 18px !important">{{Username}}</label>
+      <a><span style=" bottom: 325px !important; right: -85px !important;padding: 3px 10px 3px 10px!important;border-radius: 4px !important;letter-spacing: 0.4px !important;width: auto !important; height: auto !important; cursor: pointer; font-weight: 500 !important; text-align: left !important;z-index: 100;">{{Username}}</span> </a>
+    </div>-->
+          <!--<button (click)="readFromBlob()">aaa</button>-->
+          <br />
+
+
+
+      </div>
+
+
+
+
+
+
+      <!---------------------------------------------------------------------------------------------->
+      <!--<button (click)="isValidTrue()">asfasdjadadadjkladk</button>-->
+
+
+
+      <div class="ml-25 displayVideo" style="font-size: 12px; font-weight:400" *ngIf="isSideBar == false;">
+        <div class="mt-10">
+          <a>
+            <img src="assets/images/MobileIcon1.png" style="width: 8px;  margin: 0px 2px 4px 2px; height: 12px;" />
+          </a>&nbsp;&nbsp; <!--Mobile Number-->{{lblMobileNumber}} <br />
+          <div class="ml-25 fntWght2 GreyClr" style="font-weight:600 !important; width: 170px;">
+            {{TelMobile}}
+          </div>
+        </div>
+
+        <div class="mt-10">
+          <a>
+            <img src="assets/images/EmailIcon1.png" style="width: 14px; margin: 0px -2px 3px -2px; height: 10px;" />
+          </a>&nbsp;&nbsp; <!--Email Address-->{{EmailAddress}} <br />
+          <div class="ml-25 fntWght2 GreyClr" style="font-weight:600 !important; width: 170px !important; overflow-wrap: break-word;">
+            <!--{{Email}}-->
+            <div class="click-to-top">
+              <label class="username setWidth col-lg-12 col-md-9 col-sm-12 col-xs-12" style="margin-bottom: -5px;padding: 0px; max-width: unset; font-weight: 600;">{{Email}}</label>
+              <a><span style="z-index: 100;right: -85px !important;padding: 3px 10px 3px 10px!important;border-radius: 4px !important;letter-spacing: 0.4px !important;width: auto !important; height: auto !important; font-weight: 500 !important; text-align: left !important;">{{Email}}</span> </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-10">
+          <a>
+            <img src="assets/images/Adressicons1.png" style="width: 10px; margin-bottom: 5px; height: 12px;" />
+          </a>&nbsp;&nbsp; <!--Address-->{{lblAddress}}
+          <div class=" ml-25 fntWght2 GreyClr" style="font-weight:600 !important; overflow-wrap: break-word;">
+            {{Address}}
+
+          </div>
+        </div>
+
+        <div class="mt-10">
+          <a>
+            <img src="assets/images/BirthdayIcon.png" style="width: 10px; margin-bottom: 5px; height: 12px;" />
+          </a>&nbsp;&nbsp; <!--Date of Birth-->{{DateofBirthdashboard}} <br />
+          <div class="ml-25 fntWght2 GreyClr" style="font-weight:600 !important">
+            {{DateOB}}
+          </div>
+        </div>
+
+        <div class="mt-10">
+          <a>
+            <img src="assets/images/age1.png" style="width: 10px; margin-bottom: 5px; height: 12px;" />
+          </a>&nbsp;&nbsp; <!--Age-->{{lblAge}} <br />
+          <div class="ml-25 fntWght2 GreyClr" style="font-weight:600 !important">
+            {{Age}}
+          </div>
+        </div>
+        <!--<iframe width="150" height="100" src="https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>-->
+        <!--<div id="video">
+          <div id="play-btn-wrap">
+            <a href="" class="play-btn">
+              <span id="play"></span>
+            </a>
+          </div>
+        </div>-->
+        <!--purani video style-->
+        <!--*ngIf="VisIntroductoryVideo == true "-->
+        <!--<div class="mt-10 "  style="cursor:pointer;" *ngIf="VisIntroductoryVideo == true" >
+          <a>
+            <i style="font-size:24px; color:grey !important; font-size:10px !important; cursor: default !important;" class="fa">&#xf04b;</i>
+          </a>&nbsp;&nbsp;&nbsp;<span style="cursor: auto !important;">  </span>{{B}}&nbsp;{{C}} &nbsp;{{D}} &nbsp;{{E}} <br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{F}}&nbsp;&nbsp;
+
+          <br />
+          <div class="ml-25 fntWght2 GreyClr" style="font-weight:600 !important;   margin-top: 5px !important;">
+
+            <span *ngIf="!isShowVideo">
+              <div style="width:165px!important; height:108px !important; background-color:whitesmoke !important">
+                <label style="cursor: pointer !important;">
+                  <input type='file' (change)="onSelectFile1($event)" style="display:none;cursor: pointer !important;" name="file[]" class="file_multi_video" accept='video/*'>
+                  <img style="margin: 40px 72px; cursor: pointer !important;" src="assets/images/videoIcon/1x/VideoUpload.png" />
+                </label>
+              </div>
+
+              <label class="mar" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-top:1px !important; margin-right: -6px !important; float: right !important;font-size: 9px !important; cursor:auto !important">{{lblMiximumSize}} 2 MB{{this.CompanyIdService.VideoSize}} MB</label>
+            </span>
+
+            <div class="row " style="display:flex;" *ngIf="isShowVideo">
+              <br />
+              <div class="col-lg-12">
+                <div class="form-group" style="text-align:center" >
+                  <span >
+
+                    <div class="container" >
+                      <span class="video">
+                        <video style=" width: 165px !important; height: 145px !important;outline: none !important;" [src]="url1" #myname></video>
+
+                      </span>
+                      <div class="middle" *ngIf="isDeleteIcon" >
+                        <div class="text"><img src="assets/images/lookupclose.png" style="width: 17px;" (click)="setId1();" data-toggle="modal" data-target="#myModalFordelete5" data-backdrop="static" data-keyboard="false" class="glyphicon glyphicon-trash"></div>
+                      </div>
+                    </div>
+
+                  </span>
+                  <br />
+                  <br />
+                  <br /><br /><br /><br /><br /><br />
+                  <br />
+                  <span *ngIf="isSaveBtnShow "  style="position: relative;">
+                   <a (click)="SaveJPImgProfile1();"><img style="width:30px;" src="assets/images/tickimages/tick2.png" /></a> &nbsp;&nbsp;&nbsp;&nbsp;
+                      <a (click)="isRemoveVideo();"><img style="width:30px;" src="assets/images//tickimages/cross2.png" /></a> <br />
+                      <br /> <label style="color:red; font-size:9px!important;margin-left: -10px;margin-top: -5px;">{{ApplyJobMsgForSize}}</label>
+                   </span>
+                </div>
+              </div>
+            </div>
+            <label style="color:red; font-size:9px!important;margin-top: -5px;" *ngIf="videoVlaidMsg">Attached video format is not valid!</label>
+          </div>
+        </div>-->
+
+        <br />
+
+
+      </div>
+
+      <div id="divLoader">
+        <div class="loader" *ngIf="isSideBar"></div>
+      </div>
+
+
+    </div>
+
+
+    <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 plr-0" [style.borderLeft]="[BorderColor ? BorderColor : DefaultBorderColor]">
+      <nav>
+        <ul class="nav nav-tabs nav-tabs1 responsive-tabs" role="tablist" style="padding-right: 10px;">
+          <li id="MyJobs" *ngIf="!isFF" tabindex="1" role="presentation" [style.width]="PannelWidth" [ngClass]="[activeAssessment == true || activePersonalInfo == true ? 'cs-tab tblHeaderFnt' : 'cs-tab active tblHeaderFnt']">
+            <a (click)="onTab_Click('isMyJobActive')" [style.fontWeight]="[isMyJobActive ? fontWeight : defaultFontWeight]" [style.borderBottom]="[isMyJobActive ? BorderColorMenu : DefaultBorderColorMenu]" [style.color]="[isMyJobActive ? ThemeFontColor  : DefaultFontColor]" href="#myJobs" aria-controls="myJobs" role="tab" data-toggle="tab" class="MenuTxtClr" style="font-size:14px !important;  border-radius: 0px !important;  margin-right: 0px !important;">
+              <img [src]="isMyJobActive == true ? myJobs : 'assets/images/MyJobs.png'" id="IsmyJobs"> <span class="badge" *ngIf="OPenVacanciesCount !== 0" id="badgeCountermyJobs"> {{OPenVacanciesCount}} </span> &nbsp;  <!--My Jobs-->{{lblMyJobs}}
+            </a>
+          </li>
+          <li id="PersonalInfo" tabindex="2" role="presentation" [style.width]="PannelWidth" [ngClass]="[activePersonalInfo == true ? 'cs-tab active tblHeaderFnt' : 'cs-tab tblHeaderFnt']">
+            <a (click)="onTab_Click('isPersonalInfoActive')" [style.fontWeight]="[isPersonalInfoActive ? fontWeight : defaultFontWeight]" [style.borderBottom]="[isPersonalInfoActive ? BorderColorMenu : DefaultBorderColorMenu]" [style.color]="[isPersonalInfoActive ? ThemeFontColor  : DefaultFontColor]" href="#personalInfo" aria-controls="personalInfo" role="tab" data-toggle="tab" class="MenuTxtClr" style="font-size:14px !important;  border-radius: 0px !important;  margin-right: 0px !important;">
+              <img [src]="isPersonalInfoActive == true ? personlaInfo : 'assets/images/PersonalInfo.png'"> &nbsp;<!--Personal Info-->{{lblPersonalInfo}}
+            </a>
+          </li>
+          <li id="ProfessionalInfo" tabindex="3" role="presentation" [style.width]="PannelWidth" class="cs-tab tblHeaderFnt">
+            <a (click)="onTab_Click('isProfessionalInfoActive')" [style.fontWeight]="[isProfessionalInfoActive ? fontWeight : defaultFontWeight]" [style.borderBottom]="[isProfessionalInfoActive ? BorderColorMenu : DefaultBorderColorMenu]" [style.color]="[isProfessionalInfoActive ? ThemeFontColor  : DefaultFontColor]" href="#professionalInfo" aria-controls="professionalInfo" role="tab" data-toggle="tab" class="MenuTxtClr" style="font-size:14px !important;  border-radius: 0px !important;  margin-right: 0px !important;">
+              <img [src]="isProfessionalInfoActive == true ? professionalInfo : 'assets/images/ProfessionalInfo.png'"> &nbsp; <!--Professional Info-->{{lblProfessionalInfo}}
+            </a>
+          </li>
+
+
+          <li id="ApplicantPackage"
+              tabindex="4"
+              role="presentation"
+              [style.width]="PannelWidth"
+              [ngClass]="[activeApplicantPackage ? 'cs-tab active tblHeaderFnt' : 'cs-tab tblHeaderFnt']" *ngIf="isPackageEnable">
+
+            <a (click)="onTab_Click('isApplicantPackageActive')"
+               [style.fontWeight]="[isApplicantPackageActive ? fontWeight : defaultFontWeight]"
+               [style.borderBottom]="[isApplicantPackageActive ? BorderColorMenu : DefaultBorderColorMenu]"
+               [style.color]="[isApplicantPackageActive ? ThemeFontColor : DefaultFontColor]"
+               href="#applicantPackage"
+               aria-controls="applicantPackage"
+               role="tab"
+               data-toggle="tab"
+               class="MenuTxtClr"
+               style="font-size:14px !important; border-radius: 0px !important; margin-right: 0px !important;">
+
+              <img [src]="isApplicantPackageActive ? packageActive : 'assets/images/package.png'">
+
+              &nbsp; Applicant Package
+            </a>
+          </li>
+
+
+          <!--New tab    ----------------------------------------------------------------
+
+
+  <li id="PersInfoNonCop" tabindex="3" role="presentation" [style.width]="[IsAssessmentActive ? '25%' : PannelWidth]" class="cs-tab tblHeaderFnt">
+    <a (click)="onTab_Click('isPersonalInfoNonCorporateActive')" [style.fontWeight]="[isPersonalInfoNonCorporateActive ? fontWeight : defaultFontWeight]" [style.borderBottom]="[isPersonalInfoNonCorporateActive ? BorderColorMenu : DefaultBorderColorMenu]" [style.color]="[isPersonalInfoNonCorporateActive ? ThemeFontColor  : DefaultFontColor]" href="#personalInfoNonCorporate" aria-controls="personalInfoNonCorporate" role="tab" data-toggle="tab" class="MenuTxtClr" style="font-size:14px !important; border-radius: 0px !important; margin-right: 0px !important;">
+      <img [src]="isPersonalInfoNonCorporateActive == true ? personalInfoNonCorporate : 'assets/images/PersonalInfo.png'"> &nbsp; <!--Personal Info Non-Corporate-->
+          <!--{{lblPersonalInfoNonCorporate}}
+    </a>
+  </li>
+
+
+  <li id="ProfInfoNonCop" tabindex="3" role="presentation" [style.width]="[IsAssessmentActive ? '25%' : PannelWidth]" class="cs-tab tblHeaderFnt">
+    <a (click)="onTab_Click('isProfessionalInfoNonCorporateActive')" [style.fontWeight]="[isProfessionalInfoNonCorporateActive ? fontWeight : defaultFontWeight]" [style.borderBottom]="[isProfessionalInfoNonCorporateActive ? BorderColorMenu : DefaultBorderColorMenu]" [style.color]="[isProfessionalInfoNonCorporateActive ? ThemeFontColor  : DefaultFontColor]" href="#ProfessionalInfoNonCorporate" aria-controls="ProfessionalInfoNonCorporate" role="tab" data-toggle="tab" class="MenuTxtClr" style="font-size:14px !important; border-radius: 0px !important; margin-right: 0px !important;">
+      <img [src]="isProfessionalInfoNonCorporateActive == true ? ProfessionalInfoNonCorporate : 'assets/images/PersonalInfo.png'"> &nbsp; <!--Professional Info Non-Corporate-->
+          <!--{{lblPersonalInfoNonCorporate}}
+    </a>
+  </li>
+
+   -->
+
+          <li tabindex="4"
+              role="presentation"
+              [style.width]="PannelWidth"
+              [ngClass]="[activeAssessment == true ? 'cs-tab active tblHeaderFnt' : 'cs-tab tblHeaderFnt']"
+              *ngIf="IsAssessmentActive == true || IsAssessmentActive == null">
+            <a (click)="onTab_Click('isActiveAssessment')" [style.fontWeight]="[isActiveAssessment ? fontWeight : defaultFontWeight]" [style.borderBottom]="[isActiveAssessment ? BorderColorMenu : DefaultBorderColorMenu]" [style.color]="[isActiveAssessment ? ThemeFontColor  : DefaultFontColor]" href="#assessment" aria-controls="assessment" role="tab" data-toggle="tab" class="MenuTxtClr" style="font-size:14px !important;  border-radius: 0px !important;  margin-right: 0px !important;">
+              <img [src]="isActiveAssessment == true ? assessment : 'assets/images/Assessments.png'"> <span *ngIf="this.assessService.assessCount !== 0" class="badge" id="badgeCounterAssessment"> {{ this.assessService.assessCount }} </span>  &nbsp;  <!--Assessments-->{{Assessments}}
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <div class="tab-content" style="margin-left:30px;">
+        <div role="tabpanel" [ngClass]="[activeAssessment == true || activePersonalInfo == true ? 'tab-pane' : 'tab-pane active']" id="myJobs">
+          <app-my-jobs [AppliedJobCode]="JobCode" [isFF]="!isFF" (getCounter)="getCounter($event)"></app-my-jobs>
+        </div>
+        <div role="tabpanel" class="tab-pane" [ngClass]="[activePersonalInfo == true ? 'tab-pane active' : 'tab-pane']" id="personalInfo">
+          <app-personal-info [isFF]="isFF" (getApplicantInfo)="onApplicantInfo($event)"></app-personal-info>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="professionalInfo">
+          <app-professional-info [isFF]="isFF" (getApplicantInfo)="getCounter1($event)"></app-professional-info>
+        </div>
+
+
+        <div role="tabpanel"
+             class="tab-pane"
+             [ngClass]="[activeApplicantPackage ? 'tab-pane active' : 'tab-pane']"
+             id="applicantPackage">
+
+          <app-applicant-package  (getApplicantInfo)="onApplicantInfo($event)"></app-applicant-package>
+
+        </div>
+
+
+        <!--<div role="tabpanel" class="tab-pane" id="personalInfoNonCorporate">
+    <app-personal-information-non-corporate></app-personal-information-non-corporate>
+  </div>
+
+  <div role="tabpanel" class="tab-pane" id="ProfessionalInfoNonCorporate">
+    <app-professional-information-non-corporate></app-professional-information-non-corporate>
+  </div>-->
+
+        <div role="tabpanel" [ngClass]="[activeAssessment == true ? 'tab-pane active' : 'tab-pane']" id="assessment" *ngIf="IsAssessmentActive == true || IsAssessmentActive == null">
+          <app-assessment></app-assessment>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chatbox component -->
+  <app-chatbox></app-chatbox>
+
+</div>

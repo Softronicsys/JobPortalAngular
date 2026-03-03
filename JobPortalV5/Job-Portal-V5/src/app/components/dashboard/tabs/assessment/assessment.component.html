@@ -1,0 +1,264 @@
+﻿<style>  /*spaces*/
+  .fixed_header {
+    /*width: 1060px;*/
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: 12px !important;
+  }
+
+    .fixed_header tbody {
+      display: block;
+      width: 100%;
+      overflow: auto;
+      /*height: 90px;*/
+      min-height: 20px !important;
+      max-height: 90px !important;
+    }
+
+    .fixed_header thead tr {
+      display: block;
+      color: black;
+    }
+
+    .fixed_header thead {
+      background: black;
+      color: #fff;
+    }
+
+    .fixed_header th, .fixed_header td {
+      padding: 5px;
+      /*text-align: left;*/
+      /*width: 212px;*/
+    }
+
+  body {
+    font-size: 0.9em;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  thead {
+    background-color: #f1f1f1;
+    color: black;
+  }
+
+  table > thead > tr > th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #f1f1f1;
+  }
+
+  thead, tbody {
+    display: block;
+  }
+
+  th, td {
+    padding: 7px 2px 5px 4px !important;
+    width: 345px;
+    box-sizing: border-box;
+  }
+
+  button:hover {
+    background-color: #00b2ff;
+    color: white;
+  }
+
+  tbody {
+    /*height: 90px;*/
+    overflow-y: scroll;
+  }
+</style>
+
+
+
+<div class="fntFmly fntWght">
+  <div class="container-fluid">
+    <br />
+    <form [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+
+      <div class="row ">
+        <div class="col-sm-12 col-lg-12 col-md-12">
+          <div class="form-group ">
+            <p class="" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="font-size:20px; ">
+              <!--Behavioral Assessment-->{{BehavioralAssessment}} <!--({{BehvCount}})-->
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row ">
+        <div class="col-sm-12" style="margin-bottom:10px;">
+          <div class="ex2">
+            <table class="table fixed_header">
+              <thead class="tableHeaderBackground tablePanelHeading" style="font-size: 12px; ">
+                <tr>
+                  <th class="fntFmly tblHeaderFnt fntWght2 text-center"><strong style="color: #524d4d !important;"><!--Submit Between-->{{lblSubmitBetween}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt fntWght2 text-center"><strong style="color: #524d4d !important;"><!--Assessment Status-->{{AssessmentStatus}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt fntWght2 text-center"><strong style="color: #524d4d !important;"><!--Questionnaire-->{{Questionnaire}}</strong></th>
+                </tr>
+              </thead>
+
+              <tbody class="tblbodyclr">
+
+                <tr *ngIf="assessService.BehaveList === null || this.assessService.BehaveList?.length <= 0" style="font-size: 12px;">
+                  <td></td>
+                  <td class="text-center">
+                    <span class="fntFmly">
+                      <!--No data-->{{NoData}}
+                    </span>
+                  </td>
+                  <td></td>
+                </tr>
+
+                <tr *ngFor="let item of assessService.BehaveList; index as i">
+                  <td class="fntWght fntFmly text-center">
+                    <div>
+                      {{item.StartandEndDate}}
+                      <br />
+                      {{item.StartandEndTime}}
+                    </div>
+                  </td>
+                  <td class="fntWght fntFmly text-center" [innerHTML]="item.AssessmentStatus" [ngStyle]="{'color': (item.ShowView === 1)? '#ff0000': '#000000' }">
+
+                    <!--{{item.AssessmentStatus}}-->
+                  </td>
+                  <td class="fntFmly text-center" style="color:#007fff">
+                    <a *ngIf="item?.ShowView == 1" style="cursor:pointer" (click)="startAss(item)">View</a>
+                  </td>
+                </tr>
+
+              </tbody>
+
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </form>
+    <br />
+
+    <form [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+
+      <div class="row ">
+        <div class="col-sm-12 col-lg-12 col-md-12">
+          <div class="form-group ">
+            <p class="" style="font-size:20px;" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
+              <!--Capability Assessment-->{{CapabilityAssessment}} <!--({{CapCount}})-->
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row ">
+        <div class="col-sm-12 " style="margin-bottom:10px; ">
+          <div class="ex2">
+            <table class="table fixed_header">
+              <thead class="tableHeaderBackground tablePanelHeading" style="font-size: 12px; ">
+                <tr>
+                  <th class="fntFmly tblHeaderFnt fntWght2 text-center"><strong style="color: #524d4d !important;"><!--Submit Between-->{{lblSubmitBetween}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt fntWght2 text-center"><strong style="color: #524d4d !important;"><!--Assessment Status-->{{AssessmentStatus}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt fntWght2 text-center"><strong style="color: #524d4d !important;"><!--Questionnaire-->{{Questionnaire}}</strong></th>
+                </tr>
+              </thead>
+
+              <tbody class="tblbodyclr">
+
+                <tr *ngIf="assessService.IntelligenceList === null || this.assessService.IntelligenceList?.length <= 0" style="font-size: 12px;">
+                  <td></td>
+                  <td class="text-center">
+                    <span class="fntFmly">
+                      <!--No data-->{{NoData}}
+                    </span>
+                  </td>
+                  <td></td>
+                </tr>
+
+                <tr *ngFor="let item of assessService.IntelligenceList; index as i;">
+                  <td class="fntWght fntFmly text-center">
+                    {{item.StartandEndDate}}
+                    <br />
+                    {{item.StartandEndTime}}
+                  </td>
+                  <td class="fntWght greenTextClr fntFmly text-center" [innerHTML]="item.AssessmentStatus" [ngStyle]="{'color': (item.ShowView === 1)? '#ff0000': '#000000' }">
+
+                    <!--{{item.AssessmentStatus}}-->
+                  </td>
+                  <td class="fntFmly text-center" style="color:#007fff">
+                    <a *ngIf="item?.ShowView == 1" style="cursor:pointer" (click)="startAss(item)">View</a>
+                  </td>
+                </tr>
+
+              </tbody>
+
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </form>
+    <br />
+
+    <form [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+
+      <div class="row ">
+
+        <div class="col-sm-12 col-lg-12 col-md-12">
+          <div class="form-group ">
+            <p class="" style="font-size:20px;" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
+              <!--Emotional Intelligence Assessment-->{{EmotionalIntelligenceAssessments}} <!--({{EmoCount}})-->
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row ">
+        <div class="col-sm-12 " style="margin-bottom:10px; ">
+          <div class="ex2">
+            <table class="table fixed_header">
+              <thead class="tableHeaderBackground tablePanelHeading" style="font-size: 12px; ">
+                <tr>
+                  <th class="fntFmly tblHeaderFnt fntWght2 text-center"><strong style="color: #524d4d !important;"><!--Submit Between-->{{lblSubmitBetween}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt fntWght2 text-center"><strong style="color: #524d4d !important;"><!--Assessment Status-->{{AssessmentStatus}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt fntWght2 text-center"><strong style="color: #524d4d !important;"><!--Questionnaire-->{{Questionnaire}}</strong></th>
+                </tr>
+              </thead>
+
+              <tbody class="tblbodyclr">
+
+                <tr *ngIf="assessService.EmotionalIntelligenceList === null || this.assessService.EmotionalIntelligenceList?.length <= 0" style="font-size: 12px;">
+                  <td></td>
+                  <td class="text-center">
+                    <span class="fntFmly">
+                      <!--No data-->{{NoData}}
+                    </span>
+                  </td>
+                  <td></td>
+                </tr>
+
+                <tr *ngFor="let item of assessService.EmotionalIntelligenceList; index as i;">
+                  <td class="fntWght fntFmly text-center">
+                    {{item.StartandEndDate}}
+                    <br />
+                    {{item.StartandEndTime}}
+                  </td>
+                  <td class="fntWght greenTextClr text-center fntFmly" [innerHTML]="item.AssessmentStatus" [ngStyle]="{'color': (item.ShowView === 1)? '#ff0000': '#000000' }">
+                    <!--{{}}-->
+                  </td>
+                  <td class="fntFmly text-center" style="color:#007fff ">
+                    <a *ngIf="item?.ShowView == 1" style="cursor:pointer" (click)="startAss(item)">View</a>
+                  </td>
+                </tr>
+
+              </tbody>
+
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </form>
+    <br />
+  </div>
+</div>

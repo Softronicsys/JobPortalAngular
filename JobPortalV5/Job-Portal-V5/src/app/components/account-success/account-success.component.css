@@ -1,0 +1,105 @@
+@media (min-width: 1200px) {
+  .modal-xlg {
+    width: 35%;
+  }
+}
+
+#BackgroundImageAccountSuccess {
+  margin-top: -470px !important;
+  width: 100%;
+}
+
+#logoAdjstmnt {
+  /*height: 32px;
+  width: 200px;
+  margin: 28px 0px 0px 92px;*/
+  margin-right: 5px;
+  margin-top: 30px;
+}
+@media screen and (min-width: 300px) and (max-width: 400px) {
+
+  #BackgroundImageAccountSuccess {
+    width: 100%;
+    margin-top: 25px !important;
+  }
+  #logoAdjstmnt {
+    max-height: 45px;
+    /*max-width: 200px; // Commented due to stretched layout in mobile, Raised by Asif sb.*/
+    margin: 28px 0px 0px 0px;
+  }
+}
+
+@media screen and (min-width: 400px) and (max-width: 500px) {
+
+  #BackgroundImageAccountSuccess {
+    width: 100%;
+    margin-top: -25px !important;
+  }
+
+}
+@media screen and (min-width: 500px) and (max-width: 600px) {
+
+  #BackgroundImageAccountSuccess {
+    width: 100%;
+    margin-top: -80px !important;
+  }
+}
+@media screen and (min-width: 600px) and (max-width: 700px) {
+
+  #BackgroundImageAccountSuccess {
+    width: 100%;
+    margin-top: -135px !important;
+  }
+}
+@media screen and (min-width: 700px) and (max-width: 800px) {
+
+  #BackgroundImageAccountSuccess {
+    width: 100%;
+    margin-top: -190px !important;
+  }
+}
+@media screen and (min-width: 800px) and (max-width: 900px) {
+
+  #BackgroundImageAccountSuccess {
+    width: 100%;
+    margin-top: -250px !important;
+  }
+}
+@media screen and (min-width: 900px) and (max-width: 1000px) {
+
+  #BackgroundImageAccountSuccess {
+    width: 100%;
+    margin-top: -310px !important;
+  }
+}
+
+@media screen and (min-width: 1000px) and (max-width: 1100px) {
+
+  #BackgroundImageAccountSuccess {
+    width: 100%;
+    margin-top: -360px !important;
+  }
+}
+@media screen and (min-width: 1100px) and (max-width: 1200px) {
+
+  #BackgroundImageAccountSuccess {
+    width: 100%;
+    margin-top: -390px !important;
+  }
+}
+
+@media screen and (min-width: 1200px) and (max-width: 1300px) {
+
+  #BackgroundImageAccountSuccess {
+    width: 100%;
+    margin-top: -440px !important;
+  }
+}
+
+@media screen and (min-width: 1300px) and (max-width: 1400px) {
+
+  #BackgroundImageAccountSuccess {
+    width: 100%;
+    margin-top: -470px !important;
+  }
+}

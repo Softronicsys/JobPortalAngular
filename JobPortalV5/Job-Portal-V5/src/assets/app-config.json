@@ -1,0 +1,15 @@
+{
+
+  "baseUrl": "http://localhost:31697/",
+  
+  "CompanyGroupID": "14",
+  "AssessmentURL": "https://qaassessment.azurewebsites.net/",
+
+  "ShowLoginWithLinkedIN": false,
+  "SigninWithLinkedInCred": {
+    "clientId": "77vwoaw3pcxkxj",
+    "redirectUrl": "http://localhost:8732/linkedInLogin"
+  }
+}
+
+

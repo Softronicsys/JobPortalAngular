@@ -1,0 +1,49 @@
+<style>
+  button:hover {
+    background-color: #00b2ff;
+    color: white;
+  }
+
+  button:active {
+    color: white;
+  }
+</style>
+
+<div class="container-fluid fntFmly" *ngIf="WrongUrl" id="headerSize">
+ 
+  <div class="row" style="margin-left: 0px;">
+    <div class="col-lg-1 col-md-1 col-sm-1"></div>
+    <div class="row btn-position col-lg-10 col-md-10 col-sm-12 col-xs-12">
+      <!--<div class="col-lg-2 col-md-2 col-sm-12 col-xs-2" style="margin: 0px; min-height: 70px !important;">-->
+        <!--<div [ngStyle]="{'background-image': 'url(' + CompanyIdService.CompanyLogoBase64 + ')'}" id="logoAdjstmnt"></div>-->
+        <img id="logoAdjstmnt" [src]=getSantizeUrl(CompanyIdService.CompanyLogoBase64) alt="" />
+      <!--</div>-->
+        <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12" style="padding-right: 0px;" *ngIf="showButton">
+          <label *ngIf="isValidationForBrowser" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="color: white; float: left !important; font-size:12px !important; font-weight: 500 !important">It is recommended that you use Google Chrome for the best user experience.</label>
+          <!--<a href="https://www.serenahotels.com/en/about-us.html" target="_blank">
+    About Us
+  </a>&nbsp;&nbsp;&nbsp;-->
+          <a [style.visibility]="hideHomeButton == true ? 'hidden' : 'visible'" routerLink="/" (click)="emptyIDandCode()">
+            <img style="width: 26px; margin-bottom: 6px;" src={{BackgroundImage}} />
+          </a><!--&nbsp;&nbsp;&nbsp;-->
+
+          <a [style.visibility]="hideSignupButton == true ? 'hidden' : 'visible'" routerLink="/registration" (click)="emptyIDandCode()">
+            <button style="margin-bottom: 6px; margin-left: 6px;" type="button" class="btn app-btn   clrhover" id="mb-5" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><!--SIGN UP-->{{btnSignUp}}</button>
+          </a><!--&nbsp;&nbsp;&nbsp;-->
+          <a routerLink="/login">
+            <button style="margin-bottom: 6px; margin-left: 6px;" type="button" class="btn app-btn clrhover"
+                    [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
+            <!--LOG IN-->{{btnLogin}}</button>
+          </a>
+          <a [style.visibility]="hideSignupButton == true ? 'hidden' : 'visible'"
+             href="{{lnkAboutUs}}" target="_blank">
+            <button style="margin-bottom: 6px; margin-left: 6px;" type="button"
+                    class="btn app-btn   clrhover" id="mb-5"
+                    [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
+              {{btnAboutUs}}
+            </button>
+          </a>
+        </div>
+    </div>
+  </div>
+</div>  

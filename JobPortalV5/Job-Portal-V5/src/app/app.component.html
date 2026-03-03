@@ -1,0 +1,327 @@
+<app-header [hideHomeButton]="hideHomeButton" [hideSignupButton]="hideSignupButton" *ngIf=!isHeaderHide></app-header>
+<router-outlet></router-outlet>
+
+<app-footer></app-footer>
+<app-appErrorPopup></app-appErrorPopup>
+<!-- Modal For Internet Disconnectivity -->
+<div class="modal fade" id="myModalInternetDis" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog modal-sm fade1" style=" transform: translate(0%, 50%);">
+    <div class="modal-content">
+
+      <div class="modal-body">
+
+        <div class="row">
+          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+            <img class="popupThankLogo" src="assets/images/NetDisconnect.png" />
+
+          </div>
+
+          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+          </div>
+
+        </div>
+
+
+
+        <div class="row" style=" margin-top: 5px !important;">
+          <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+
+          </div>
+          <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+
+            <label class="popupThank" style="font-size:12px !important; margin-left: 30px;"><strong>Internet was disconnected</strong></label>
+
+          </div>
+
+          <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+
+          </div>
+
+        </div>
+        <br />
+        <div class="row">
+          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4" style="margin-left: -22px;">
+            <a class="btn btnTextColor btn-lg SaveBtn1 clrhover" data-dismiss="modal" style="background: #808080; color: white">
+              Ok
+            </a>
+
+          </div>
+
+          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+          </div>
+
+
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- close pop up -->
+<!-- Modal For Internet Disconnectivity -->
+<div class="modal fade" id="myModalWrongURL" role="dialog" data-keyboard="false" data-backdrop="static" style="z-index: 99999!important;">
+  <div class="modal-dialog modal-sm fade1" style=" transform: translate(0%, 80%); width: 350px;">
+    <div class="modal-content">
+
+      <div class="modal-body">
+
+        <div class="row" style="text-align: center !important">
+          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+          </div>
+          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+            <img class="popupThankLogo" src="assets/images/CrossImg.png" />
+            <!--<span class="glyphicon glyphicon-remove" style="text-align: center !important"></span>-->
+
+          </div>
+
+          <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+          </div>
+
+        </div>
+        <br />
+
+
+        <div class="row" style="text-align: center !important">
+          <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+
+          </div>
+          <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+
+            <label style="font-size:12px !important;"><strong>URL Is Invalid or Invalid Access try.</strong></label><br />
+            <label style="font-size:12px !important;"><strong>Please use appropriate URL for accessing your Job Portal.</strong></label>
+
+          </div>
+
+          <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+
+          </div>
+
+        </div>
+        <br />
+
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- close pop up -->
+<!---------------------------------------------------------------------------------------------->
+<!--Popup open For job Applicant-->
+<div class="modal fade" id="JobApplicantMsgTrue" role="dialog">
+  <div class="modal-dialog modal-sm fade1">
+    <div class="modal-content" style="width: 380px; height: auto !important; max-height: 400px !important; position: absolute; transform: translate(-10%, 50%) !important;">
+
+      <div class="modal-body">
+
+        <div class="row" style="text-align:center">
+
+          <div class="col-lg-12 ">
+
+            <img class="popupThankLogo" [src]="tickImage" />
+
+          </div>
+
+
+        </div>
+
+
+
+        <div class="row" style=" margin-top: 5px !important;">
+
+          <div class="col-lg-12">
+
+            <p style="text-align: center;" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">{{ message }}</p>
+
+          </div>
+
+
+
+        </div>
+
+
+        <div class="row">
+
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="form-group" style="text-align: center;">
+              <a class="btn btn-lg btnTextColor SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-left: 5px; color: white;" (click)="removeMsg()"><span class="fa fa-check"></span> &nbsp;OK  </a>
+            </div>
+          </div>
+
+
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!--Popup Close For job Applicant-->
+<!--Popup open For job Applicant-->
+<!--<div class="modal fade" id="JobApplicantMsg1False" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog modal-sm fade1">
+    <div class="modal-content" style="height: auto !important; max-height: 400px !important; position: absolute; transform: translate(0%, 50%) !important;width: 342px;">
+
+      <div class="modal-body">
+
+        <div class="row" style="text-align:center" *ngIf="isTick">
+
+          <div class="col-lg-12 ">
+
+            <img class="popupThankLogo" [src]="tickImage" />
+
+          </div>
+
+
+        </div>
+
+
+
+        <div class="row" style=" margin-top: 5px !important;">
+
+          <div class="col-lg-12">
+
+            <pre style="font-family: Barlow,Medium !important; background-color: white !important; border: white !important;white-space: pre-wrap;  " [innerHTML]="message" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"></pre>
+
+          </div>
+
+
+
+        </div>
+
+
+        <div class="row">
+
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="form-group" style="text-align: center;">
+              <a class="btn btn-lg btnTextColor SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-left: 5px; color: white;" (click)="removeMsg()"><span class="fa fa-check"></span> &nbsp;OK  </a>
+            </div>
+          </div>
+
+
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>-->
+<!--<div class="modal fade" id="JobApplicantMsg1False" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog modal-sm fade1">
+    <div class="modal-content" style="height: auto !important; max-height: 400px !important; position: absolute; transform: translate(0%, 50%) !important; width:370px">
+
+      <div class="modal-body">
+
+        <div class="row" style="text-align:center" *ngIf="isTick">
+
+          <div class="col-lg-12 ">
+
+            <img class="popupThankLogo" [src]="tickImage" />
+
+          </div>
+
+
+        </div>
+
+
+
+        <div class="row" style=" margin-top: 5px !important;">
+
+          <div class="col-lg-12">
+
+            <pre style="font-family: Barlow,Medium !important; background-color: white !important; border: white !important;" [innerHTML]="message" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"></pre>
+
+          </div>
+
+
+
+        </div>
+
+
+        <div class="row">
+
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="form-group" style="text-align: center;">
+              <a class="btn btn-lg btnTextColor SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-left: 5px; color: white;" (click)="removeMsg()"><span class="fa fa-check"></span> &nbsp;OK  </a>
+            </div>
+          </div>
+
+
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>-->
+
+
+<div class="modal fade" id="JobApplicantMsg1False" role="dialog" data-keyboard="false" data-backdrop="static">
+  <div class="modal-dialog modal-sm fade1">
+    <div class="modal-content" style="height: auto !important; max-height: 400px !important;" id="widthForpop">
+
+      <div class="modal-body">
+
+        <div class="row" style="text-align:center" *ngIf="isTick">
+
+          <div class="col-lg-12 ">
+
+            <img class="popupThankLogo" [src]="tickImage" />
+
+          </div>
+
+
+        </div>
+
+
+
+        <div class="row" style=" margin-top: 5px !important;">
+
+          <div class="col-lg-12">
+
+            <pre style="font-family: Barlow,Medium !important; background-color: white !important; border: white !important;" [innerHTML]="message" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"></pre>
+
+          </div>
+
+
+
+        </div>
+
+
+        <div class="row">
+
+          <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="form-group" style="text-align: center;">
+              <a class="btn btn-lg btnTextColor SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-left: 5px; color: white;" (click)="removeMsg()"><span class="fa fa-check"></span> &nbsp;OK  </a>
+            </div>
+          </div>
+
+
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!--Popup Close For job Applicant-->

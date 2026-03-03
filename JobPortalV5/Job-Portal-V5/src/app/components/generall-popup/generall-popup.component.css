@@ -1,0 +1,48 @@
+.tblWidth {
+  width: 100% !important;
+}
+
+.tblWidthFormat {
+  width: 97% !important;
+  margin-left: 11px !important;
+}
+#generallPopupText {
+  font-weight: 600 !important;
+}
+
+@media screen and (min-width: 300px) and (max-width: 760px) {
+
+  #generallPopupText {
+    margin-left: 11px !important;
+  }
+}
+
+
+table.grd {
+  /*background: white;*/
+  width: 100%;
+}
+
+  table.grd tr > th {
+    font-size: 11px;
+    font-weight: 100;
+    padding: 5px;
+    /*background: #202020;*/
+    color: white;
+  }
+
+
+
+  /*table.grd tr > th:hover {
+            cursor: pointer;
+        }*/
+
+  table.grd tr > td {
+    border-bottom: 1px solid #ccc;
+    font-size: 11px;
+    padding: 5px;
+  }
+
+  table.grd tr.NoDataRow {
+    font-size: 11px;
+  }

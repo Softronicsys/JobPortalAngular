@@ -1,0 +1,99 @@
+﻿<style>
+  button:hover {
+    background-color: #00b2ff;
+    color: white;
+  }
+</style>
+
+<ngx-spinner bdColor="rgba(51,51,51,0.8)"
+             size="medium"
+             color="#fff"
+             type="ball-scale-multiple">
+  <p style="font-size: 20px; color: white">Loading...</p>
+</ngx-spinner>
+
+
+<div  class="fntFmly" *ngIf="WrongUrl">
+
+  <div class="container-fluid">
+
+    <form>
+
+      <div class="row" style="margin-top: 50px;">
+        <div class="col-lg-4 col-md-4 col-sm-4 "></div>
+        <div class="col-lg-4 col-md-4 col-sm-4 ">
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-4  floatRight">
+          <label style="color:red; font-size:12px;" *ngIf="DisconnectInternet == true"><sup style="color:red;font-size:11px !important" class="forValidation">*</sup>Please check your internet connection and try again.</label>
+          <label style="color:red; font-size:12px;" *ngIf="isMandatoryfields == true"><sup style="color:red;font-size:11px !important" class="forValidation">*</sup>Please enter mandatory fields.</label>
+        </div>
+      </div>
+
+
+
+      <div class="row" style="margin-top: 50px;">
+        <div class="col-lg-4 col-md-4"></div>
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+          <div class="col-xs-1">
+          </div>
+          <div class="col-xs-10">
+            <label for="exampleInputEmail1" class="text-center fntWght" style="font-size:12px"><!--We have a emailed you Pin Code on a email address you have just entered. if you can't find the email, please check your spam or junk folder and enter Pin Code in the text box below-->{{lblPinCodeHeading}} </label>
+
+          </div>
+
+          <div class="col-xs-1">
+
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4"></div>
+      </div>
+
+
+
+      <div class="row" style="margin-top: 25px;">
+        <div class="col-lg-4 col-md-4"></div>
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+          <div class="col-xs-1">
+          </div>
+          <div class="col-xs-10">
+            <label for="exampleInputEmail1" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><!--Pin Code-->{{lblPinCode}}</label>
+            <input type="password" class="form-control" id="" placeholder="" name="email" [(ngModel)]="PinCode" maxlength="50" >
+            <div style=" text-align: center; margin-top: 10px;" *ngIf="iserrorMsg">
+              <p style="color:red;" class="mandatoryStar">{{errorMsg}}</p>
+            </div>
+          </div>
+
+          <div class="col-xs-1">
+
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4"></div>
+      </div>
+
+
+
+
+
+
+      <div class="row" style="margin-top: 30px;">
+        <div class="col-lg-4 col-md-4"></div>
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+          <div class="col-xs-4">
+          </div>
+          <div class="col-xs-4">
+            <button  (click)="forgotPasswordSubmitPin();" style="width:100px; height:25px; float: right;" type="button" id="butn" class="btn btn-block app-btn signup-btn clrhover" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><!--Confirm-->{{lblConfirm}} </button>
+     
+          </div>
+
+          <div class="col-xs-4">
+
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-4"></div>
+      </div>
+
+    </form>
+  </div>
+  <img id="BackgroundImagepinCode" src={{BackgroundImage}} />
+
+</div>

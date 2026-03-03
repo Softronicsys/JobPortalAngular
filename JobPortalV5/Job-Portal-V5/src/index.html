@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="assets/css/style.css" media="screen">
+  <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>-->
+  <!-- 1. Load jQuery FIRST -->
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+  <!-- 2. Load SignalR core BEFORE hubs -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/signalr.js/2.4.3/jquery.signalR.min.js"></script>
+
+  <!-- 3. Load SignalR auto-generated proxy hubs -->
+  <script src="http://localhost:31697/signalr/hubs"></script>
+
+  <!-- 4. Load MediaElement AFTER jQuery -->
+  <script src="assets/js/mediaelement-and-player.min.js"></script>
+
+  <script>
+    console.log("jQuery loaded?", typeof $);              // should log 'function'
+    console.log("SignalR loaded?", typeof $.hubConnection); // should log 'function'
+  </script>
+
+</head>
+<body>
+  <app-root></app-root>
+</body>
+</html>

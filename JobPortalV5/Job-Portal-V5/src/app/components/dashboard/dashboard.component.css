@@ -1,0 +1,591 @@
+/*Div Loader*/
+#divLoader {
+  margin-top: 60px;
+  margin-left: 75px;
+}
+
+
+.logo-sm {
+  width: 65px;
+  vertical-align: unset !important;
+  
+}
+
+#widLogo {
+  width: 200px !important
+}
+
+.home-icon {
+  border: none;
+  background: none;
+  outline: none;
+  color: #007fff;
+  font-size: 20px;
+  margin-right: 15px;
+}
+
+.btn-position {
+  text-align: right;
+  margin-right: 60px;
+}
+
+.bd-bottom {
+  border-bottom: 1px solid #007fff;
+}
+
+.bd-left {
+  border-left: 1px solid #007fff;
+}
+
+.hideScroll_X {
+  overflow-x: hidden;
+}
+
+.cs-tab {
+  width: 25%;
+  text-align: center;
+}
+
+.nav-tabs1.responsive-tabs {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.nav-tabs1.responsive-tabs > li {
+  float: none;
+}
+
+@media screen and (max-width: 768px) {
+  .nav-tabs1.responsive-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav-tabs1.responsive-tabs > li {
+    flex: 0 0 auto;
+    width: auto !important;
+  }
+
+  .nav-tabs1.responsive-tabs > li > a {
+    white-space: nowrap;
+  }
+}
+
+.profile {
+  text-align: center;
+  margin-top: 25px;
+  margin-left: -15px;
+  margin-right: -15px;
+}
+
+.profile-img {
+  border-radius: 100%;
+  border-color: blue;
+  width: 37px;
+  height: 35px;
+}
+
+.MenuTxtClr {
+  color: #CCCCCC;
+}
+
+#badgeCountermyJobs {
+  right: 175px !important;
+}
+#badgeCounterAssessment {
+  right: 192px !important;
+}
+
+
+.dropdown .dropdown-menu .nonClickable:hover .dropdown-menu {
+  display: block;
+}
+
+
+
+
+/* profile completion loader */
+
+.progress {
+  width: 120px;
+  height: 120px;
+  line-height: 150px;
+  background: none;
+  margin: 0 auto;
+  box-shadow: none;
+  position: relative;
+}
+
+  .progress:after {
+    content: "";
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 12px solid #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .progress > span {
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    z-index: 1;
+  }
+
+  .progress .progress-left {
+    left: 0;
+  }
+
+  .progress .progress-bar {
+    width: 100%;
+    height: 100%;
+    background: none;
+    border-width: 12px;
+    border-style: solid;
+    position: absolute;
+    top: 0;
+  }
+
+  .progress .progress-left .progress-bar {
+    left: 100%;
+    border-top-right-radius: 80px;
+    border-bottom-right-radius: 80px;
+    border-left: 0;
+    -webkit-transform-origin: center left;
+    transform-origin: center left;
+  }
+
+  .progress .progress-right {
+    right: 0;
+  }
+
+    .progress .progress-right .progress-bar {
+      left: -100%;
+      border-top-left-radius: 80px;
+      border-bottom-left-radius: 80px;
+      border-right: 0;
+      -webkit-transform-origin: center right;
+      transform-origin: center right;
+      animation: loading-1 1.8s linear forwards;
+    }
+
+  .progress .progress-value {
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    background: #44484b;
+    font-size: 24px;
+    color: #fff;
+    line-height: 135px;
+    text-align: center;
+    position: absolute;
+    top: 5%;
+    left: 5%;
+  }
+
+#rigthForProgressTooltip {
+  right: -120px !important;
+}
+
+  .progress.blue .progress-bar {
+    border-color: #049dff;
+  }
+
+  .progress.blue .progress-left .progress-bar {
+    animation: loading-2 1.5s linear forwards 1.8s;
+  }
+
+  .progress.yellow .progress-bar {
+    border-color: #007fff;
+  }
+
+  .progress.yellow .progress-left .progress-bar {
+    animation: loading-3 1s linear forwards 1.8s;
+  }
+
+  .progress.pink .progress-bar {
+    border-color: #ed687c;
+  }
+
+  .progress.pink .progress-left .progress-bar {
+    animation: loading-4 0.4s linear forwards 1.8s;
+  }
+
+  .progress.green .progress-bar {
+    border-color: #1abc9c;
+  }
+
+  .progress.green .progress-left .progress-bar {
+    animation: loading-5 1.2s linear forwards 1.8s;
+  }
+
+@keyframes loading-1 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+  }
+}
+
+@keyframes loading-2 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(144deg);
+    transform: rotate(144deg);
+  }
+}
+
+@keyframes loading-3 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+  }
+}
+
+@keyframes loading-4 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(36deg);
+    transform: rotate(36deg);
+  }
+}
+
+@keyframes loading-5 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(126deg);
+    transform: rotate(126deg);
+  }
+}
+
+@media only screen and (max-width: 990px) {
+  .progress {
+    margin-bottom: 20px;
+  }
+}
+@media screen and (min-width: 840px) and (max-width: 990px) {
+
+  #divLoader {
+    margin-top: 20px;
+    margin-left: 455px;
+  }
+}
+@media screen and (min-width: 700px) and (max-width: 840px) {
+
+  #divLoader {
+    margin-top: 20px;
+    margin-left: 325px;
+  }
+}
+@media screen and (min-width: 500px) and (max-width: 700px) {
+
+  #divLoader {
+    margin-top: 20px;
+    margin-left: 220px;
+  }
+}
+@media screen and (min-width: 350px) and (max-width: 500px) {
+
+  #divLoader {
+    margin-top: 20px;
+    margin-left: 175px;
+  }
+}
+
+
+@media screen and (min-width: 590px) and (max-width: 769px) {
+
+  #badgeCountermyJobs {
+    right: 130px !important;
+    right: 145px !important;
+  }
+  #badgeCounterAssessment {
+    right: 145px !important;
+  }
+}
+
+@media screen and (min-width: 482px) and (max-width: 590px) {
+
+  #badgeCountermyJobs {
+    right: 105px !important;
+  }
+  #badgeCounterAssessment {
+    right: 122px !important;
+  }
+  #rigthForProgressTooltip {
+    right: -65px !important;
+  }
+}
+
+@media screen and (min-width: 430px) and (max-width: 482px) {
+
+  #badgeCountermyJobs {
+    right: 93px !important;
+  }
+  #badgeCounterAssessment {
+    right: 69px !important;
+  }
+
+  #rigthForProgressTooltip {
+    right: -65px !important;
+  }
+}
+
+@media screen and (min-width: 404px) and (max-width: 430px) {
+
+  #badgeCountermyJobs {
+    right: 85px !important;
+  }
+  #badgeCounterAssessment {
+    right: 62px !important;
+  }
+
+  #rigthForProgressTooltip {
+    right: -65px !important;
+  }
+}
+
+@media screen and (min-width: 320px) and (max-width: 404px) {
+
+  #badgeCountermyJobs {
+    right: 44px !important;
+  }
+  #badgeCounterAssessment {
+    right: 56px !important;
+  }
+
+  #rigthForProgressTooltip {
+    right: -65px !important;
+  }
+}
+
+
+/*for delete btn content Video*/
+
+.container1 {
+  position: relative;
+  /*margin-top: 50px;*/
+  width: 165px;
+  height: 145px;
+}
+
+video {
+  position: absolute;
+  width: 165px;
+  height: 145px;
+  left: 0;
+}
+
+.button {
+  position: absolute;
+  left: -5px;
+  top: 13px;
+  opacity: 0;
+}
+
+  .button a {
+    width: 200px;
+    /*padding: 12px 150px;*/
+    margin-left: 150px;
+    color: white;
+    z-index: 1;
+  }
+
+.container1:hover .button {
+  opacity: 1;
+}
+
+.container1:hover {
+  opacity: 0.8;
+}
+
+
+.container4 {
+  position: relative;
+  text-align: center;
+  color: white;
+}
+
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@media screen and (min-width: 300px) and (max-width: 500px) {
+
+  .transformPopup {
+    transform: translate(0px, 0px) !important;
+    top: 20% !important;
+  }
+
+  /*#IsmyJobs {
+    padding-left: 28px;
+    padding-right: 25px;
+  }*/
+  .middle {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    /*top: 18%;
+    left: 500% !important;*/
+    transform: translate(-50%, 75%);
+    -ms-transform: translate(-40%, 0%);
+    text-align: center;
+  }
+
+  .BorderMenu {
+    border-top: 1px solid darkgrey;
+  }
+
+ .displayNoneForMenu {
+    display: block !important;
+  }
+  .displayNoneForMenuForWeb {
+    display: none !important;
+  }
+}
+
+@media screen and (min-width: 750px) and (max-width: 850px) {
+
+
+  .middle {
+    transition: .5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 18%;
+    left: 110% !important;
+    transform: translate(-50%, 75%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+  }
+}
+
+
+.transformPopup {
+  transform: translate(125px, 0px);
+  top: 20% !important;
+}
+
+
+/*.video {
+  width: 100%;
+  border: 1px solid black;
+}*/
+
+/*.wrapper {
+  display: table;
+   width: 135%;
+  width: auto;
+  position: relative;
+ 
+}*/
+
+/*.playpause {
+  background-image: url(http://png-4.findicons.com/files/icons/2315/default_icon/256/media_play_pause_resume.png);
+  background-repeat: no-repeat;
+  width: 50%;
+  height: 50%;
+  position: absolute;
+  left: 0%;
+  right: 0%;
+  top: 100%;
+  bottom: 0%;
+  margin: auto;
+  background-size: contain;
+  background-position: center;
+}*/
+
+
+/*#IsmyJobs {
+  padding-left: 28px;
+  padding-right: 25px;
+}*/
+
+.container {
+  position: relative;
+  width: 100%;
+}
+
+.middle {
+  transition: .5s ease;
+  opacity: 0;
+  position: absolute;
+  top: 18%;
+  left: 94%;
+  transform: translate(-50%, 75%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.container:hover .video {
+  opacity: 0.3;
+}
+
+.container:hover .middle {
+  opacity: 1;
+}
+
+.text {
+  color: white;
+  cursor: pointer;
+}
+
+.displayNoneForMenu{
+
+  display: none
+
+}
+
+.marginDashboard {
+  width: 200px;
+  margin: 15px 0px 0px 0px;
+}
+
+
+.displayVideo {
+  display: block;
+}
+
+@media screen and (min-width: 300px) and (max-width: 500px) {
+
+  .displayVideo {
+    display: none !important;
+  }
+  .marginDashboard {
+    width: 150px !important;
+    margin: 15px 0px 0px 90px !important;
+     }
+
+  .btn-position {
+    text-align: right;
+    margin-right: 95px !important;
+  }
+}

@@ -1,0 +1,2379 @@
+<style>
+  .fixed_header {
+    width: 1030px;
+    table-layout: fixed;
+    border-collapse: collapse;
+    font-size: 12px !important;
+  }
+
+  .fixed_header tbody {
+    display: block;
+    width: 100%;
+    overflow: auto;
+    /*height: 90px;*/
+    min-height: 20px !important;
+    max-height: 90px !important;
+  }
+
+    .fixed_header thead tr {
+      display: block;
+      color: black;
+    }
+
+    .fixed_header thead {
+      background: black;
+      color: #fff;
+    }
+
+    .fixed_header th, .fixed_header td {
+      padding: 5px;
+      text-align: left;
+      width: 171px;
+    }
+
+
+
+  body {
+    font-size: 0.9em;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  thead {
+    background-color: #e6e6e6;
+    color: black;
+  }
+
+  thead, tbody {
+    display: block;
+  }
+
+  table > thead > tr > th {
+    vertical-align: top;
+    border: 2px solid #f1f1f1;
+  }
+
+  th, td {
+    padding: 7px 2px 5px 4px !important;
+    width: 770px;
+    box-sizing: border-box;
+  }
+
+  tbody {
+    /*height: 110px;*/
+    overflow-y: scroll
+  }
+</style>
+
+
+
+<div class="fntFmly" id="move">
+  <div class="container " style="width:100%;">
+    <div>
+      <table style="margin-bottom:8px;width:100%">
+        <tbody style="overflow: hidden; height: auto;">
+          <tr style="float:right;margin-right: 4%;margin-top: 1%;">
+            <td *ngIf="!isMobile" [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="viewStyle">
+              <div *ngIf="updateProfService.IsGridStyle && !isMobile" [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="View-Normal" id="imgNormalView" (click)="SaveGridViewStyle(0)"></div>
+              <div *ngIf="!updateProfService.IsGridStyle && !isMobile" [ngStyle]="{'outline-color': ThemeFontColor ? ThemeFontColor  : DefaultFontColor, 'background': ThemeFontColor ? ThemeFontColor  : DefaultFontColor}" class="View-Normal-Selected" id="imgNormalView"></div>
+              <div *ngIf="(!updateProfService.IsGridStyle || isMobile)" [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="View-Grid" id="imgGridView" (click)="SaveGridViewStyle(1)">
+                <hr *ngFor="let item of HRLooping" class="View-Grid-Lines" [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" />
+              </div>
+              <div *ngIf="updateProfService.IsGridStyle || isMobile" [ngStyle]="{'outline-color': ThemeFontColor ? ThemeFontColor  : DefaultFontColor, 'background': ThemeFontColor ? ThemeFontColor  : DefaultFontColor}" class="View-Grid-Selected" id="imgGridView" (click)="SaveGridViewStyle(1)">
+                <hr *ngFor="let item of HRLooping" class="View-Grid-Lines" style="border-color:white;" />
+              </div>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <br />
+    <form action="/action_page.php " *ngIf="VisAcademicQualifications == true" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+
+      <div class="row " style="display:flex;">
+        <div class="col-xs-12 col-sm-12" style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="form-group ">
+            <p [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="font-size:20px;"><span *ngIf="MndAcademicQualifications == true" style="color:red; font-size:22px; margin-left:-10px !important">*</span><!--Academic Qualifications-->{{AcademicQualifications}}</p>
+          </div>
+        </div>
+        <div class="col-sm-7 ">
+          <div class="form-group ">
+
+          </div>
+        </div>
+
+        <div class="col-sm-2 padding-unset">
+          <div class="form-group ">
+            <a [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+               [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+               data-toggle="modal" style="margin-top: 4px;" data-target="#myModal1"
+               class="btnClass popupStyle clrhover uppercase" data-backdrop="static" data-keyboard="false"
+               (click)="btnAdd_Click('AcademicQual'); ">
+              <span class="glyphicon glyphicon-plus"></span><!--ADD-->{{Add}}
+            </a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal1" role="dialog">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header" style="border-bottom: 0px solid #e5e5e5;">
+                    <button type="button" style="color:blue;" class="close" data-dismiss="modal"><img src="assets/images/lookupclose.png"></button>
+                    <h4 class="modal-title PopupLeftRightPdngHeading" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><span *ngIf="MndAcademicQualifications == true" style="color:red;">*</span><!--Academic Qualifications-->{{AcademicQualifications}}</h4>
+                  </div>
+
+                  <div class="modal-body ">
+                    <div class="row " id="yahoo">
+                      <!--*ngIf="isMandatoryfields || DisconnectInternet || isDateValid || isCGPAValidation || isPercentageValidation || isbirthday || isbirthday1 || isdatefromandcompletion || isdatefrom || ProvideValidDate || EnterGPA || EnterPercentage || isCurrentDate || isCorrectDateAcademic"-->
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isMandatoryfields == true"><span style="color:red;font-size:14px !important" class="forValidation">*</span>Please enter mandatory fields.</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="DisconnectInternet == true"><span style="color:red;font-size:14px !important" class="forValidation">*</span>Please check your internet connection and try again.</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isDateValid">'Date From' should be less than 'Date of Completion'</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isCGPAValidation">Please enter CGPA between 1.0-4.0</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isPercentageValidation">Please enter Percentage between 1-100</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isbirthday">'Date of birth' should be less than Date From</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isbirthday1">'Date of birth' should be less than Date Of Completion</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isdatefromandcompletion">Please enter 'Date From' and 'Date of Completion'</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isdatefrom">Please enter 'Date From'</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="ProvideValidDate">Please provide Valid Date</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="EnterGPA == true">Please enter GPA</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="EnterPercentage == true">Please enter Percentage</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isCurrentDate == true">'Date From' should be less than 'Current Date'</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isCorrectDateAcademic">Please Enter Valid Date</label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="degree" class="fntWght fntFmly fontSize12"><span style="color:red;" class="mandatoryStar">*</span>Degree</label>
+                          <div *ngIf="!isTextActive && ddlDegree != '-1'">
+
+                            <select (change)="ddlDegree == '-1'? true: false;" [ngClass]="{'BorderColor':isMandatoryfields}" id="ddlDegree" class=" custom-dropdown small selectpicker form-control Font-size_dropdown" name="ddlDegree" [(ngModel)]="ddlDegree" style="border-radius:0px;">
+                              <option *ngFor="let item of DegreeDropdown" [ngValue]="item.Id">{{ item.Name }}</option>
+                            </select>
+
+                          </div>
+                          <div *ngIf="ddlDegree == '-1'">
+                            <input required type="text" maxlength="100" (paste)="false" [ngClass]="{'BorderColor':isMandatoryfields && OtherddlDegree == ''}" [(ngModel)]="OtherddlDegree" class="form-control fontSize12" id="OtherInstituteAcademic2" placeholder="Enter your degree" name="OtherInstituteAcademic" style="border-radius:0px;">
+                            <img src="assets/images/lookupclose.png" (click)="otherDegree()" class="crossbtn" />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="Middle Name" class="fntWght fntFmly fontSize12"><span style="color:red;" class="mandatoryStar">*</span><!--Specialization/Subject-->{{SpecializationSubject}}</label>
+                          <input type="text" maxlength="50" (paste)="onPaste($event)" placeholder="Enter Specialization Subject" [ngClass]="{'BorderColor':isMandatoryfields && Specialization == ''}" class="form-control fontSize12" [(ngModel)]="Specialization" id="specialization1"  name="specialization1" style="border-radius:0px;">
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="" class="fntWght fntFmly fontSize12"><span style="color:red;" class="mandatoryStar">*</span><!--Educational Status-->{{EducationStatus}}</label>
+
+                          <select [ngClass]="{'BorderColor':isMandatoryfields && qualificationstatus == ''}" id="dldEducationalStatus" [(ngModel)]="qualificationstatus" class="selectpicker form-control Font-size_dropdown" style="border-radius:0px;"
+                                  name="dldEducationalStatus">
+                            <option value="">N/A</option>
+                            <option value="1">Completed</option>
+                            <option value="0">In Process</option>
+                          </select>
+
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="institute" class="fntWght fntFmly fontSize12"><span style="color:red;" class="mandatoryStar">*</span> <!--Institute-->{{lblInstitute}}</label>
+                          <div *ngIf="!isTextActiveInstitute && Institute != '-1'">
+
+                            <select (change)="Institute == '-1'? true: false;" [ngClass]="{'BorderColor':isMandatoryfields}" id="InstituteDropdown" [(ngModel)]="Institute" class="selectpicker form-control Font-size_dropdown" name="InstituteDropdown" style="border-radius:0px;">
+                              <option *ngFor="let item of InstituteDropdown" [ngValue]="item.Id">{{ item.Name }}</option>
+                            </select>
+
+                          </div>
+                          <div *ngIf="Institute == '-1'">
+                            <input required type="text" maxlength="100" [(ngModel)]="OtherInstituteAcademic" [ngClass]="{'BorderColor':isMandatoryfields && OtherInstituteAcademic == ''}" class="form-control fontSize12" id="OtherInstituteAcademic4" placeholder="" name="OtherInstituteAcademics" style="border-radius:0px;">
+                            <img src="assets/images/lookupclose.png" (click)="otherInstitute()" class="crossbtn" />
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group">
+                          <label for="country " class="fntWght fntFmly fontSize12"><!--Country-->{{Country}}</label>
+
+                          <select class="selectpicker form-control Font-size_dropdown" (change)="onChange()" [(ngModel)]="selectedCountry" name="Selectcountry" id="Selectcountrytxt" style="border-radius:0px;">
+                            <option *ngFor="let item of CountriesDropdown" [ngValue]="item.Id">{{ item.Name }}</option>
+                          </select>
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="Password " class="fntWght fntFmly fontSize12"><!--City-->{{City}}</label>
+
+                          <select class="selectpicker form-control Font-size_dropdown" name="citiesByCountryId" [(ngModel)]="academicCity" id="1txtcitiesByCountryId" style="border-radius:0px;">
+                            <option *ngFor="let item of CitiesByCountryIdDropdown" [ngValue]="item?.Id">{{ item?.Name }}</option>
+                          </select>
+
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="ID Card No" class="fntWght fntFmly fontSize12">{{lblScoreType}}</label>
+                          <select id="ddlScoreType" [(ngModel)]="ScoreType" class="selectpicker form-control Font-size_dropdown" style="border-radius:0px;" name="ddlScoreType">
+                            <option value="">N/A</option>
+                            <option value="C">CGPA</option>
+                            <option value="P">Percentage</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="Passport No" class="fntWght fntFmly fontSize12">{{PercentageCGPA}}</label>
+                          <input appBlockCopyPaste NumericInput *ngIf="ScoreType == 'P'" type="number" [(ngModel)]="Grade" class="form-control fontSize12" id="Percentage1" placeholder="Percentage between 0-100" name="Percentage100" style="border-radius:0px;">
+                          <input appBlockCopyPaste NumericInput *ngIf="ScoreType == 'C'" type="number" [(ngModel)]="Grade" class="form-control fontSize12" id="Percentage2" placeholder="CGPA between 0-4" name="CGPA" style="border-radius:0px;">
+                          <input *ngIf="ScoreType == ''" type="number" class="form-control fontSize12" id="Percentage3" placeholder="" [disabled]="ScoreType == ''" name="percent" style="border-radius:0px;">
+                        </div>
+                      </div>
+
+                      <!-- New Added For field force -->
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="institutionType" class="fntWght fntFmly fontSize12">{{RegularPrivate}}</label>
+                          <select id="qualification_type" [(ngModel)]="qualificationType" class="selectpicker form-control Font-size_dropdown" style="border-radius:0px;" name="qualification_type">
+                            <option *ngFor="let qualification of qualification_type" [ngValue]="qualification">{{ qualification.Name }}</option>
+                          </select>
+                        </div>
+                      </div>
+                      <!-- End New Added For field force -->
+                    </div>
+
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4">
+                        <div class="form-group" style="width: 268px;">
+                          <label for="" class="fntWght fntFmly fontSize12">{{DateFrom}}</label>
+                          <date-picker [defaultValue]="defaultAcademicDateFrom" (pickerChange)="datePickerChanged($event, 'academicdatefrom')"></date-picker>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-4">
+                        <div class="form-group" style="width: 268px;">
+                          <label for="" class="fntWght fntFmly fontSize12">{{qualificationstatus == '0' ? "Expected Date of Completion" : lblDateofcompletion}}</label>
+                          <date-picker style="width:268px !important" [defaultValue]="defaultAcademicDateOfCompletion" (pickerChange)="datePickerChanged($event, 'academicdateofcompletion')"></date-picker>
+                        </div>
+                      </div>
+                    </div>
+
+
+
+                    <div class="row ">
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group" style="margin-top: 30px" align="center">
+                          <a class="btn btnTextColor greenBackgroundClr btn-lg SaveBtn1 ltrSpc clrhover" (click)="SaveAcademicQualification()">
+                            <img src="assets/images/btnSave.png" style="height: 12px; margin-bottom: 5px;"> &nbsp;  <!--SAVE-->{{Save}}
+                          </a>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+
+                    </div>
+
+
+
+
+
+
+                  </div>
+
+
+                </div>
+              </div>
+
+            </div>
+            <!--Popup Close-->
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="word-break: break-all !important;">
+        <div class="col-sm-12 " style="margin-bottom:10px; ">
+
+          <div *ngIf="!updateProfService.IsGridStyle" class='normalView'>
+            <table *ngIf="!QualificationDetail || QualificationDetail.length <= 0" style="width:100%;font-size: 12px;">
+              <tbody style="overflow-y:hidden;">
+                <tr style="width:100%; display: block;">
+                  <td style="width:100%; text-align: center; display: block;">
+                    <h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="fntFmly">
+                      {{nodata}}
+                    </h5>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div *ngFor="let item of QualificationDetail; let i = index">
+
+              <!--<h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">{{i+1}} - {{item?.DegreeName}}</h5>
+            <h6 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="subHeadOpac">{{item?.Specialization}}</h6>-->
+
+
+              <div class="otherDetailsNormalView">
+                <span class="ListViewHeading" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
+                  {{i+1}} - {{item?.DegreeName}}
+                </span>
+
+                &nbsp;<b>From</b>&nbsp;
+
+
+                <span class="subHeadOpac" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
+                  {{item?.InstName}}
+                </span>
+              </div>
+
+              <div class="otherDetailsNormalView aligned-row"><b>{{SpecializationSubject}}: &nbsp;&nbsp;</b>{{item?.Specialization}}</div>
+              <div class="otherDetailsNormalView aligned-row"><b>{{EducationStatus}}: &nbsp;&nbsp;</b>{{item?.qualificationstatus ? 'Completed' : 'In Process'}}</div>
+              <div class="otherDetailsNormalView aligned-row"><b>{{PercentageCGPA}}: &nbsp;&nbsp;</b>{{item?.Grade}}<span *ngIf="item.ScoreType == 'C' && item.Grade">&nbsp;CGPA</span><span *ngIf="item.ScoreType == 'P' && item.Grade">%</span></div>
+              <div class="otherDetailsNormalView aligned-row" style="margin-bottom: 3px;"><b>{{PassingYear}}: &nbsp;&nbsp;</b>{{item?.PYear}}</div>
+              <div class="otherDetailsNormalView aligned-row" style="margin-bottom: 3px;"><b>{{RegularPrivate}}: &nbsp;&nbsp;</b>{{getQualificationtype(item.QualType) || 'N/A'}}</div>
+              <div class="click-to-top">
+                <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                   [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+                   class="glyphicon glyphicon-edit"
+                   (click)="handleAcademicEdit(item)">
+                  <span class="forEditTooltip" style="bottom: 1px !important; left: 36px !important;">Edit</span>
+                </a>
+
+              </div>&nbsp;&nbsp;
+              <div class="click-to-top" style="position: relative; ">
+                <a onclick="return false" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                   class="fa fa-times"
+                   style="color: #C77874; vertical-align: middle; cursor:pointer;"
+                   (click)="handleAcademicDeleteClick(item)">
+                  <span class="forDeleteTooltip">Delete</span>
+                </a>
+
+              </div>
+              <!-- <br /> -->
+              <hr *ngIf="QualificationDetail.length > 1" />
+            </div>
+          </div>
+          <div class="ex2" *ngIf="updateProfService.IsGridStyle">
+            <table class="table fixed_header">
+              <thead class="tableHeaderBackground tablePanelHeading " style="font-size:
+    12px; ">
+                <tr>
+                  <th class="fntFmly tblHeaderFnt" style="width: 84px !important"><strong style="color: #524d4d !important;"></strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 123px !important"><strong style="color: #524d4d !important;"><!--Degree-->{{lblDegree}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 230px !important;text-align:center;"><strong style="color: #524d4d !important;"><!--Specialization / Subject-->{{SpecializationSubject}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 206px !important;text-align:center;"><strong style="color: #524d4d !important;"> <!--Education Status-->{{EducationStatus}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 157px !important; text-align:center; padding-right:25px !important;" ><strong style="color: #524d4d !important;"><!--Institute-->{{lblInstitute}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 180px !important; text-align: center !important"><strong style="color: #524d4d !important;"><!--Percentage / CGPA-->{{PercentageCGPA}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 147px !important; text-align: center"><strong style="color: #524d4d !important;"><!--Passing Year-->{{PassingYear}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 167px  !important; text-align: center"><strong style="color: #524d4d !important;">{{RegularPrivate}}</strong></th> <!-- New Added For field force -->
+                </tr>
+              </thead>
+              <tbody class="tblbodyclr  member">
+                <tr *ngIf="!QualificationDetail || QualificationDetail.length <= 0" style="font-size: 12px;">
+                  <td colspan="7" style="text-align: center; width:1030px;">
+                    <span class="fntFmly">
+                      <!--No data-->{{nodata}}
+                    </span>
+                  </td>
+                </tr>
+                <tr *ngFor="let item of QualificationDetail"  (click)="handleAcademicEdit(item)">
+                  <td style="width: 68px !important">
+                    <!--<a style="cursor:pointer;" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" data-toggle="modal" data-target="#myModal1" data-backdrop="static" data-keyboard="false" onclick="return false">
+                    <img src="../../../../../assets/images/imgEdit.png" (click)="onUpdateAcademic_Click(item)">
+                  </a>&nbsp;&nbsp;
+                  <a onclick="return false" style="cursor:pointer">
+                    <img src="../../../../../assets/images/imgRemove.png" style="margin-top: 4px;" (click)="setId(item)" data-toggle="modal" data-target="#myModalFordelete1" data-backdrop="static" data-keyboard="false">
+                  </a>-->
+
+                    <div class="click-to-top">
+                      <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                         [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+                         class="glyphicon glyphicon-edit"
+                         (click)="handleAcademicEdit(item)">
+                        <span class="forEditTooltip">Edit</span>
+
+                      </a>
+                    </div>&nbsp;&nbsp;
+                    <div class="click-to-top" style="position: relative; ">
+                      <a onclick="return false" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                         class="fa fa-times"
+                         style="color: #C77874; vertical-align: middle; cursor:pointer;"
+                         (click)="handleAcademicDeleteClick(item)">
+                        <span class="forDeleteTooltip">Delete</span>
+                      </a>
+                    </div>
+
+
+                  </td>
+                  <td class="fntWght fntFmly" style="width: 113px !important"> {{ item.DegreeName }}</td>
+                  <td class="fntWght fntFmly" style="width: 203px !important;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">{{ item.Specialization }}</td>
+                  <td class="fntWght fntFmly" style="width: 157px !important;text-align:center;" *ngIf="item.qualificationstatus == 1">Completed</td>
+                  <td class="fntWght fntFmly" style="width: 157px !important" *ngIf="item.qualificationstatus == 0">In Process</td>
+                  <td class="fntWght fntFmly" style="width: 147px !important;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">{{ item.InstName }}</td>
+                  <td class="fntWght fntFmly" style="width: 147px !important; text-align: center !important">{{ item.Grade }}<span *ngIf="item.ScoreType == 'C' && item.Grade">&nbsp;CGPA</span><span *ngIf="item.ScoreType == 'P' && item.Grade">%</span></td>
+                  <td class="fntWght fntFmly" style="width: 147px !important; text-align: center">{{ item.PYear }}</td>
+                  <td class="fntWght fntFmly" style="width: 147px !important; text-align: center">{{ getQualificationtype(item.QualType) || 'N/A' }}</td><!-- New Added For field force -->
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <br />
+
+    </form>
+
+    <form action="/action_page.php " *ngIf="VisCertifications == true " [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+      <br />
+      <div class="row " style="display:flex;">
+        <div class="col-xs-12 col-sm-12" style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="form-group ">
+            <p [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="font-size:20px; "><span *ngIf="MndCertifications == true" style="color:red; font-size:22px; margin-left:-10px !important ">*</span><!--Certifications-->{{Certification}}</p>
+          </div>
+        </div>
+        <div class="col-sm-7 ">
+          <div class="form-group ">
+
+          </div>
+        </div>
+
+        <div class="col-sm-2 padding-unset">
+          <div class="form-group ">
+            <a data-toggle="modal" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null" (click)="btnAdd_Click('Certification'); " [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-top: 4px;" data-target="#myModal2" class="btnClass popupStyle clrhover uppercase" data-backdrop="static" data-keyboard="false">
+              <span class="glyphicon glyphicon-plus "></span> <!--ADD-->{{Add}}
+            </a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal2" role="dialog">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header" style="border-bottom: 0px solid #e5e5e5; ">
+                    <button type="button" class="close textColor" data-dismiss="modal"><img src="assets/images/lookupclose.png"></button>
+                    <h4 class="modal-title PopupLeftRightPdngHeading" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><span *ngIf="MndCertifications == true" style="color:red;">*</span><!--Certifications-->{{Certification}}</h4>
+                  </div>
+                  <div class="modal-body">
+
+                    <div class="row " *ngIf="isMandatoryfields || DisconnectInternet || isDateValid || isCGPAValidation || isPercentageValidation || isbirthday || ProvideValidDate || isCorrectDateCertificate">
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+                          <label style="color:red; float: right; margin-right: 25px; " class="forValidation" *ngIf="isMandatoryfields == true"><span style="color:red;font-size:14px !important" class="forValidation">*</span>Please enter mandatory fields.</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="DisconnectInternet == true"> <span style="color:red;font-size:14px !important" class="forValidation">*</span>Please check your internet connection and try again.</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isDateValid">'Date of Achievement' should be less than 'Date of Expiry'</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isCGPAValidation">Please enter CGPA between 1.0-4.0</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isPercentageValidation">Please enter Percentage between 1-100</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isbirthday">'Date of birth' should be less than 'Date of Achievement'</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="ProvideValidDate">Please provide Valid Date</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isCorrectDateCertificate">Please Enter Valid Date</label>
+
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="degree" class="fntWght fontSize12"><span style="color:red;" class="mandatoryStar">*</span><!--Certifications-->{{Certification}}</label><br>
+                          <div *ngIf="!isTextActiveCertification && crtid != '-1'">
+
+                            <select (change)="isTextActiveCertification =crtid == '-1'? true: false;" [ngClass]="{'BorderColor':isMandatoryfields && crtidValidation == 'N/A'}" id="ddlCertificationsDropdown" [(ngModel)]="crtid" class="selectpicker form-control Font-size_dropdown" name="ddlCertificationsDropdown" style="border-radius:0px;">
+                              <option *ngFor="let item of CertificationsDropdown" [ngValue]="item.Id">{{ item.Name }}</option>
+                            </select>
+                          </div>
+                          <div *ngIf="crtid == '-1'">
+                            <input type="text" maxlength="100" [(ngModel)]="OtherCertification" [ngClass]="{'BorderColor':isMandatoryfields && OtherCertification == ''}" class="form-control fontSize12" id="OtherInstituteAcademic1" placeholder="" name="OtherInstituteAcademicss" style="border-radius:0px; ">
+                            <img src="assets/images/lookupclose.png" (click)="otherCertication()" class="crossbtn" />
+                          </div>
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group " style="width: 268px">
+                          <label for="" class="fntWght fontSize12"><span style="color:red;" class="mandatoryStar">*</span><!--Date of Achievement-->{{lblDateofAchievement}}</label>
+                          <div [ngClass]="{'BorderColor':isMandatoryfields && txtCertificateDateOfAchievement == ''}" style="height: 36px;">
+                            <date-picker [defaultValue]="defaultCertificateDateOfAchievement" (pickerChange)="datePickerChanged($event, 'certificatecateofachievement')"></date-picker>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group " style="width: 268px">
+                          <label for="institute " class="fntWght fontSize12"><!--Date of Expiry-->{{lblDateofExpiry}}</label>
+                          <date-picker [defaultValue]="defaultCertificateDateOfExpiry" (pickerChange)="datePickerChanged($event, 'certificatedateofexpiry')"></date-picker>
+
+                        </div>
+                      </div>
+
+                    </div>
+
+
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="" class="fntWght fontSize12"><!--Score Type-->{{lblScoreType}}</label><br>
+
+                          <select id="ddlScoreType1" [(ngModel)]="ScoreTypeCertificate" class="selectpicker form-control fontSize12" style="border-radius:0px;"
+                                  name="ddlScoreType1">
+                            <option value="">N/A</option>
+                            <option value="C">CGPA</option>
+                            <option value="P">Percentage</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="" class="fntWght fontSize12"><!--Percentage/CGPA-->{{PercentageCGPA}}</label>
+                          <!--<input NumericInput type="text" maxlength="3" class="form-control fontSize12" id="percentage2" placeholder=" " [(ngModel)]="Score" name="percentage2" [placeholder]="ScoreTypeCertificate == 'P' ? 'Percentage between 0-100' : 'CGPA between 0-4'" [disabled]="ScoreTypeCertificate == ''"  style="border-radius:0px;">-->
+                          <input appBlockCopyPaste NumericInput *ngIf="ScoreTypeCertificate == 'P'" type="number" [(ngModel)]="Score" class="form-control fontSize12" id="Percentage12" placeholder="Percentage between 0-100" name="Percentage100" style="border-radius:0px;">
+                          <input appBlockCopyPaste NumericInput *ngIf="ScoreTypeCertificate == 'C'" type="number" [(ngModel)]="Score" class="form-control fontSize12" id="Percentage22" placeholder="CGPA between 0-4" name="CGPA" style="border-radius:0px;">
+                          <input *ngIf="ScoreTypeCertificate == ''" type="number" class="form-control fontSize12" id="Percentage32" placeholder="" [disabled]="ScoreType == ''" name="percent1" style="border-radius:0px;">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="institute" class="fntWght fontSize12"><!--Institute-->{{lblInstitute}}</label>
+                          <div *ngIf="!isTextActiveInstitute && Institute != '-1'">
+
+                            <select (change)="isTextActiveInstitute =Institute == '-1'? true: false;" [(ngModel)]="Institute" id="InstituteDropdown1" class="selectpicker form-control Font-size_dropdown" name="InstituteDropdown1" style="border-radius:0px;">
+                              <option *ngFor="let item of InstituteDropdown" [ngValue]="item.Id">{{ item.Name }}</option>
+                            </select>
+                          </div>
+                          <div *ngIf="Institute == '-1'">
+                            <input type="text" maxlength="100" [(ngModel)]="OtherInstituteCertification" [ngClass]="{'BorderColor':isMandatoryfields && OtherInstituteCertification == ''}" class="form-control fontSize12" id="OtherInstituteCertification" placeholder="" name="OtherInstituteCertification" style="border-radius:0px;">
+                            <img src="assets/images/lookupclose.png" (click)="otherInstitute1()" class="crossbtn" />
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+
+
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="" class="fntWght fontSize12"><!--Country-->{{Country}}</label><br>
+
+                          <select class="selectpicker form-control Font-size_dropdown" [(ngModel)]="selectedCountry" (change)="onChange()" name="Selectcountry1" id="Selectcountrytxt1" style="border-radius:0px;">
+                            <option *ngFor="let item of CountriesDropdown" [ngValue]="item.Id">{{ item.Name }}</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="" class="fntWght fontSize12"><!--City-->{{City}}</label>
+
+                          <select class="selectpicker form-control Font-size_dropdown" [(ngModel)]="CertificateCity" name="citiesByCountryId1" id="txtcitiesByCountryId1" style="border-radius:0px;">
+                            <option *ngFor="let item of CitiesByCountryIdDropdown" [ngValue]="item?.Id">{{ item?.Name }}</option>
+                          </select>
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="institute" class="fntWght fontSize12">Address<!--{{lblDegree}}--></label>
+                          
+
+                          <input type="text" maxlength="170" [(ngModel)]="CertificateAddress" class="form-control fontSize12" id="address2" placeholder="Enter Address " name="address2" style="border-radius:0px; font-size: 13px !important;">
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="row ">
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group " align="center">
+                          <a class="btn btnTextColor greenBackgroundClr btn-lg SaveBtn1 ltrSpc clrhover" (click)="SaveCertification()">
+                            <img src="assets/images/btnSave.png" style="height: 12px; margin-bottom: 5px;"> &nbsp;  <!--SAVE-->{{Save}}
+                          </a>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+            <!--Popup close-->
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="word-break: break-all !important;">
+        <div class="col-sm-12 " style="margin-bottom:10px; ">
+
+          <div *ngIf="!updateProfService.IsGridStyle" class='normalView'>
+            <table *ngIf="!CertificationDetail || CertificationDetail.length <= 0" style="width:100%;font-size: 12px;">
+              <tbody style="overflow-y:hidden;">
+                <tr style="width:100%; display: block;">
+                  <td style="width:100%; text-align: center; display: block;">
+                    <h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="fntFmly">
+                      {{nodata}}
+                    </h5>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div *ngFor="let item of CertificationDetail; let i = index">
+
+              <!--<h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">{{i+1}} - {{item?.CrtName}}</h5>
+  <h6 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="subHeadOpac">{{item?.InstName}}</h6>-->
+
+              <div class="otherDetailsNormalView">
+                <span class="ListViewHeading" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
+                  {{i+1}} - {{item?.CrtName}}
+                </span>
+
+                &nbsp;<b>From</b>&nbsp;
+
+
+                <span class="subHeadOpac" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
+                  {{item?.InstName}}
+                </span>
+              </div>
+              <div class="otherDetailsNormalView aligned-row">
+                <b>{{PercentageCGPA}}:&nbsp;&nbsp;</b>
+                <span>
+                  {{item?.Score}}
+                  <span *ngIf="item.ScoreType == 'C' && item.Score">&nbsp;CGPA</span>
+                  <span *ngIf="item.ScoreType == 'P' && item.Score">%</span>
+                </span>
+              </div>
+              <!--<div class="otherDetailsNormalView aligned-row"><b>{{PercentageCGPA}}: &nbsp;&nbsp;</b>{{item?.Score}}<span *ngIf="item.ScoreType == 'C' && item.Score">&nbsp;CGPA</span><span *ngIf="item.ScoreType == 'P' && item.Score">%</span></div>-->
+              <div class="otherDetailsNormalView aligned-row"><b>{{lblDateofAchievement}}: &nbsp;&nbsp;</b>{{item?.SimpleDateFrom}}</div>
+              <div class="click-to-top">
+                <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                   [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+                   class="glyphicon glyphicon-edit"
+                   (click)="handleCertificationsEdit(item)">
+                  <span class="forEditTooltip" style="bottom: 1px !important; left: 36px !important;">Edit</span>
+                </a>
+
+              </div>&nbsp;&nbsp;
+              <div class="click-to-top" style="position: relative; ">
+                <a onclick="return false" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                   class="fa fa-times"
+                   style="color: #C77874; vertical-align: middle; cursor:pointer;"
+                   (click)="handleCertificationsDeleteClick(item)">
+                  <span class="forDeleteTooltip">Delete</span>
+                </a>
+
+              </div>
+              <!-- <br /> -->
+              <hr *ngIf="CertificationDetail.length > 1" />
+            </div>
+          </div>
+          <div class="ex2" *ngIf="updateProfService.IsGridStyle">
+            <table class="table fixed_header">
+              <thead class="tableHeaderBackground tablePanelHeading " style="font-size:12px; ">
+                <tr>
+                  <th class="fntFmly tblHeaderFnt" style="width: 84px;"><strong style="color: #524d4d !important; "></strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 237px;text-align:center;"><strong style="color: #524d4d !important;"><!--Certification-->{{Certification}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 295px;text-align:center;"><strong style="color: #524d4d !important; "><!--Institute-->{{lblInstitute}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 206px; text-align:center"><strong style="color: #524d4d !important;"><!--Percentage / CGPA-->{{PercentageCGPA}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 206px; text-align:center"><strong style="color: #524d4d !important;"><!--Percentage / CGPA-->{{lblDateofAchievement}}</strong></th>
+                </tr>
+              </thead>
+              <tbody class="tblbodyclr member">
+                <tr *ngIf="!CertificationDetail || CertificationDetail.length <= 0" style="font-size: 12px;">
+                  <td colspan="7" style="text-align: center; width:1030px;">
+                    <span class="fntFmly">
+                      <!--No data-->{{nodata}}
+                    </span>
+                  </td>
+                </tr>
+                <tr *ngFor="let item of CertificationDetail"  (click)="handleCertificationsEdit(item)">
+                  <td style="width: 84px !important;">
+                    <!--<a style="cursor:pointer;" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" data-toggle="modal" data-target="#myModal2" data-backdrop="static" data-keyboard="false" onclick="return false">
+                    <img src="../../../../../assets/images/imgEdit.png" (click)="onUpdateCertification_Click(item)">
+                  </a>&nbsp;&nbsp;
+                  <a onclick="return false" href="">
+                    <img src="../../../../../assets/images/imgRemove.png" style="margin-top: 4px;" (click)="setId(item)" data-toggle="modal" data-target="#myModalFordelete1" data-backdrop="static" data-keyboard="false">
+                  </a>-->
+
+                    <div class="click-to-top">
+                      <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                         [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+                         class="glyphicon glyphicon-edit"
+                         (click)="handleCertificationsEdit(item)">
+                      <span class="forEditTooltip">Edit</span>
+
+                      </a>
+                    </div>&nbsp;&nbsp;
+                    <div class="click-to-top" style="position: relative; ">
+                      <a onclick="return false" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                         class="fa fa-times"
+                         style="color: #C77874; vertical-align: middle; cursor:pointer;"
+                         (click)="handleCertificationsDeleteClick(item)">
+                        <span class="forDeleteTooltip">Delete</span>
+                      </a>
+                    </div>
+
+                  </td>
+                  <td class="fntWght fntFmly" style="width: 237px;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">{{ item.CrtName }}</td>
+                  <td class="fntWght fntFmly" style="width: 295px;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">{{ item.InstName }}</td>
+                  <td class="fntWght fntFmly" style="width: 206px; text-align:center">{{ item.Score }} <span *ngIf="item.ScoreType == 'C' && item.Score">&nbsp;CGPA</span><span *ngIf="item.ScoreType == 'P' && item.Score">%</span> </td>
+                  <td class="fntWght fntFmly" style="width: 206px; text-align:center">{{ item.SimpleDateFrom }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <br />
+    </form>
+
+    <form action="/action_page.php " [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]" *ngIf="VisTrainings == true">
+      <br />
+      <div class="row " style="display:flex;">
+        <div class="col-xs-12 col-sm-12" style="display:flex; justify-content:space-between; align-items:center;">
+
+          <div class="form-group ">
+            <p [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="font-size:20px; "><span *ngIf="MndTrainings == true" style="color:red; font-size:22px; margin-left:-10px !important ">*</span><!--Trainings-->{{Trainings}}</p>
+          </div>
+        </div>
+        <div class="col-sm-7 ">
+          <div class="form-group ">
+
+          </div>
+        </div>
+
+
+        <div class="col-sm-2 padding-unset">
+          <div class="form-group ">
+            <a data-toggle="modal" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null" (click)="btnAdd_Click('Training'); resetDate()" [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-top: 4px;" data-target="#myModal3" class="btnClass popupStyle clrhover uppercase" data-backdrop="static" data-keyboard="false">
+              <span class="glyphicon glyphicon-plus"></span> <!--ADD-->{{Add}}
+            </a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal3" role="dialog">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header" style="border-bottom: 0px solid #e5e5e5;">
+                    <button type="button" class="close" style="color:blue;" data-dismiss="modal"><img src="assets/images/lookupclose.png"></button>
+                    <h4 class="modal-title PopupLeftRightPdngHeading" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><span *ngIf="MndTrainings == true" style="color:red;">*</span><!--Trainings-->{{Trainings}}</h4>
+                  </div>
+                  <div class="modal-body">
+
+                    <div class="row " *ngIf="isMandatoryfields || DisconnectInternet || isDateValid || ProvideValidDate || isCorrectDateTraining">
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isMandatoryfields == true"><span style="color:red;font-size:14px !important" class="forValidation">*</span>Please enter mandatory fields.</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="DisconnectInternet == true"><span style="color:red;font-size:14px !important" class="forValidation">*</span>Please check your internet connection and try again.</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isDateValid">'Date From' should be less than current date</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="ProvideValidDate">Please provide Valid Date</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isCorrectDateTraining">Please Enter Valid Date</label>
+
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="degree" class="fntWght fontSize12"><span style="color:red;" class="mandatoryStar">*</span><!--Course Title-->{{lblCourseTitle}}</label><br>
+                          <input type="text" maxlength="100" placeholder="Enter Course Title" [ngClass]="{'BorderColor':isMandatoryfields && TrainingCourseTitle == ''}" [(ngModel)]="TrainingCourseTitle" class="form-control fontSize12" id="CTitle"  name="CTitle" style="border-radius:0px;">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="degree " class="fntWght fontSize12"><!--Institute-->{{lblInstitute}}</label><br>
+                          <input type="text" maxlength="50" [(ngModel)]="InstituteTrainigTextBox" id="TrainingInstitute1" name="TrainingInstitute1" class="form-control fontSize12" placeholder="Enter Institute " style="border-radius:0px;">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="degree " class="fntWght fontSize12"><!--Training Subject-->{{lblTrainingSubject}}</label><br>
+
+                          <select [(ngModel)]="TrainingTrainingSubject" id="ddlTrainingSubjectDropdown" class="selectpicker form-control Font-size_dropdown" name="ddlTrainingSubjectDropdown" style="border-radius:0px;">
+                            <option *ngFor="let item of TrainingSubjectDropdown" [ngValue]="item.Id">{{ item.Name }}</option>
+                          </select>
+
+                        </div>
+                      </div>
+
+                    </div>
+
+
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="institute " class="fntWght fontSize12"><!--Country-->{{Country}}</label>
+
+                          <select class="selectpicker form-control Font-size_dropdown" (change)="onChange()" [(ngModel)]="selectedCountry" name="selectedCountry2" id="selectedCountry2" style="border-radius:0px;">
+                            <option *ngFor="let item of CountriesDropdown" [ngValue]="item.Id">{{ item.Name }}</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="institute " class="fntWght fontSize12"><!--City-->{{City}}</label>
+
+                          <select [(ngModel)]="TrainingCity" class="selectpicker form-control Font-size_dropdown" name="citiesByCountryId2" id="txtcitiesByCountryId2" style="border-radius:0px;">
+
+                            <option *ngFor="let item of CitiesByCountryIdDropdown" [ngValue]="item.Id">{{ item.Name }}</option>
+                          </select>
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group " style="width:268px">
+                          <label for="institute " class="fntWght fontSize12"><!--Date From-->{{DateFrom}}</label>
+                          <date-picker [defaultValue]="defaultTrainingDateFrom" (pickerChange)="datePickerChanged($event, 'trainingdatefrom')"></date-picker>
+                        </div>
+                      </div>
+
+                    </div>
+
+
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4 ">
+                        <div class="form-group " style="width:268px">
+                          <label for="institute" class="fntWght fontSize12"><!--Date To-->{{DateTo}}</label>
+                          <date-picker [defaultValue]="defaultTrainingDateTo" (pickerChange)="datePickerChanged($event, 'trainingdateto')"></date-picker>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+
+                      </div>
+
+                    </div>
+
+
+
+
+
+
+                    <div class="row ">
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group" align="center">
+                          <a class="btn btnTextColor greenBackgroundClr btn-lg SaveBtn1 ltrSpc clrhover" (click)="SaveTraining()">
+                            <img src="assets/images/btnSave.png" style="height: 12px; margin-bottom: 5px;"> &nbsp; <!--SAVE-->{{Save}}
+                          </a>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+
+                    </div>
+
+
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <!--Popup Close-->
+
+          </div>
+        </div>
+      </div>
+
+      <div class="row " style="word-break: break-all !important;">
+        <div class="col-sm-12 " style="margin-bottom:10px; ">
+          <div *ngIf="!updateProfService.IsGridStyle" class='normalView'>
+            <table *ngIf="!TrainingDetail || TrainingDetail.length <= 0" style="width:100%;font-size: 12px;">
+              <tbody style="overflow-y:hidden;">
+                <tr style="width:100%; display: block;">
+                  <td style="width:100%; text-align: center; display: block;">
+                    <h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="fntFmly">
+                      {{nodata}}
+                    </h5>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div *ngFor="let item of TrainingDetail; let i = index">
+
+              <!--<h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">{{i+1}} - {{item?.Course}}</h5>
+            <h6 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="subHeadOpac">{{item?.Institute}}</h6>-->
+
+              <div class="otherDetailsNormalView">
+                <span class="ListViewHeading" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
+                  {{i+1}} - {{item?.Course}}
+                </span>
+
+                &nbsp;<b>From</b>&nbsp;
+
+
+                <span class="subHeadOpac" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
+                  {{item?.Institute}}
+                </span>
+              </div>
+
+              <div class="otherDetailsNormalView aligned-row" *ngIf="item?.TrainingSubject"><b>{{lblTrainingSubject}}: &nbsp;&nbsp;</b> <span style="overflow-wrap: break-word;">{{item?.TrainingSubject}}</span></div>
+              <div class="otherDetailsNormalView aligned-row" *ngIf="item?.SimpleDateFrom"><b>{{DateFrom}}: &nbsp;&nbsp;</b>{{item?.SimpleDateFrom}}</div>
+              <div class="otherDetailsNormalView aligned-row" *ngIf="item?.SimpleDateTo"><b>{{DateTo}}: &nbsp;&nbsp;</b>{{item?.SimpleDateTo}}</div>
+              <div class="click-to-top">
+                <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                   [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+                   class="glyphicon glyphicon-edit"
+                   (click)="handleTrainingsEdit(item)">
+                  <span class="forEditTooltip" style="bottom: 1px !important; left: 36px !important;">Edit</span>
+                </a>
+
+              </div>&nbsp;&nbsp;
+              <div class="click-to-top" style="position: relative; ">
+                <a onclick="return false" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                   class="fa fa-times"
+                   style="color: #C77874; vertical-align: middle; cursor:pointer;"
+                   (click)="handleTrainingsDeleteClick(item)">
+                  <span class="forDeleteTooltip">Delete</span>
+                </a>
+
+              </div>
+              <hr *ngIf="TrainingDetail.length > 1" />
+
+
+            </div>
+          </div>
+          <div class="ex2" *ngIf="updateProfService.IsGridStyle">
+            <table class="table fixed_header">
+              <thead class="tableHeaderBackground tablePanelHeading " style="font-size:12px; ">
+                <tr>
+                  <th class="fntFmly tblHeaderFnt" style="width: 100px;"><strong style="color: #524d4d !important;"></strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 255px;text-align:center;"><strong style="color: #524d4d !important;"><!--Course Title-->{{lblCourseTitle}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 255px;text-align:center;"><strong style="color: #524d4d !important;"><!--Institute-->{{lblInstitute}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 206px; text-align:center"><strong style="color: #524d4d !important;"><!--Date From-->{{DateFrom}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 213px; text-align:center"><strong style="color: #524d4d !important;"><!--Date To-->{{DateTo}}</strong></th>
+                </tr>
+              </thead>
+              <tbody class="tblbodyclr member">
+                <tr *ngIf="!TrainingDetail || TrainingDetail.length <= 0" style="font-size: 12px;">
+                  <td colspan="7" style="text-align: center; width:1030px;">
+                    <span class="fntFmly">
+                      <!--No data-->{{nodata}}
+                    </span>
+                  </td>
+                </tr>
+                <tr *ngFor="let item of TrainingDetail" (click)="handleTrainingsEdit(item)">
+                  <td style="width: 100px !important;">
+                    <!--<a style="cursor:pointer" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" data-toggle="modal" data-target="#myModal3" data-backdrop="static" data-keyboard="false" onclick="return false">
+                    <img src="../../../../../assets/images/imgEdit.png" (click)="onUpdateTraining_Click(item)">
+                  </a>&nbsp;&nbsp;
+                  <a onclick="return false" href="">
+                    <img src="../../../../../assets/images/imgRemove.png" style="margin-top: 4px;" (click)="setId(item)" data-toggle="modal" data-target="#myModalFordelete1" data-backdrop="static" data-keyboard="false">
+                  </a>-->
+
+                    <div class="click-to-top">
+                      <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                         [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+                         class="glyphicon glyphicon-edit"
+                         (click)="handleTrainingsEdit(item)">
+                        <span class="forEditTooltip" style="bottom: 1px !important; left: 36px !important;">Edit</span>
+                      </a>
+                    </div>&nbsp;&nbsp;
+                    <div class="click-to-top" style="position: relative; ">
+                      <a onclick="return false" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                         class="fa fa-times"
+                         style="color: #C77874; vertical-align: middle; cursor:pointer;"
+                         (click)="handleTrainingsDeleteClick(item)">
+                        <span class="forDeleteTooltip">Delete</span>
+                      </a>
+                    </div>
+
+                  </td>
+                  <td class="fntWght fntFmly" style="width: 255px;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">{{ item.Course }}</td>
+                  <td class="fntWght fntFmly" style="width: 255px;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">{{ item.Institute }}</td>
+                  <td class="fntWght fntFmly" style="width: 206px;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">&nbsp;&nbsp;{{ item.SimpleDateFrom }}</td>
+                  <td class="fntWght fntFmly" style="width: 213px;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">&nbsp;&nbsp;&nbsp;&nbsp;{{ item.SimpleDateTo }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <br />
+    </form>
+
+    <!--*ngIf="VisExperience == true"-->
+
+    <form action="/action_page.php " *ngIf="VisExperience == true" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+      <br />
+      <div class="row " style="display:flex;">
+        <div class="col-xs-12 col-sm-12" style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="form-group ">
+            <p [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="font-size:20px; "><span *ngIf="MndExperience == true" style="color:red; font-size:22px;  margin-left:-10px !important">*</span>Experience</p>
+          </div>
+        </div>
+        <div class="col-sm-7 ">
+          <div class="form-group ">
+
+          </div>
+        </div>
+
+        <div class="col-sm-2 padding-unset">
+          <div class="form-group">
+            <a data-toggle="modal" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null" (click)="btnAdd_Click('Experience'); resetDate();" [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-top: 4px;" data-target="#myModal4" class="btnClass popupStyle clrhover uppercase" data-backdrop="static" data-keyboard="false">
+              <span class="glyphicon glyphicon-plus "></span> <!--ADD-->{{Add}}
+            </a>
+            <!-- Modal -->
+            <div class="modal fade" id="myModal4" role="dialog">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header" style="border-bottom: 0px solid #e5e5e5;">
+                    <button type="button" class="close textColor" data-dismiss="modal"><img src="assets/images/lookupclose.png"></button>
+                    <h4 class="modal-title PopupLeftRightPdngHeading" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><span *ngIf="MndExperience == true" style="color:red;">*</span><!--Experience-->{{Experience}}</h4>
+                  </div>
+                  <div class="modal-body">
+
+                    <div class="row " *ngIf="isMandatoryfields || DisconnectInternet || isDateValid || ProvideValidDate || isDateValid1 || isCorrectDateExperience">
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isMandatoryfields == true"><span style="color:red;font-size:14px !important" class="forValidation">*</span>Please enter mandatory fields.</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="DisconnectInternet == true"><span style="color:red;font-size:14px !important" class="forValidation">*</span>Please check your internet connection and try again.</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isDateValid">'Date From' should be less than current date</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="ProvideValidDate">Please Enter Required Date</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isDateValid1">'Date From' should be less than 'Date of Completion'</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isCorrectDateExperience">Please Enter Valid Date</label>
+
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="degree " class="fntWght fontSize12"><span style="color:red;" class="mandatoryStar">*</span><!--Company-->{{Company}}</label><br>
+                          <input type="text" maxlength="100" [ngClass]="{'BorderColor':isMandatoryfields && ExperienceCompany == ''}" [(ngModel)]="ExperienceCompany" class="form-control fontSize12" id="company3" placeholder=" Enter Experience Company  " name="company3" style="border-radius:0px;">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="institute " class="fntWght fontSize12"><span style="color:red;" class="mandatoryStar">*</span><!--Designation-->{{Designation}}</label>
+                          <input type="text" maxlength="100" [ngClass]="{'BorderColor':isMandatoryfields && ExperienceDesignation == ''}" [(ngModel)]="ExperienceDesignation" class="form-control fontSize12" id="Designation3" placeholder="Enter Designation" name="Designation3" style="border-radius:0px;">
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="institute " class="fntWght fontSize12"><!--Job Responsibilities-->{{lblJobResponsibilities}}</label>
+                          <input type="text" maxlength="150" [(ngModel)]="ExperienceJobResponsibilities" class="form-control fontSize12" id="Responsibilities3" placeholder="Enter Job Responsibilities" name="Responsibilities3" style="border-radius:0px;">
+
+                        </div>
+                      </div>
+
+                    </div>
+
+
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="degree " class="fntWght fontSize12"><!--Leaving Reason-->{{LeavingReason}}</label><br>
+                          <input type="text" maxlength="170" [(ngModel)]="ExperienceLeavingReason" class="form-control fontSize12" id="reason3" placeholder=" Enter Leaving Reason " name="reason3" style="border-radius:0px;" [disabled]="StillWorking">
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="institute " class="fntWght fontSize12"><!--Current/Last Salary-->{{CurrentLastSal}}</label>
+                          <input NumericInput type="text" maxlength="20" [(ngModel)]="ExperienceSalary" class="form-control fontSize12" id="SalaryEx" placeholder="Enter Current / Last Salary " name="SalaryEx" style="border-radius:0px;">
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="degree " class="fntWght fontSize12"><!--Currency-->{{lblCurrency}}</label><br>
+
+                          <select [(ngModel)]="ExperienceCurrency" id="txtcurrency" class="selectpicker form-control Font-size_dropdown" style="border-radius:0px;" name="currency">
+                            <option *ngFor="let item of CurrencyDropdown" [ngValue]="item.Id">{{ item.Name }}</option>
+                          </select>
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="" class="fntWght fontSize12"><!--Current/Last Benefits-->{{lblCurrentLastBenefits}}</label>
+                          <input type="text" maxlength="170" [(ngModel)]="ExperienceBenefit" class="form-control fontSize12" id="Benefits3" placeholder="Enter Current / Last Benefits" name="Benefits3" style="border-radius:0px;">
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="institute" class="fntWght fontSize12"><!--Employer Phone No.-->{{EmployerPhoneNo}}</label>
+                          <input NumericInput appBlockCopyPaste type="text" maxlength="30" [(ngModel)]="ExperiencePhone" class="form-control fontSize12" id="phoneno3" placeholder=" Enter Employer Phone Number " name="phoneno3 " style="border-radius:0px;">
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="degree" class="fntWght fontSize12"><!--Employer Address-->{{EmployerAddress}}</label><br>
+                          <input type="text" maxlength="170" [(ngModel)]="ExperienceAddress" class="form-control fontSize12" id="Address3" placeholder="Enter Address " name="Address3 " style="border-radius:0px;">
+
+
+                        </div>
+
+                      </div>
+
+                    </div>
+
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4 ">
+                        <div class="form-group " style="width:268px">
+                          <label for="institute " class="fntWght fontSize12">Date From<!--{{DateFrom}}--></label>
+                          <date-picker [defaultValue]="defaultExperienceDateFrom" (pickerChange)="datePickerChanged($event, 'experiencedatefrom')"></date-picker>
+
+                        </div>
+                      </div>
+
+                      <div class="col-sm-4 ">
+                        <div class="form-group " style="width:268px">
+                          <label *ngIf="StillWorking == false" for="institute " class="fntWght fontSize12">Date To<!--{{DateTo}}--></label>
+                          <div *ngIf="StillWorking == false">
+                            <date-picker [defaultValue]="defaultExperienceDateTo" (pickerChange)="datePickerChanged($event, 'experiencedateto')"></date-picker>
+                          </div>
+                          <div *ngIf="StillWorking == true">
+                            <label for="present" style="margin-top: 12px;" class="fntWght fontSize12" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">- Present</label>
+                          </div>
+                          <div>
+                            <div style="float:left;">
+                              <label for="chkCoveredUnderMedicalPolicy1" class="switch" style="margin: 5px 0px 0px 0px;">
+                                <input type="checkbox" [(ngModel)]="StillWorking" id="chkCoveredUnderMedicalPolicy1" [ngModelOptions]="{standalone: true}" />
+                                <span class="slider round"></span>
+                              </label>
+                            </div>
+
+                            <div style="float:left; ">
+                              <p style="font-size:10px; margin: 8px 0px 0px 15px; "><!--I am currently working here-->{{lblIamcurrentlyworkinghere}}</p>
+                            </div>
+                          </div>
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+
+
+
+                    </div>
+
+                    <div class="row ">
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group " align="center">
+                          <a class="btn btnTextColor greenBackgroundClr btn-lg SaveBtn1 ltrSpc clrhover" (click)="SaveExperince()">
+                            <img src="assets/images/btnSave.png" style="height: 12px; margin-bottom: 5px;"> &nbsp;  <!--SAVE-->{{Save}}
+                          </a>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+            <!--Popup Close-->
+          </div>
+        </div>
+      </div>
+
+      <div class="row " style="word-break: break-all !important;">
+        <div class="col-sm-12 " style="margin-bottom:10px; ">
+          <div *ngIf="!updateProfService.IsGridStyle" class='normalView'>
+            <table *ngIf="!ExperienceDetail || ExperienceDetail.length <= 0" style="width:100%;font-size: 12px;">
+              <tbody style="overflow-y:hidden;">
+                <tr style="width:100%; display: block;">
+                  <td style="width:100%; text-align: center; display: block;">
+                    <h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="fntFmly">
+                      {{nodata}}
+                    </h5>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div *ngFor="let item of ExperienceDetail; let i = index">
+              <!-- <hr style="border-top: 1px solid" [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"/> -->
+              <h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">{{i+1}} - {{item?.oldCompany}}</h5>
+              <h6 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="subHeadOpac">{{item?.oldPosition}}</h6>
+              <div class="otherDetailsNormalView aligned-row"><b>{{lblJobResponsibilities}}: &nbsp;&nbsp;</b><span style="overflow-wrap: break-word;">{{item?.JobDescription}}</span></div>
+              <div class="otherDetailsNormalView aligned-row"><b>{{LeavingReason}}: &nbsp;&nbsp;</b><span style="overflow-wrap: break-word;">{{item?.Reason}}</span></div>
+              <div class="otherDetailsNormalView aligned-row"><b>Date From: &nbsp;&nbsp;</b>{{item?.SimpleFromDate}}</div>
+              <div class="otherDetailsNormalView aligned-row" style="margin-bottom: 3px;"><b>Date To: &nbsp;&nbsp;</b>{{item?.SimpleToDate}}</div>
+              <div class="click-to-top">
+                <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                   [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                   class="glyphicon glyphicon-edit"
+                   (click)="handleExperienceEdit(item)">
+                  <span class="forEditTooltip" style="bottom: 1px !important; left: 36px !important;">Edit</span>
+                </a>
+              </div>&nbsp;&nbsp;
+              <div class="click-to-top" style="position: relative; ">
+                <a onclick="return false" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                   class="fa fa-times"
+                   style="color: #C77874; vertical-align: middle; cursor:pointer;"
+                   (click)="handleExperienceDeleteClick(item)">
+                  <span class="forDeleteTooltip">Delete</span>
+                </a>
+              </div>
+              <hr *ngIf="ExperienceDetail.length > 1" />
+              <!-- <br /> -->
+            </div>
+          </div>
+          <div class="ex2" *ngIf="updateProfService.IsGridStyle">
+            <table class="table fixed_header">
+              <thead class="tableHeaderBackground tablePanelHeading " style="font-size: 12px; ">
+                <tr>
+                  <th class="fntFmly tblHeaderFnt" style="width: 107px; text-align:center"><strong style="color: #524d4d !important;"></strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 157px; text-align:center"><strong style="color: #524d4d !important;"><!--Company-->{{Company}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 157px; text-align:center"><strong style="color: #524d4d !important;"><!--Designation-->{{Designation}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 157px; text-align:center"><strong style="color: #524d4d !important;"><!--Job Responsibilities-->{{lblJobResponsibilities}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 157px; text-align:center"><strong style="color: #524d4d !important;"><!--Leaving Reason-->{{LeavingReason}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 147px; text-align:center"><strong style="color: #524d4d !important;">Date From<!--{{DateFrom}}--></strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 147px; text-align:center"><strong style="color: #524d4d !important;">Date To<!--{{DateTo}}--></strong></th>
+                </tr>
+              </thead>
+              <tbody class="tblbodyclr member">
+                <tr *ngIf="!ExperienceDetail || ExperienceDetail.length <= 0" style="font-size: 12px;">
+                  <td colspan="7" style="text-align: center; width:1030px;">
+                    <span class="fntFmly">
+                      <!--No data-->{{nodata}}
+                    </span>
+                  </td>
+                </tr>
+                <tr *ngFor="let item of ExperienceDetail"  (click)="handleExperienceEdit(item)">
+                  <td style="width: 107px !important;">
+                    <!--<a style="cursor:pointer" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" data-toggle="modal" data-target="#myModal4" data-backdrop="static" data-keyboard="false" onclick="return false">
+                    <img src="../../../../../assets/images/imgEdit.png" (click)="onUpdateExperience_Click(item)">
+                  </a>&nbsp;&nbsp;
+                  <a onclick="return false" href="">
+                    <img src="../../../../../assets/images/imgRemove.png" style="margin-top: 4px;" (click)="setId(item)" data-toggle="modal" data-target="#myModalFordelete1" data-backdrop="static" data-keyboard="false">
+                  </a>-->
+
+                    <div class="click-to-top">
+                      <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                         [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                         class="glyphicon glyphicon-edit"
+                         (click)="handleExperienceEdit(item)">
+                      <span class="forEditTooltip">Edit</span>
+
+                      </a>
+                    </div>&nbsp;&nbsp;
+                    <div class="click-to-top" style="position: relative; ">
+                      <a onclick="return false" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                         class="fa fa-times"
+                         style="color: #C77874; vertical-align: middle; cursor:pointer;"
+                         (click)="handleExperienceDeleteClick(item)">
+                        <span class="forDeleteTooltip">Delete</span>
+                      </a>
+                    </div>
+
+                  </td>
+                  <td class="fntWght fntFmly" style="width: 157px;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">{{ item.oldCompany }}</td>
+                  <td class="fntWght fntFmly" style="width: 157px;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">&nbsp;{{ item.oldPosition}}</td>
+                  <td class="fntWght fntFmly" style="width: 157px;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">&nbsp;&nbsp;{{ item.JobDescription }}</td>
+                  <td class="fntWght fntFmly" style="width: 157px;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">&nbsp;&nbsp;{{ item.Reason }}</td>
+                  <td class="fntWght fntFmly" style="width: 147px;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">&nbsp;&nbsp;{{ item.SimpleFromDate }}</td>
+                  <td class="fntWght fntFmly" style="width: 147px;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">&nbsp;&nbsp;&nbsp;{{ item.SimpleToDate }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <br />
+    </form>
+
+
+    <!-- RelativeInCompany  Or Organization -->
+
+
+    <form action="/action_page.php " *ngIf="VisRelativeInAtco == true" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+      <br />
+      <div class="row" style="display:flex;">
+        <div class="col-xs-12 col-sm-12" style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="form-group ">
+            <p [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="font-size:20px; "><span *ngIf="MndRelativeInAtco == true" style="color:red; font-size:22px; margin-left:-10px !important ">*</span>{{RelativeInCompanyLabel}}</p>
+          </div>
+        </div>
+        <div class="col-sm-7 ">
+          <div class="form-group ">
+
+          </div>
+        </div>
+
+        <div class="col-sm-2 padding-unset">
+          <div class="form-group">
+            <a data-toggle="modal" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null" (click)="btnAdd_Click('Relative'); resetDate()" [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-top: 4px;" data-target="#myModal35" class="btnClass popupStyle clrhover uppercase" data-backdrop="static" data-keyboard="false">
+              <span class="glyphicon glyphicon-plus"></span> <!--ADD-->{{Add}}
+            </a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal35" role="dialog">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header" style="border-bottom: 0px solid #e5e5e5;">
+                    <button type="button" class="close textColor" data-dismiss="modal"><img src="assets/images/lookupclose.png"></button>
+                    <h4 class="modal-title primary PopupLeftRightPdngHeading" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><span *ngIf="MndRelativeInAtco == true" style="color:red;">*</span>{{RelativeInCompanyLabel}}</h4>
+                  </div>
+                  <div class="modal-body">
+
+                    <div class="row " *ngIf="isRelativeinCompany || MndRelativeInAtco || DisconnectInternet || isCorrectDateCompetency">
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isRelativeinCompany "><span style="color:red;font-size:14px !important" class="forValidation">*</span>Please enter mandatory fields.</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="DisconnectInternet == true"><span style="color:red;font-size:14px !important" class="forValidation">*</span>Please check your internet connection and try again.</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isCorrectDateCompetency">Please Enter Valid Date</label>
+
+
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4 ">
+                        <div class="form-group">
+                          <label for="RelativeinAtco" class="fntWght fontSize12"><span style="color:red; font-size:13px; margin-left: -5px !important; ">*</span>{{FullName}}</label><br>
+                          <input [ngClass]="{'BorderColor': isRelativeinCompany && RelativeinAtco == '' }" type="text" id="RelativeinAtco" [(ngModel)]="RelativeinAtco" class="form-control Font-size_dropdown" style="border-radius:0px;" name="RelativeinAtco" placeholder="Enter Name">
+                        </div>
+
+
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="designation" class="fntWght fontSize12"><!--<span  style="color:red; font-size:13px; margin-left: -5px !important; ">*</span>-->{{Designation_Department}}</label>
+                          <input type="text" id="designation" [(ngModel)]="Relativedesignation" class="form-control Font-size_dropdown" style="border-radius:0px;" name="Relativedesignation" placeholder="Enter Designation">
+                        </div>
+
+
+                      </div>
+
+
+                      <!--<div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="relation" class="fntWght fontSize12"><span style="color:red; font-size:13px; margin-left: -5px !important; ">*</span>{{Relation}}</label>
+                    <input type="text" [ngClass]="{'BorderColor': isRelativeinCompany && relation == ''}" [(ngModel)]="relation" class="form-control Font-size_dropdown" style="border-radius:0px;" id="relation" name="relation" placeholder="Enter Relation">
+                  </div>
+
+
+                </div>-->
+
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="relation" class="fntWght fontSize12"><span style="color:red; font-size:13px; margin-left: -5px !important; ">*</span>{{Relation}}</label><select [(ngModel)]="Relationship2" [ngClass]="{'BorderColor': isRelativeinCompany && Relationship2.Name == 'N/A' }" class="selectpicker form-control Font-size_dropdown" style="border-radius: 0px;" name="Relationship">
+                            <option *ngFor="let Relation of RelationshipDropdown" [ngValue]="Relation">{{ Relation.Name }}</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-4">
+
+                        <div class="form-group">
+
+                        </div>
+                      </div>
+
+                    </div>
+
+
+
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group " align="center">
+                          <a class="btn btnTextColor greenBackgroundClr btn-lg SaveBtn1 ltrSpc clrhover" (click)="SaveRelativeinCompany()">
+                            <img src="assets/images/btnSave.png" style="height: 12px; margin-bottom: 5px;"> &nbsp;  <!--SAVE-->{{Save}}
+                          </a>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <!--Popup Close-->
+          </div>
+        </div>
+      </div>
+
+      <div class="row " style="word-break: break-all !important;">
+        <div class="col-sm-12 " style="margin-bottom:10px; ">
+          <div *ngIf="!updateProfService.IsGridStyle" class='normalView'>
+            <table *ngIf="!RelativeDetail || RelativeDetail.length <= 0" style="width:100%;font-size: 12px;">
+              <tbody style="overflow-y:hidden;">
+                <tr style="width:100%; display: block;">
+                  <td style="width:100%; text-align: center; display: block;">
+                    <h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="fntFmly">
+                      {{nodata}}
+                    </h5>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div *ngFor="let item of RelativeDetail; let i = index">
+
+              <div class="otherDetailsNormalView aligned-row">
+                <!--<b>{{FullName}}: &nbsp;&nbsp;</b>-->
+                <span class="ListViewHeading" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
+                  {{i+1}} - {{item?.Descriptive_Name}}
+                </span>
+
+              </div>
+
+              <div class="otherDetailsNormalView aligned-row" style="margin-bottom: 3px;"><b>{{Relation}}: &nbsp;&nbsp;</b>{{item?.Descriptive_Designation}}</div>
+              <div class="otherDetailsNormalView aligned-row" style="margin-bottom: 3px;"><b>{{Designation_Department}}: &nbsp;&nbsp;</b>{{getRelativeRelationName(item.RelationshipId)}}</div>
+
+              <div class="click-to-top">
+                <a style="cursor:pointer;"  *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                   [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+                   class="glyphicon glyphicon-edit"
+                   (click)="handleRelativeInTPSEdit(item)">
+                  <span class="forEditTooltip" style="bottom: 1px !important; left: 36px !important;">Edit</span>
+                </a>
+              </div>&nbsp;&nbsp;
+              <div class="click-to-top" style="position: relative; ">
+                <a onclick="return false"  *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                   class="fa fa-times"
+                   style="color: #C77874; vertical-align: middle; cursor:pointer;"
+                   (click)="handleRelativeInTPSDeleteClick(item)">
+                  <span class="forDeleteTooltip">Delete</span>
+                </a>
+
+              </div>
+              <hr *ngIf="RelativeDetail.length > 1" />
+              <br />  <br />
+            </div>
+          </div>
+          <div class="ex2" *ngIf="updateProfService.IsGridStyle">
+            <table class="table fixed_header">
+              <thead class="tableHeaderBackground tablePanelHeading " style="font-size:
+    12px; ">
+                <tr>
+                  <th class="fntFmly tblHeaderFnt" style="width: 100px !important;"><strong style="color: #524d4d !important;text-align:center;"></strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 245px !important;text-align:center;"><strong style="color: #524d4d !important;text-align:center;">{{Name}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 329px !important;text-align:center;"><strong style="color: #524d4d !important;text-align:center;">{{Designation_Department}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 355px !important;text-align:center;"><strong style="color: #524d4d !important;text-align:center;">{{Relation}}</strong></th>
+
+                </tr>
+              </thead>
+              <tbody class="tblbodyclr member">
+                <tr *ngIf="!RelativeDetail || RelativeDetail.length <= 0" style="font-size: 12px;">
+                  <td colspan="7" style="text-align: center; width:1030px;">
+                    <span class="fntFmly">
+                      <!--No data-->{{nodata}}
+                    </span>
+                  </td>
+                </tr>
+                <tr *ngFor="let item of RelativeDetail"  (click)="handleRelativeInTPSEdit(item)">
+                  <td style="width: 100px !important;">
+                    <!--<a style="cursor: pointer;" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" data-toggle="modal" data-target="#myModal35" data-backdrop="static" data-keyboard="false" onclick="return false">
+                    <img src="../../../../../assets/images/imgEdit.png" (click)="onUpdateRelative_Click(item)">
+                  </a>&nbsp;&nbsp;
+                  <a onclick="return false" href="">
+                    <img src="../../../../../assets/images/imgRemove.png" style="margin-top: 4px;" (click)="setId(item)" data-toggle="modal" data-target="#myModalFordelete1" data-backdrop="static" data-keyboard="false">
+                  </a>-->
+
+                    <div class="click-to-top">
+                      <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                         [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+                         class="glyphicon glyphicon-edit"
+                         (click)="handleRelativeInTPSEdit(item)">
+                        <span class="forEditTooltip">Edit</span>
+
+                      </a>
+                    </div>&nbsp;&nbsp;
+                    <div class="click-to-top" style="position: relative;">
+                      <a onclick="return false"  *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                         class="fa fa-times"
+                         style="color: #C77874; vertical-align: middle; cursor:pointer;"
+                         (click)="handleRelativeInTPSDeleteClick(item)">
+                        <span class="forDeleteTooltip">Delete</span>
+                      </a>
+                    </div>
+
+                  </td>
+
+                  <td class="fntWght fntFmly" style="width: 245px !important;font-size: 12px !important;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">{{item.Descriptive_Name}}</td>
+                  <td class="fntWght fntFmly" style="width: 329px !important;font-size: 12px !important;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">{{item.Descriptive_Designation}}</td>
+                  <td class="fntWght fntFmly" style="width: 355px !important;font-size: 12px !important;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">{{getRelativeRelationName(item.RelationshipId)}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <br />
+    </form>
+
+    <!--*ngIf="VisCompetenciesSkills == true"-->
+
+    <form action="/action_page.php " *ngIf="VisCompetenciesSkills == true" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+      <br />
+      <div class="row" style="display:flex;">
+        <div class="col-xs-12 col-sm-12" style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="form-group ">
+            <p [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="font-size:20px; "><span *ngIf="MndCompetenciesSkills == true" style="color:red; font-size:22px; margin-left:-10px !important ">*</span><!--Competencies / Skills-->{{CompetenciesSkills}}</p>
+          </div>
+        </div>
+        <div class="col-sm-7 ">
+          <div class="form-group ">
+
+          </div>
+        </div>
+
+        <div class="col-sm-2 padding-unset">
+          <div class="form-group">
+            <a data-toggle="modal" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null" (click)="btnAdd_Click('ComptenciesSkill'); resetDate()" [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-top: 4px;" data-target="#myModal5" class="btnClass popupStyle clrhover uppercase" data-backdrop="static" data-keyboard="false">
+              <span class="glyphicon glyphicon-plus"></span> <!--ADD-->{{Add}}
+            </a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal5" role="dialog">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header" style="border-bottom: 0px solid #e5e5e5;">
+                    <button type="button" class="close textColor" data-dismiss="modal"><img src="assets/images/lookupclose.png"></button>
+                    <h4 class="modal-title primary PopupLeftRightPdngHeading" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><span *ngIf="MndCompetenciesSkills == true" style="color:red;">*</span><!--Competencies / Skills-->{{CompetenciesSkills}}</h4>
+                  </div>
+                  <div class="modal-body">
+
+                    <div class="row " *ngIf="isMandatoryfields || DisconnectInternet || isCorrectDateCompetency">
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isMandatoryfields == true"><span style="color:red;font-size:14px !important" class="forValidation">*</span>Please enter mandatory fields.</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="DisconnectInternet == true"><span style="color:red;font-size:14px !important" class="forValidation">*</span>Please check your internet connection and try again.</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isCorrectDateCompetency">Please Enter Valid Date</label>
+
+
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="degree " class="fntWght fontSize12"><span style="color:red; " class="mandatoryStar">*</span><!--Competency-->{{Competency}}</label><br>
+                          <select [ngClass]="{'BorderColor':isMandatoryfields && ddlCompetency1 == 'N/A'}" id="ddlCompetencyLevel3Dropdown" [(ngModel)]="ddlCompetency" class="selectpicker form-control Font-size_dropdown" style="border-radius:0px;" name="ddlCompetencyLevel3Dropdown">
+                            <option *ngFor="let item of CompetencyLevel3Dropdown" [ngValue]="item.Id">{{ item.Name }}</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="institute" class="fntWght fontSize12"><span style="color:red; " class="mandatoryStar">*</span><!--Required Rating-->{{RequiredRating}}</label>
+
+                          <select [ngClass]="{'BorderColor':isMandatoryfields && ddlRequiRatingCompetency1 == 'N/A'}" [(ngModel)]="ddlRequiRatingCompetency" id="ddlRatingDropdown" class="selectpicker form-control Font-size_dropdown" style="border-radius:0px;" name="ddlRatingDropdown">
+                            <option *ngFor="let item of RatingDropdown" [ngValue]="item.Id">{{ item.Name }}</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="institute " class="fntWght fontSize12"><span style="color:red; " class="mandatoryStar">*</span><!--Remarks-->{{lblremarks}}</label>
+                          <input type="text" maxlength="150" [ngClass]="{'BorderColor':isMandatoryfields && RemarksCompetency == ''}" [(ngModel)]="RemarksCompetency" class="form-control fontSize12" id="Remarks4" placeholder=" Enter Remarks" name="Remarks4" style="border-radius:0px;">
+                        </div>
+                      </div>
+
+
+                    </div>
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group " align="center">
+                          <a class="btn btnTextColor greenBackgroundClr btn-lg SaveBtn1 ltrSpc clrhover" (click)="SaveCompetencySkill()">
+                            <img src="assets/images/btnSave.png" style="height: 12px; margin-bottom: 5px;"> &nbsp;  <!--SAVE-->{{Save}}
+                          </a>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <!--Popup Close-->
+          </div>
+        </div>
+      </div>
+
+      <div class="row " style="word-break: break-all !important;">
+        <div class="col-sm-12 " style="margin-bottom:10px; ">
+          <div *ngIf="!updateProfService.IsGridStyle" class='normalView'>
+            <table *ngIf="!CompetencySkillsDetail || CompetencySkillsDetail.length <= 0" style="width:100%;font-size: 12px;">
+              <tbody style="overflow-y:hidden;">
+                <tr style="width:100%; display: block;">
+                  <td style="width:100%; text-align: center; display: block;">
+                    <h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="fntFmly">
+                      {{nodata}}
+                    </h5>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div *ngFor="let item of CompetencySkillsDetail; let i = index">
+              <!-- <hr style="border-top: 1px solid" [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"/> -->
+              <h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">{{i+1}} - {{item?.Competencethree}}</h5>
+
+              <div class="otherDetailsNormalView aligned-row" style="margin-bottom: 3px;"><b>{{RequiredRating}}: &nbsp;&nbsp;</b>{{item?.RatingName}}</div>
+              <div class="otherDetailsNormalView aligned-row" style="margin-bottom: 3px;"><b>{{lblremarks}}: &nbsp;&nbsp;</b>{{item?.Remarks}}</div>
+              <div class="click-to-top">
+                <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                   [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+                   class="glyphicon glyphicon-edit"
+                   (click)="handleCompetenciesEdit(item)">
+                  <span class="forEditTooltip" style="bottom: 1px !important; left: 36px !important;">Edit</span>
+                </a>
+              </div>&nbsp;&nbsp;
+              <div class="click-to-top" style="position: relative; ">
+                <a onclick="return false" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                   class="fa fa-times"
+                   style="color: #C77874; vertical-align: middle; cursor:pointer;"
+                   (click)="handleCompetenciesDeleteClick(item)">
+                  <span class="forDeleteTooltip">Delete</span>
+                </a>
+
+              </div>
+              <hr *ngIf="CompetencySkillsDetail.length > 1" />
+              <br />  <br />
+            </div>
+          </div>
+          <div class="ex2" *ngIf="updateProfService.IsGridStyle">
+            <table class="table fixed_header">
+              <thead class="tableHeaderBackground tablePanelHeading " style="font-size:
+    12px; ">
+                <tr>
+                  <th class="fntFmly tblHeaderFnt" style="width: 100px !important;text-align:center;"><strong style="color: #524d4d !important;<!--margin-left: -10px;-->"></strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 258px !important;text-align:center;"><strong style="color: #524d4d !important;"><!--Competency-->{{Competency}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 258px !important;text-align:center;"><strong style="color: #524d4d !important;<!--margin-left: -10px;-->"><!--Required Rating-->{{RequiredRating}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width: 414px !important;text-align:center;"><strong style="color: #524d4d !important;<!--margin-left: -10px;-->"><!--Remarks-->{{lblremarks}}</strong></th>
+                </tr>
+              </thead>
+              <tbody class="tblbodyclr member">
+                <tr *ngIf="!CompetencySkillsDetail || CompetencySkillsDetail.length <= 0" style="font-size: 12px;">
+                  <td colspan="7" style="text-align: center; width:1030px;">
+                    <span class="fntFmly">
+                      <!--No data-->{{nodata}}
+                    </span>
+                  </td>
+                </tr>
+                <tr *ngFor="let item of CompetencySkillsDetail" (click)="handleCompetenciesEdit(item)">
+                  <td style="width: 100px !important;">
+                    <!--<a style="cursor: pointer;" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" data-toggle="modal" data-target="#myModal5" data-backdrop="static" data-keyboard="false" onclick="return false">
+                    <img src="../../../../../assets/images/imgEdit.png" (click)="onUpdateCompetencySkill_Click(item)">
+                  </a>&nbsp;&nbsp;
+                  <a onclick="return false" href="">
+                    <img src="../../../../../assets/images/imgRemove.png" style="margin-top: 4px;" (click)="setId(item)" data-toggle="modal" data-target="#myModalFordelete1" data-backdrop="static" data-keyboard="false">
+                  </a>-->
+
+                    <div class="click-to-top">
+                      <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                         [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+                         class="glyphicon glyphicon-edit"
+                         (click)="handleCompetenciesEdit(item)">
+                        <span class="forEditTooltip">Edit</span>
+
+                      </a>
+                    </div>&nbsp;&nbsp;
+                    <div class="click-to-top" style="position: relative;">
+                      <a onclick="return false" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                         class="fa fa-times"
+                         style="color: #C77874; vertical-align: middle; cursor:pointer;"
+                         (click)="handleCompetenciesDeleteClick(item)">
+                        <span class="forDeleteTooltip">Delete</span>
+                      </a>
+                    </div>
+
+                  </td>
+                  <td class="fntWght fntFmly" style="width: 258px !important; font-size: 12px !important;text-align:center;"> {{ item.Competencethree }}</td>
+                  <td class="fntWght fntFmly" style="width: 258px !important; font-size: 12px !important;text-align:center;">{{ item.RatingName }}</td>
+                  <td class="fntWght fntFmly" style="width: 414px !important; font-size: 12px !important;text-align:center;">{{ item.Remarks }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <br />
+    </form>
+    <!--*ngIf="VisProfessionalReferences == true"-->
+    <!-- Professional References-->
+    <form action="/action_page.php" *ngIf="VisProfessionalReferences == true" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+      <br />
+      <div class="row " style="display:flex;">
+        <div class="col-xs-12 col-sm-12" style="display:flex; justify-content:space-between; align-items:center;">
+          <div class="form-group ">
+            <p [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="font-size:20px; "><span *ngIf="MndProfessionalReferences == true" style="color:red; font-size:22px;  margin-left:-10px !important">*</span>{{ProfessionalReferences}}</p>
+          </div>
+        </div>
+        <div class="col-sm-7 ">
+          <div class="form-group ">
+
+          </div>
+        </div>
+
+        <div class="col-sm-2 padding-unset">
+          <div class="form-group">
+            <a data-toggle="modal" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null" (click)="btnAdd_Click('ProfReference'); resetDate()" [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-top: 4px;" data-target="#myModal6" class="btnClass popupStyle clrhover uppercase" data-backdrop="static" data-keyboard="false">
+              <span class="glyphicon glyphicon-plus"></span> <!--ADD-->{{Add}}
+            </a>
+
+            <!-- Modal -->
+            <div class="modal fade" id="myModal6" role="dialog">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header" style="border-bottom: 0px solid #e5e5e5;">
+                    <button type="button" class="close textColor" data-dismiss="modal"><img src="assets/images/lookupclose.png"></button>
+                    <h4 class="modal-title PopupLeftRightPdngHeading" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><span *ngIf="MndProfessionalReferences == true" style="color:red;">*</span>{{ProfessionalReferences}}</h4>
+                  </div>
+                  <div class="modal-body">
+
+                    <div class="row " *ngIf="isMandatoryfields || DisconnectInternet || EmailValidation || isCorrectDateRefference">
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+                          <label style="color:red;float: right; margin-right: 25px;" class="forValidation" *ngIf="isMandatoryfields == true"><span style="color:red;font-size:14px !important" class="forValidation">*</span>Please enter mandatory fields.</label>
+                          <label *ngIf="DisconnectInternet == true" style="color:red;font-size:12px !important"><span style="color:red;font-size:14px !important" class="forValidation">*</span>Please check your internet connection and try again.</label>
+                          <label *ngIf="EmailValidation" style="color:red; float: right; margin-right: 25px;" class="forValidation">Please enter valid Email Address</label>
+                          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isCorrectDateRefference">Please Enter Valid Date</label>
+
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="" class="fntWght fontSize12"><span style="color:red;" class="mandatoryStar">*</span><!--Name-->{{Name}}</label><br>
+                          <input type="text" maxlength="50" [ngClass]="{'BorderColor':isMandatoryfields && NameProfessionalReference == ''}" [(ngModel)]="NameProfessionalReference" class="form-control fontSize12" id="Name5" placeholder="Enter Reference Name " name="Name5" style="border-radius:0px;">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="" class="fntWght fontSize12"><span style="color:red;" class="mandatoryStar">*</span><!--Designation-->{{Designation}}</label>
+                          <input type="text" maxlength="50" [ngClass]="{'BorderColor':isMandatoryfields && DesignationProfessionalReference == ''}" [(ngModel)]="DesignationProfessionalReference" class="form-control fontSize12" id="Designation5" placeholder="Enter designation" name="Designation5" style="border-radius:0px;">
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group ">
+                          <label for="institute " class="fntWght fontSize12"><!--<span style="color:red;" class="mandatoryStar">*</span>-->{{ProfessionalInformation}}</label>
+                          <input type="text" maxlength="100" [(ngModel)]="RelationshipProfessionalReference" class="form-control fontSize12" id="professionalrelationship5" placeholder="Enter Information " name="professionalrelationship5" style="border-radius:0px;">
+
+                        </div>
+                      </div>
+
+
+                    </div>
+
+
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="institute" class="fntWght fontSize12"><!--Company (Current)-->{{lblCompanyCurrent}}</label>
+                          <input type="text" maxlength="50" [(ngModel)]="CurrentCompanyProfessionalReference" class="form-control fontSize12" id="company6" placeholder="Enter References Company " name="company6" style="border-radius:0px;">
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="institute" class="fntWght fontSize12">{{ReportingTo}}</label>
+                          <input type="text" maxlength="100" [(ngModel)]="ReportingToProfessionalReference" class="form-control fontSize12" id="reporting6" placeholder="Enter Reporting To (Name & Designation) " name="reporting6" style="border-radius:0px;">
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="institute" class="fntWght fontSize12"><!--Email-->{{APEmail}}</label>
+                          <input type="email" maxlength="50" [(ngModel)]="EmailProfessionalReference" class="form-control fontSize12" id="EmailProfessionalReference" placeholder="Enter Email " name="email6" style="border-radius:0px;">
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="row PopupLeftRightPdngBox">
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="degree" class="fntWght fontSize12"><span style="color:red;" class="mandatoryStar">*</span><!--Contact Number-->{{ContactNumber}}</label><br>
+                          <input NumericInput appBlockCopyPaste type="text" maxlength="12" minlength="12" [ngClass]="{'BorderColor':isMandatoryfields && ContactNumberProfessionalReference == ''}" [(ngModel)]="ContactNumberProfessionalReference" class="form-control fontSize12" id="contactnumber6" placeholder="Enter Phone No.(e.g., 923XXXXXXXXX)" name="contactnumber6" style="border-radius:0px;">
+                          <small *ngIf="showPhoneNumberError && !validatePhoneNumber(ContactNumberProfessionalReference)" style="color:red;">
+                            Invalid phone number format. Must be in the format 923XXXXXXXXX.
+                          </small>
+
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="institute" class="fntWght fontSize12"><!--Address Type-->{{AddressType}}</label>
+
+                          <select id="ddlAddressType" [(ngModel)]="AddressTypeProfessionalReference" class="selectpicker form-control Font-size_dropdown" style="border-radius:0px;"
+                                  name="ddlAddressType">
+                            <option value="">N/A</option>
+                            <option value="P">Personal</option>
+                            <option value="B">Business</option>
+                          </select>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+                          <label for="" class="fntWght fontSize12"><!--Postal Address-->{{PostalAddress}}</label>
+                          <input type="text" maxlength="170" [(ngModel)]="PostalAddressProfessionalReference" class="form-control fontSize12" id="postaladdress6" placeholder="Enter Address " name="postaladdress6" style="border-radius:0px;">
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="row ">
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+
+                        </div><!--<button type='submit' (click)="validate()" id='validate'></button>-->
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group " align="center">
+                          <a class="btn btnTextColor greenBackgroundClr btn-lg SaveBtn1 ltrSpc clrhover" (click)="validate()" id='validate'>
+                            <img src="assets/images/btnSave.png" style="height: 12px; margin-bottom: 5px;"> &nbsp; <!--SAVE-->{{Save}}
+                          </a>
+                        </div>
+                      </div>
+                      <div class="col-sm-4 ">
+                        <div class="form-group ">
+
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <!--Popup Close-->
+          </div>
+        </div>
+      </div>
+
+      <div class="row " style="word-break: break-all !important;">
+        <div class="col-sm-12 " style="margin-bottom:10px; ">
+
+          <div *ngIf="!updateProfService.IsGridStyle" class='normalView'>
+            <table *ngIf="!ProfessRefDetail || ProfessRefDetail.length <= 0" style="width:100%;font-size: 12px;">
+              <tbody style="overflow-y:hidden;">
+                <tr style="width:100%; display: block;">
+                  <td style="width:100%; text-align: center; display: block;">
+                    <h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="fntFmly">
+                      {{nodata}}
+                    </h5>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div *ngFor="let item of ProfessRefDetail; let i = index">
+              <!-- <hr style="border-top: 1px solid" [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"/> -->
+              <h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">{{i+1}} - {{item?.RefName}}</h5>
+              <h6 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="subHeadOpac">{{item?.Designation}}</h6>
+              <div class="otherDetailsNormalView aligned-row-extra"><b>Professional Information: &nbsp;&nbsp;</b><span style="overflow-wrap: break-word;">{{item?.Relationship}}</span></div>
+              <div class="otherDetailsNormalView aligned-row-extra"><b>Company (Current): &nbsp;&nbsp;</b><span style="overflow-wrap: break-word;">{{item?.Company}}</span></div>
+              <div class="otherDetailsNormalView aligned-row-extra"><b>Reporting To (Name & Designation): &nbsp;&nbsp;</b><span style="overflow-wrap: break-word;">{{item?.ReportingTo}}</span></div>
+              <div class="otherDetailsNormalView aligned-row-extra"><b>{{APEmail}}: &nbsp;&nbsp;</b>{{item?.Email}}</div>
+              <div class="otherDetailsNormalView aligned-row-extra"><b>Contact Number: &nbsp;&nbsp;</b>{{item?.Phone}}</div>
+              <div class="otherDetailsNormalView aligned-row-extra"><b>Postal Address: &nbsp;&nbsp;</b><span style="overflow-wrap: break-word;">{{item?.Address}}</span></div>
+              <div class="otherDetailsNormalView aligned-row-extra" style="margin-bottom: 3px;"><b>Address Type: &nbsp;&nbsp;</b>{{item.AddressType == 'P' ? 'Personal' : item.AddressType == 'B' ? 'Business' : '' }}</div>
+              <div class="click-to-top">
+                <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                   [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+                   class="glyphicon glyphicon-edit"
+                   (click)="handleReferencesEdit(item)">
+                  <span class="forEditTooltip" style="bottom: 1px !important; left: 36px !important;">Edit</span>
+                </a>
+              </div>&nbsp;&nbsp;
+              <div class="click-to-top" style="position: relative; ">
+                <a onclick="return false" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                   class="fa fa-times"
+                   style="color: #C77874; vertical-align: middle; cursor:pointer;"
+                   (click)="handleReferencesDeleteClick(item)">
+                  <span class="forDeleteTooltip">Delete</span>
+                </a>
+
+              </div>
+              <hr *ngIf="ProfessRefDetail.length > 1" />
+              <!-- <br /> -->
+
+              <p [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                 style="font-style: italic; margin-top: 10px;">
+                We may contact the individuals listed in your references section.
+              </p>
+            </div>
+          </div>
+          <div class="ex2" *ngIf="updateProfService.IsGridStyle">
+            <table class="table fixed_header">
+              <thead class="tableHeaderBackground tablePanelHeading " style="font-size: 12px;">
+                <tr style="vertical-align: top;">
+                  <th class="fntFmly tblHeaderFnt" style="width:73px;text-align:center;"><strong style="color: #524d4d !important;"></strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width:103px;text-align:center;"><strong style="color: #524d4d !important;"><!--Name-->{{Name}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width:103px;text-align:center;"><strong style="color: #524d4d !important;"><!--Designation-->{{Designation}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width:103px;text-align:center;"><strong style="color: #524d4d !important;">Professional <br /> Relationship</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width:103px;text-align:center;"><strong style="color: #524d4d !important;">Company <br /> (Current)</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width:103px;text-align:center;"><strong style="color: #524d4d !important;">Reporting To <br /> (Name & <br /> Designation)</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width:133px;text-align:center;"><strong style="color: #524d4d !important;"><!--Email-->{{APEmail}}</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width:103px;text-align:center;"><strong style="color: #524d4d !important;">Contact <br /> Number</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width:103px;text-align:center;"><strong style="color: #524d4d !important;">Postal <br /> Address</strong></th>
+                  <th class="fntFmly tblHeaderFnt" style="width:103px;text-align:center;"><strong style="color: #524d4d !important;">Address <br /> Type</strong></th>
+                </tr>
+              </thead>
+              <tbody class="tblbodyclr member">
+                <tr *ngIf="!ProfessRefDetail || ProfessRefDetail.length <= 0" style="font-size: 12px;">
+                  <td colspan="7" style="text-align: center; width:1030px;">
+                    <span class="fntFmly">
+                      <!--No data-->{{nodata}}
+                    </span>
+                  </td>
+                </tr>
+                <tr *ngFor="let item of ProfessRefDetail" (click)="handleReferencesEdit(item)">
+                  <td style="width: 73px !important;">
+                    <!--<a style="cursor:pointer" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" data-toggle="modal" data-target="#myModal6" data-backdrop="static" data-keyboard="false" onclick="return false">
+        <img src="../../../../../assets/images/imgEdit.png" (click)="onUpdateProfessionalReference_Click(item)">
+      </a>&nbsp;&nbsp;
+      <a onclick="return false" href="">
+        <img src="../../../../../assets/images/imgRemove.png" style="margin-top: 4px;" (click)="setId(item)" data-toggle="modal" data-target="#myModalFordelete1" data-backdrop="static" data-keyboard="false">
+      </a>-->
+
+                    <div class="click-to-top">
+                      <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                         [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+                         class="glyphicon glyphicon-edit"
+                         (click)="handleReferencesEdit(item)">
+                        <span class="forEditTooltip">Edit</span>
+
+                      </a>
+                    </div>&nbsp;&nbsp;
+                    <div class="click-to-top" style="position: relative; ">
+                      <a onclick="return false" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                         class="fa fa-times"
+                         style="color: #C77874; vertical-align: middle; cursor:pointer;"
+                         (click)="handleReferencesDeleteClick(item)">
+                        <span class="forDeleteTooltip">Delete</span>
+                      </a>
+                    </div>
+
+
+                  </td>
+                  <td class="fntWght fntFmly" style="width:103px;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">{{ item.RefName }}</td>
+                  <td class="fntWght fntFmly" style="width:103px;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">{{ item.Designation }}</td>
+                  <td class="fntWght fntFmly" style="width:103px;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">{{ item.Relationship }}</td>
+                  <td class="fntWght fntFmly" style="width:103px;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">{{ item.Company }}</td>
+                  <td class="fntWght fntFmly" style="width:103px;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">{{ item.ReportingTo }}</td>
+                  <td class="fntWght fntFmly" style="width:133px;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">{{ item.Email }}</td>
+                  <td class="fntWght fntFmly" style="width:103px;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">{{ item.Phone }}</td>
+                  <td class="fntWght fntFmly" style="width:103px;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;">{{ item.Address }}</td>
+                  <!--<td class="fntWght fntFmly" style="width:103px">&nbsp;&nbsp;{{ item.AddressType }}</td>-->
+
+
+
+                  <td class="fntWght fntFmly" style="width: 103px !important;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;" *ngIf="item.AddressType == 'P'">Personal</td>
+                  <td class="fntWght fntFmly" style="width: 103px !important;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;" *ngIf="item.AddressType == 'B'">Business</td>
+                </tr>
+                <tr *ngIf="ProfessRefDetail && ProfessRefDetail.length > 0">
+                  <td colspan="10" style="text-align: center;">
+                    <p 
+                       [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+                       style="font-style: italic; font-size: 13px; margin-top: 10px; text-align: center;">
+                      We may contact the individuals listed in your references section.
+                    </p>
+                  </td>
+                </tr>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </form>
+
+    <!--New Added For field force -->
+
+    <form action="/action_page.php" *ngIf="isFF == true" style="font-size:12px;border-bottom: 1px solid rgb(0, 127, 255); ">
+
+
+      <div class="row">
+        <div class="col-lg-2 col-md-2 col-sm-2" style="margin-left:-15px;">
+          <div class="col-lg-2">
+            <p [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="font-size:20px;margin-top: 32px;">Declaration</p>
+          </div>
+        </div>
+        <div class="col-lg-12 text-justify ">
+          <label class="no-gap-label">
+            <input [style.color]="ThemeFontColor ? ThemeFontColor : DefaultFontColor" type="checkbox" [checked]="ApprovalStatus == 'S' || isCheckboxChecked" [disabled]="ApprovalStatus == 'S' || DeclarationcheckboxVisible == true" id="declarationCheckbox" (change)="showButtonNext($event)"> I declare that the information in this application form is complete and true. I also understand that as a part of {{RelativeInCompanyLabelonly}} procedures, an inquiry may be made which will provide applicable information concerning my employment history, performance, and character. Furthermore, I undertake that I have never been arrested or involved in any criminal activity. Hence, I authorize {{RelativeInCompanyLabelonly}} to investigate all the statements made in this form.
+          </label>
+        </div>
+      </div>
+
+
+
+      <div class="row">
+        <div style="margin-top: 35px;margin-bottom:20px; text-align: center;">
+          <button type="submit" class="btn btn-secondary" style="margin-right : 15px ;border:1px solid grey" (click)="moveToPreviousTab()"> Return To Previous Section</button>
+          <button type="submit" class="btn btn-success" data-mdb-ripple-color="#ffffff" id="submitButton" [disabled]="ApprovalStatus == 'S' || !submitButtonVisible" (click)="SaveRecords(); checkCheckbox()">Submit</button>
+
+          <div *ngIf=" ApprovalStatus == 'S' " class="submission-date" style="margin-top: 25px;">
+            Submitted on: {{ SubmissionDate | date: 'dd/MMM/yyyy hh:mm a' }}
+          </div>
+        </div>
+      </div>
+
+
+    </form>
+
+    <!--Success Message-->
+
+    <div class="modal fade custom-modal" id="myModal40" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 0.5rem; border: 1px solid #d6e9c6;">
+          <div class="modal-header" style="background-color: #d4edda; color: #155724; border-bottom: 1px solid #c3e6cb;">
+            <h5 class="modal-title" id="successModalLabel" style="font-size: 15px; font-weight: bold;">Success!</h5>
+          </div>
+          <div class="modal-body" style="padding: 1.5rem; color: #155724; font-size: 14px; line-height: 1.5;">
+            Your application has been successfully submitted!.<br>
+            You will be contacted soon by your interviewer.
+          </div>
+          <div class="modal-footer" style="background-color: #d4edda; border-top: 1px solid #c3e6cb;">
+            <button type="button" (click)="closepopupSuccess()" class="btn btn-secondary" data-bs-dismiss="modal" style="background-color: #6c757d; border: none;">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+    <!-- Modal 50 -->
+    <div class="modal fade" id="ErrorOccurinValidation" role="dialog" data-keyboard="false" data-backdrop="static">
+      <div class="modal-dialog modal-sm fade1">
+        <div class="modal-content" style="height: auto !important; max-height: 400px !important;" id="widthForpop">
+          <div class="modal-body">
+            <div class="row" style="text-align:center" *ngIf="isTick">
+              <div class="col-lg-12">
+                <img class="popupThankLogo" [src]="tickImage" />
+              </div>
+            </div>
+
+            <div class="row" style="margin-top: 5px !important;">
+              <div class="col-lg-12">
+                <pre style="white-space: normal; word-break: keep-all; font-family: Barlow, Medium !important; background-color: white !important; border: white !important;" [innerHTML]="ValidationErrorMsg" [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"></pre>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group" style="text-align: center;">
+                  <a class="btn btn-lg btnTextColor SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]" style="margin-left: 5px; color: white;" (click)="removeMsg()">
+                    <span class="fa fa-check"></span> &nbsp;OK
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Validation Success Modal -->
+
+
+
+    <div class="modal fade" id="ValidationModal" role="dialog" data-keyboard="false" data-backdrop="static">
+      <div class="modal-dialog modal-lg fade1" >
+        <div class="modal-content" style="height: auto !important; max-height: 400px !important;" id="widthForpop">
+          <div class="modal-body">
+            <div class="row" style="margin-top: 5px !important;">
+              <div class="col-lg-12">
+                <div class="scrollable" style="max-height: 300px; overflow-y: auto;">
+                  <pre style="white-space: normal; word-break: keep-all; font-family: Barlow, Medium !important; background-color: white !important; border: white !important;" [innerHTML]="formatValidationMsg(ValidationMsg)" [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"></pre>
+                </div>
+              </div>
+
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group" style="text-align: center;">
+                  <a class="btn btn-lg btnTextColor SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]" style="margin-left: 5px; color: white;" (click)="removeMsg()">
+                    <span class="fa fa-check"></span> &nbsp;OK
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+   </div>
+
+
+    <!--End New Added For field force -->
+
+  </div>
+
+
+  <!--Popup For Successfully-->
+
+  <div class="modal fade" id="SuccessPopup" role="dialog">
+    <div class="modal-dialog modal-sm fade1" style=" transform: translate(-2%, 80%);">
+      <div class="modal-content" style="width: 350px;">
+
+        <div class="modal-body">
+
+          <div class="row" style="text-align:center" *ngIf="isTick">
+
+            <div class="col-lg-12 ">
+
+              <img class="popupThankLogo" [src]="tickImage" />
+
+            </div>
+
+
+          </div>
+
+
+
+          <div class="row" style=" margin-top: 5px !important;">
+
+            <div class="col-lg-12">
+
+              <p style="text-align: center;" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">{{ SuccessMsg }}</p>
+
+            </div>
+
+
+
+          </div>
+
+
+          <!--<div class="row" >
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group" style="text-align: center;">
+                <a class="btn btn-lg btnTextColor SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-left: 5px; color: white;" (click)="removeMsg()"><span class="fa fa-check"></span> &nbsp;OK  </a>
+              </div>
+            </div>
+
+          </div>-->
+
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!--Popup For Successfully-->
+
+
+
+  <!--Popup For Delete-->
+
+  <div class="modal fade" id="myModalFordelete1" role="dialog">
+    <div class="modal-dialog modal-sm fade1" style=" transform: translate(0%, 200%);">
+      <div class="modal-content" style="width: 345px; height: 105px;">
+
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+            </div>
+
+
+          </div>
+
+
+
+          <div class="row" style=" margin-top: 5px !important;">
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+
+            </div>
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+
+              <p style="text-align: center;">Are you sure you want to delete?</p>
+
+            </div>
+
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+
+            </div>
+
+
+          </div>
+
+
+          <div class="row" style=" margin-top: 5px !important;">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group" style="text-align: center;">
+                <a class="btn btn-lg btnTextColor greenBackgroundClr SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-left: 5px; color: white;" (click)="deleteProfReference(delprofessionalRef); deleteCompetencies(delCompetency); deleteExperience(delExperience); getdeleteTraining(delTraining); getdeleteRelativeDetails(delRelative); getdeleteCertification(delCertification); getdeleteQualification(delQualification)"><span class="fa fa-check"></span> &nbsp;Yes  </a> &nbsp;
+                <a class="btn btn-lg btnTextColor greenBackgroundClr SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="color: white;" (click)="setIdForNo()"> <span class="fa fa-times"></span> &nbsp; No </a>
+              </div>
+            </div>
+
+
+
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!--Popup Close For Delete-->
+</div>

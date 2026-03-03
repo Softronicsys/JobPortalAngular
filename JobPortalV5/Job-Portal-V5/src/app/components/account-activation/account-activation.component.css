@@ -1,0 +1,261 @@
+#BackgroundImageAccountActivation {
+  width: 100%;
+  margin-top: -24px !important;
+}
+
+#logoAdjstmnt {
+  /*height: 32px;
+  width: 200px;
+  margin: 28px 0px 0px 92px;*/
+  margin-right: 20px;
+  margin-top: 30px;
+}
+
+#WentWrongImage {
+  width: 100%;
+  margin-top: -335px !important;
+}
+
+#afterclickGenerateLink {
+  width: 100%;
+  margin-top: -420px !important;
+}
+
+
+/*
+#BackgroundImageActivation {
+  background: url(../../../assets/images/Asset8.png);
+  background-size: 1365px 685px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 565px !important;
+}
+*/
+@media screen and (min-width: 1226px) and (max-width: 1362px) {
+  /*#BackgroundImageAccountActivation {
+    width: 100%;
+    margin-top: -278px !important;
+  }*/
+}
+
+@media screen and (min-width: 1126px) and (max-width: 1226px) {
+
+  /*#BackgroundImageAccountActivation {
+    width: 100%;
+    margin-top: -217px !important;
+  }*/
+}
+
+@media screen and (min-width: 1000px) and (max-width: 1126px) {
+
+  /*#BackgroundImageAccountActivation {
+    width: 100%;
+    margin-top: -149px !important;
+  }*/
+}
+
+@media screen and (min-width: 900px) and (max-width: 1000px) {
+
+  /*#BackgroundImageAccountActivation {
+    width: 100%;
+    margin-top: -95px !important;
+  }*/
+}
+
+@media screen and (min-width: 800px) and (max-width: 900px) {
+
+  /*#BackgroundImageAccountActivation {
+    width: 100%;
+    margin-top: -36px !important;
+  }*/
+}
+
+@media screen and (min-width: 700px) and (max-width: 800px) {
+
+  /*#BackgroundImageAccountActivation {
+    width: 100%;
+    margin-top: 20px !important;
+  }*/
+}
+
+@media screen and (min-width: 600px) and (max-width: 700px) {
+
+  /*#BackgroundImageAccountActivation {
+    width: 100%;
+    margin-top: 80px !important;
+  }*/
+}
+
+@media screen and (min-width: 500px) and (max-width: 600px) {
+
+  /*#BackgroundImageAccountActivation {
+    width: 100%;
+    margin-top: 140px !important;
+  }*/
+}
+
+@media screen and (min-width: 400px) and (max-width: 500px) {
+
+  /*#BackgroundImageAccountActivation {
+    width: 100%;
+    margin-top: 200px !important;
+  }*/
+}
+
+@media screen and (min-width: 300px) and (max-width: 400px) {
+
+  /*#BackgroundImageAccountActivation {
+    width: 100%;
+    margin-top: 200px !important;
+  }*/
+  #logoAdjstmnt {
+    height: 45px;
+    /*width: 130px;*/
+    margin: 28px 0px 0px 2px;
+  }
+}
+
+
+/* went Wrong  */
+
+@media screen and (min-width: 1289px) and (max-width: 1362px) {
+
+  #WentWrongImage {
+    width: 100%;
+    margin-top: -335px !important;
+  }
+
+  #afterclickGenerateLink {
+    width: 100%;
+    margin-top: -420px !important;
+  }
+}
+
+@media screen and (min-width: 1189px) and (max-width: 1289px) {
+
+  #WentWrongImage {
+    width: 100%;
+    margin-top: -280px !important;
+  }
+  #afterclickGenerateLink {
+    width: 100%;
+    margin-top: -360px !important;
+  }
+}
+
+@media screen and (min-width: 1089px) and (max-width: 1189px) {
+
+  #WentWrongImage {
+    width: 100%;
+    margin-top: -224px !important;
+  }
+  #afterclickGenerateLink {
+    width: 100%;
+    margin-top: -300px !important;
+  }
+}
+
+@media screen and (min-width: 989px) and (max-width: 1089px) {
+
+  #WentWrongImage {
+    width: 100%;
+    margin-top: -162px !important;
+  }
+  #afterclickGenerateLink {
+    width: 100%;
+    margin-top: -250px !important;
+  }
+}
+
+@media screen and (min-width: 889px) and (max-width: 989px) {
+
+  #WentWrongImage {
+    width: 100%;
+    margin-top: -105px !important;
+  }
+  #afterclickGenerateLink {
+    width: 100%;
+    margin-top: -145px !important;
+  }
+}
+
+@media screen and (min-width: 789px) and (max-width: 889px) {
+
+  #WentWrongImage {
+    width: 100%;
+    margin-top: -50px !important;
+  }
+  #afterclickGenerateLink {
+    width: 100%;
+    margin-top: -145px !important;
+  }
+}
+
+@media screen and (min-width: 689px) and (max-width: 789px) {
+
+  #WentWrongImage {
+    width: 100%;
+    margin-top: 5px !important;
+  }
+  #afterclickGenerateLink {
+    width: 100%;
+    margin-top: -95px !important;
+  }
+}
+
+@media screen and (min-width: 589px) and (max-width: 689px) {
+
+  #WentWrongImage {
+    width: 100%;
+    margin-top: 62px !important;
+  }
+  #afterclickGenerateLink {
+    width: 100%;
+    margin-top: -25px !important;
+  }
+}
+
+@media screen and (min-width: 489px) and (max-width: 589px) {
+
+  #WentWrongImage {
+    width: 100%;
+    margin-top: 120px !important;
+  }
+  #afterclickGenerateLink {
+    width: 100%;
+    margin-top: 10px !important;
+  }
+}
+
+@media screen and (min-width: 389px) and (max-width: 489px) {
+
+  #WentWrongImage {
+    width: 100%;
+    margin-top: 175px !important;
+  }
+  #afterclickGenerateLink {
+    width: 100%;
+    margin-top: 60px !important;
+  }
+  #logoFloatRight {
+    float: left !important;
+  }
+
+}
+
+@media screen and (min-width: 289px) and (max-width: 389px) {
+
+  #WentWrongImage {
+    width: 100%;
+    margin-top: 195px !important;
+  }
+  #afterclickGenerateLink {
+    width: 100%;
+    margin-top: 70px !important;
+  }
+
+  #logoFloatRight {
+    float: left !important;
+  }
+}
+

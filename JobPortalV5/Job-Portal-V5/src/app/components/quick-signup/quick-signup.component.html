@@ -1,0 +1,281 @@
+
+
+
+
+<div class="container">
+  <div class="row justify-content-center" id="maindiv">
+    <div class="col-md-3"></div>
+    <div class="col-md-5">
+      <h3 [ngClass]="colorclass" style="margin-right: -110px; margin-bottom: 46px;">{{NewApplicant}}</h3>
+
+      <form id="detailsForm">
+        <div class="form-group row">
+          <label for="first_name" class="col-md-4 col-form-label">{{Firstname}}</label>
+
+          <div class="col-md-8">
+            <input type="text" maxlength="15" class="form-control" id="first_name" placeholder="Enter First Name" required [(ngModel)]="firstName" name="firstName">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="middle_name" class="col-md-4 col-form-label">{{MiddleName}}</label>
+          <div class="col-md-8">
+            <input type="text" maxlength="15" class="form-control" id="middle_name" placeholder="Enter Middle Name" [(ngModel)]="middleName" name="middleName">
+
+
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="last_name" class="col-md-4 col-form-label">{{LastName}}</label>
+          <div class="col-md-8">
+            <input type="text" maxlength="15" class="form-control" id="last_name" placeholder="Enter Last Name" required [(ngModel)]="lastName" name="lastName">
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="email" class="col-md-4 col-form-label">{{EmailAddress}}</label>
+          <div class="col-md-8">
+            <input type="email"
+                   class="form-control"
+                   id="email"
+                   placeholder="Enter Email Address"
+                   required
+                   email
+                   [(ngModel)]="email"
+                   name="email"
+                   #emailModel="ngModel">
+            <div *ngIf="emailModel.invalid && emailModel.touched">
+              <small *ngIf="emailModel.errors?.required" class="text-danger">Email is required.</small>
+              <small *ngIf="emailModel.errors?.email" class="text-danger">Please enter a valid email address.</small>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="id_card_number" class="col-md-4 col-form-label">{{IDCardNo}}</label>
+          <div class="col-md-8">
+            <input type="text" class="form-control" id="id_card_number" placeholder="Enter ID Card No." required [(ngModel)]="idCardNumber" name="idCardNumber">
+          </div>
+
+          <br />
+          <br />
+
+        </div>
+
+
+
+
+
+        <div class="form-group row">
+          <label for="proposed_designation" class="col-md-4 col-form-label">Proposed Designation:</label>
+          <div class="col-md-8">
+            <select class="form-control" id="proposed_designation" [(ngModel)]="proposedDesignation" name="proposedDesignation" required>
+              <option *ngFor="let designation of proposedDesignations" [ngValue]="designation">{{ designation.Name }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="main_team" class="col-md-4 col-form-label">Main Team:</label>
+          <div class="col-md-8">
+            <select class="form-control" id="main_team" [(ngModel)]="mainTeam" name="mainTeam" required>
+              <option *ngFor="let team of mainTeams" [ngValue]="team">{{ team.Name }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="team" class="col-md-4 col-form-label">Team:</label>
+          <div class="col-md-8">
+            <select class="form-control" id="team" [(ngModel)]="team" name="team" required>
+              <option *ngFor="let team of teams" [ngValue]="team">{{ team.Name }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="region" class="col-md-4 col-form-label">Region:</label>
+          <div class="col-md-8">
+            <select class="form-control" id="region" [(ngModel)]="region" name="region" required>
+              <option *ngFor="let region of regions" [ngValue]="region">{{ region.Name }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="district" class="col-md-4 col-form-label">District:</label>
+          <div class="col-md-8">
+            <select class="form-control" id="district" [(ngModel)]="district" name="district" required>
+              <option *ngFor="let district of districts" [ngValue]="district">{{ district.Name }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="territory" class="col-md-4 col-form-label">Territory:</label>
+          <div class="col-md-8">
+            <select class="form-control" id="territory" [(ngModel)]="territory" name="territory" required>
+              <option *ngFor="let territory of territories" [ngValue]="territory">{{ territory.Name }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="direct_reporting_to" class="col-md-4 col-form-label">Direct Reporting To:</label>
+          <div class="col-md-8">
+            <select class="form-control" id="direct_reporting_to" [(ngModel)]="directReportingTo" name="directReportingTo" required>
+              <option *ngFor="let reportingTo of directReportings" [ngValue]="reportingTo">{{ reportingTo.Name }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="expected_date_of_joining" class="col-md-4 col-form-label">
+            <!--Expected Date of Joining-->When can you Join:
+          </label>
+          <div class="col-md-8">
+            <select class="form-control" id="whenyoucanjoin" [(ngModel)]="whenCanYouJoin" name="whenyoucanjoin" required>
+              <option *ngFor="let date of DateofJoining " [ngValue]="date">{{ date.Name }}</option>
+            </select>
+            <!--<input type="date" class="form-control" id="expected_date_of_joining" [(ngModel)]="expectedDateOfJoining" name="expectedDateOfJoining" required>-->
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="gross_salary" class="col-md-4 col-form-label">Gross Salary:</label>
+          <div class="col-md-8">
+            <input type="number" class="form-control" id="gross_salary" placeholder="Enter Gross Salary" [(ngModel)]="grossSalary" name="grossSalary" required>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="currently_employed" class="col-md-4 col-form-label">Currently Employed:</label>
+          <div class="col-md-8">
+
+
+            <select class="form-control" id="currently_employed" [(ngModel)]="currentlyEmployed" name="currentlyEmployed" required>
+              <option *ngFor="let Emp of CurrentlyEmployed " [ngValue]="Emp">{{ Emp.Name }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group row">
+          <label for="Base_City" class="col-md-4 col-form-label">Base City:</label>
+          <div class="col-md-8">
+
+
+            <select class="form-control" id="Base_City" [(ngModel)]="BaseCity" name="BaseCity" >
+              <option *ngFor="let city of Basecities " [ngValue]="city">{{ city.Name }}</option>
+            </select>
+          </div>
+        </div>
+      </form>
+
+
+        <div class="form-group row">
+          <div class="col-md-12" [ngClass]="new1" style="margin-left:70px;">
+
+            <button type="submit" class="btn btn-primary" (click)="SaveQuickform()">Save and Email URL to Applicant for Completing Profile</button>
+            <!--<button type="submit" class="btn btn-primary" (click)="SaveQuickform()">Submit</button>-->
+          </div>
+          <div>
+
+
+          </div>
+        </div>
+
+
+
+
+
+ 
+      <!--<div>
+        <input [(ngModel)]="Dateofbirth" name="DOB" type="text" />
+        {{Dateofbirth}}
+
+        <button (click)="helpme()"> Click me </button>
+      </div>-->
+    </div>
+  </div>
+
+  <div class="modal fade transformPopup" id="myModalSingupErr" role="dialog"  data-toggle="modal" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg fade1" >
+      <div class="modal-content" style="width: 340px; ">
+
+        <div class="modal-body">
+
+          <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+
+            </div>
+
+
+          </div>
+
+
+
+          <div class="row" style=" margin-top: 5px !important; text-align:center !important;">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+              <p style="text-align: center;"  [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" [innerHTML]="RestrictMsg"></p>
+
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="generateLink">
+              <label style="text-align: center;"
+                     [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
+              {{genLink12}}</label>
+              <a [innerHTML]="genLink14" style="cursor: pointer !important"
+                 (click)="GenerateLink(); emptyPopup()"></a>
+              <label style="text-align: center;"
+                     [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
+              {{genLink15}}</label>
+
+              <!--<p style="text-align: center;" (click)="GenerateLink(); emptyPopup()" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" [innerHTML]="RestrictMsg1"></p>-->
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="color:red; font-size:14px;">
+              {{MsgValidate}}
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" *ngIf="linkProcessValid">
+
+
+              <p style="text-align: center;"  [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" > {{LinkMsgGenerate}}</p>
+              <p style="text-align: center;" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" > {{LinkMsgGenerate1}}</p>
+            </div>
+
+
+
+
+          </div>
+
+
+          <div class="row" style=" margin-top: 5px !important;">
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group" style="text-align: center;">
+                <a *ngIf="!generateLink" class="btn btn-lg btnTextColor greenBackgroundClr SaveBtn1"
+                   (click)="emptyPopup()" data-dismiss="modal"
+                   [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                   style=" color: white;"><span class="fa fa-check"></span> OK </a> 
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

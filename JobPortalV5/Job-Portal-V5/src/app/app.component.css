@@ -1,0 +1,17 @@
+#widthForpop {
+  width: auto !important;
+  position: absolute;
+  transform: translate(-30%, 50%) !important;
+}
+
+@media screen and (min-width: 320px) and (max-width: 450px) {
+  #BtnOfferMrgn {
+    margin-bottom: 10px !important;
+  }
+
+  #widthForpop {
+    width: 100% !important;
+    position: inherit;
+    transform: translate(0.5%, 50%) !important;
+  }
+}

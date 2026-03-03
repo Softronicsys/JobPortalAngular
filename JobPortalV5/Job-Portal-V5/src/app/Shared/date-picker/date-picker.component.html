@@ -1,0 +1,21 @@
+﻿<div  [formGroup]="datePickerForm">
+  <div col-sm-4>
+    <input NumericInput type="text" maxlength="2" formControlName="dd" class="form-control input-sm InputDatetextbox" style="width: 75px; float: left; height: 34px; margin-right: 10px;  border-radius: 0px;" [attr.disabled]="isDisabled ? '' : null" [ngClass]="{'mandatory': isRequired, 'redvalidation': isInValidCondition, 'yellowvalidation': (serverObj.isError || inValidDate) }" placeholder="DD" />
+  </div>
+    <div col-sm-4>
+      <select formControlName="mm" class="DropdownClassic Dropdowncalandar" style="width: 75px; height: 34px; float:left; margin-right: 10px; font-size:12px; " [attr.disabled]="isDisabled ? '' : null" [ngClass]="{'mandatory': isRequired, 'redvalidation': isInValidCondition, 'yellowvalidation': (serverObj.isError || inValidDate) }" name="month">
+        <option *ngFor="let month of calenderMonths" [value]="month.id">{{month.name}}</option>
+      </select>
+    </div>
+    <div col-sm-4>
+      <input NumericInput type="text" maxlength="4" formControlName="yyyy" class="form-control input-sm inputyeartextbox" style="width:75px; height: 34px; float:left; border-radius: 0px; " [attr.disabled]="isDisabled ? '' : null" [ngClass]="{'mandatory': isRequired, 'redvalidation': isInValidCondition, 'yellowvalidation': (serverObj.isError || inValidDate) }" placeholder="YYYY" />
+    </div>
+    <div class="input-group">
+      <input class="form-control" style="float:none;text-align: center;display:none" placeholder="YYYY" name="customDatePicker"
+             formControlName="pickerModel" ngx-mydatepicker (dateChanged)="onDateChanged($event)" [options]="myOptions" #dp="ngx-mydatepicker" />
+      <a  class="glyphicon glyphicon-calendar" [ngClass]="{'disabled-cursor' : isDisabled}" [attr.disabled]="isDisabled ? '' : null" (click)="dp.toggleCalendar()" style="float: left;margin-left:6px;margin-top: 8px;"> </a>
+    </div>
+  </div>
+<div *ngIf="serverObj.isError || inValidDate" [title]="serverObj.isError ? serverObj.msg : 'Invalid Date'" style="color: #ffac42;margin-top:15px;display:table;font-family: 'Barlow' !important;font-size:13px;  ">
+  {{ serverObj.isError ? serverObj.msg : 'Invalid Date' }}
+</div>

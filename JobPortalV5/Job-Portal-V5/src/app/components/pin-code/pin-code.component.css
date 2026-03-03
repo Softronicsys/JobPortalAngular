@@ -1,0 +1,112 @@
+
+
+#BackgroundImagePinCode {
+  background: url(/assets/images/vvv.png);
+  background-size: 1360px 565px;
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 565px !important;
+}
+#BackgroundImagepinCode {
+  width: 100%;
+  margin-top: -480px !important;
+}
+
+#butn {
+  cursor:pointer;
+}
+
+
+
+@media screen and (min-width: 1226px) and (max-width: 1362px) {
+
+  #BackgroundImagepinCode {
+    width: 100%;
+    margin-top: -477px !important;
+  }
+}
+
+@media screen and (min-width: 1126px) and (max-width: 1226px) {
+
+  #BackgroundImagepinCode {
+    width: 100%;
+    margin-top: -450px !important;
+  }
+}
+
+@media screen and (min-width: 1000px) and (max-width: 1126px) {
+
+  #BackgroundImagepinCode {
+    width: 100%;
+    margin-top: -394px !important;
+  }
+}
+
+@media screen and (min-width: 900px) and (max-width: 1000px) {
+
+  #BackgroundImagepinCode {
+    width: 100%;
+    margin-top: -290px !important;
+  }
+}
+
+@media screen and (min-width: 800px) and (max-width: 900px) {
+
+  #BackgroundImagepinCode {
+    width: 100%;
+    margin-top: -235px !important;
+  }
+}
+
+@media screen and (min-width: 700px) and (max-width: 800px) {
+
+  #BackgroundImagepinCode {
+    width: 100%;
+    margin-top: -178px !important;
+  }
+}
+
+@media screen and (min-width: 600px) and (max-width: 700px) {
+
+  #BackgroundImagepinCode {
+    width: 100%;
+    margin-top: -140px !important;
+  }
+}
+
+@media screen and (min-width: 500px) and (max-width: 600px) {
+
+  #BackgroundImagepinCode {
+    width: 100%;
+    margin-top: -80px !important;
+  }
+}
+
+@media screen and (min-width: 400px) and (max-width: 500px) {
+
+  #BackgroundImagepinCode {
+    width: 100%;
+    margin-top: -45px !important;
+  }
+  .floatRight {
+    float: right
+  }
+
+}
+
+@media screen and (min-width: 300px) and (max-width: 400px) {
+
+  #BackgroundImagepinCode {
+    width: 100%;
+    margin-top: -38px !important;
+  }
+
+  #butn {
+    margin-left: -45px;
+    cursor: pointer;
+  }
+  .floatRight{
+    float:right
+  }
+
+}

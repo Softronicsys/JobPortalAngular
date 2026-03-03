@@ -1,0 +1,22 @@
+﻿#myDIV1 {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+button:focus {
+  background: green;
+  outline: none !important;
+  color: white;
+  border-color: none !important;
+}
+
+button:active {
+  background: green;
+  outline: 0;
+  border: none !important;
+  color: white;
+  border-color: none !important;
+}
+
+
+

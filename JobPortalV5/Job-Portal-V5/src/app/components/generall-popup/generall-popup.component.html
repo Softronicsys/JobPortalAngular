@@ -1,0 +1,291 @@
+<style>
+  fieldset.scheduler-border {
+    border: 1px groove #ddd !important;
+    padding: 0 1.4em 1.4em 1.4em !important;
+    margin: 0 0 1.5em 0 !important;
+    -webkit-box-shadow: 0px 0px 0px 0px #000;
+    box-shadow: 0px 0px 0px 0px #000;
+  }
+
+  legend.scheduler-border {
+    font-size: 1.2em !important;
+    font-weight: bold !important;
+    text-align: left !important;
+    width: auto;
+    padding: 0 10px;
+    border-bottom: none;
+  }
+
+
+
+</style>
+
+
+<div>
+  <div class="row" style="line-height:1">
+    <div *ngFor="let item1 of this.Object.listofMPR" style="display: inline-block; width: 50%; vertical-align:top; text-align: initial;">
+      <div *ngIf="item1?.Heading != 'Work Experience' && item1?.Heading != 'Additional Requirement' &&
+           item1?.Heading != 'Incentive Package' && item1?.Heading != 'Other Benefit' &&
+           item1?.Heading != 'Salary Remarks' && item1?.Heading != 'Job Summary' &&
+           item1?.Heading != 'Accountabilities' && item1?.Heading != 'Responsibilities' &&
+           item1?.Heading != 'Extra Ordinary Work Condition'">
+      <div class="col-sm-5">
+        <div class="form-group">
+          <label class="fntFmly fntWght3 " style="margin-left: 12px;">{{ item1.Heading }}</label>
+        </div>
+      </div>
+      <div class="col-sm-7">
+        <div class="form-group" [style.color]="[IsDefaultTheme ? DefaultFontColor : ThemeFontColor]" style="display: -webkit-box !important;">
+          <label class="fntWght2" id="generallPopupText" >{{ item1.Value }}</label>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<br />
+ 
+<div>
+  
+  <div *ngFor="let item of arrHeadings" [style.borderTop]="[IsDefaultTheme ? DefaultBorderColor : BorderColor]">
+
+    <fieldset class="scheduler-border" style="width:97%; height:143px; margin-left: 12px !important; margin-top: 10px !important; background: white;">
+      <legend class="scheduler-border" style="margin-bottom: 8px !important; background-color: white;">
+        {{ item.Heading }}
+      </legend>
+      <!--<div [innerHtml]="item.Value" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="height: 116px; width: 825px; background: white; border: none;" disabled>
+
+      </div>-->
+      <textarea [style.color]="[IsDefaultTheme ? DefaultFontColor : ThemeFontColor]"
+                [style.-webkit-text-fill-color]="[IsDefaultTheme ? DefaultFontColor : ThemeFontColor]"                
+                style="height: 110px; margin-top: -11px; width: 102.5%;background: #f5f5f5;border-width: 0px;border-color: white;
+background: white;font-weight: normal;font-size: 8.5pt;font-family: Verdana;margin: 0px; margin-left: -13px; resize: none;-webkit-opacity:1"
+                disabled>{{item.Value}}</textarea>
+
+    </fieldset>
+
+  </div>
+</div>
+
+<br />
+
+
+<div class="tblWidthFormat" *ngIf="forGridData.showAuthorities">
+  <div>
+    <div class="PanelSeparator"></div>
+    <span class="PanelHeading" style="font-size:14px;">Authorities </span><br />
+    <table class="grd tblWidth" cellpadding="0" cellspacing="0" align="center">
+      <thead>
+        <tr style="height:35px !important;" >
+          <th class="align-left;" [style.backgroundColor]="[IsDefaultTheme ? DefaultFontColor : ThemeFontColor]" style="color:white; font-weight:500;">&nbsp; Authorities </th>
+        </tr>
+        <!--[ngStyle]="{'background-color': ThemeFontColor}"-->
+      </thead>
+      <tbody *ngIf="forGridData.showAuthorities" >
+        <tr *ngFor="let item of Object.authorities">
+
+          <td class="align-left"> &nbsp;{{ item.AuthorityName }}</td> 
+
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+  <br /><br />
+</div>
+
+  <div class="tblWidthFormat" *ngIf="forGridData.showMeetings">
+    <div>
+      <div class="PanelSeparator"></div>
+      <span class="PanelHeading" style="font-size:14px;">Meetings </span><br />
+     
+      <table class="grd" cellpadding="0" cellspacing="0" align="center">
+        <thead>
+          <tr style="height:35px !important;" [style.backgroundColor]="[IsDefaultTheme ? DefaultFontColor : ThemeFontColor]">
+            <th class="align-left" style="color:white; font-weight:500;">&nbsp; Meeting </th>
+            <th class="align-left" style="color:white; font-weight:500;"> Frequency    </th>
+            <th class="align-left" style="color:white; font-weight:500;"> Remarks   </th>
+          </tr>
+
+        </thead>
+        <tbody *ngIf="forGridData.showMeetings" class="tblbodyclr" style="max-height: 105px !important;">
+          <tr *ngFor="let item of Object.meetings">
+
+            <td class="align-left"> &nbsp;{{ item.Meeting }}</td>
+            <td class="align-left">{{ item.Frequency }}</td>
+            <td class="align-left">&nbsp; {{ item.Remarks }}</td>
+
+          </tr>
+        </tbody>
+      </table>
+
+
+
+    </div>
+    <br /><br />
+  </div>
+
+
+  <div  class="tblWidthFormat"  *ngIf="forGridData.showReports">
+    <div >
+      <div class="PanelSeparator"></div>
+      <span class="PanelHeading" style="font-size:14px;">Reports </span><br />
+      <table class="grd" cellpadding="0" cellspacing="0" align="center">
+        <thead>
+          <tr style="height:35px !important;" [style.backgroundColor]="[IsDefaultTheme ? DefaultFontColor : ThemeFontColor]">
+            <th class="align-left" style="color:white; font-weight:500;"> &nbsp;Type of Report  </th>
+            <th class="align-left" style="color:white; font-weight:500;">Frequency   </th>
+            <th class="align-left" style="color:white; font-weight:500;">Remarks   </th>
+          </tr>
+
+        </thead>
+        <tbody *ngIf="forGridData.showReports">
+          <tr *ngFor="let item of Object.reports">
+
+            <td class="align-left">&nbsp;{{ item.ReportType }}</td>
+            <td class="align-left">{{ item.Frequency }}</td>
+            <td class="align-left">&nbsp; {{ item.Remarks }} </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <br />
+  </div>
+ 
+
+
+  <div class="tblWidthFormat" *ngIf="forGridData.showAcademicQualifications">
+    <div >      
+      <div class="PanelSeparator"></div>
+      <span class="PanelHeading" style="font-size:14px;">Academic Qualifications </span><br />      
+      <div class="radio" *ngIf="forGridData.showAcademicQualifications">  
+        <label name="optradio" for="one" *ngIf="!Object.academicQualifications[0].chkQualification && Object.academicQualifications.length > 1"><input type="radio" id="one" style="margin-top:2px;" checked="checked" value="1">At least one of the qualifications below is required</label>
+        <label name="optradio" for="two" *ngIf="Object.academicQualifications[0].chkQualification && Object.academicQualifications.length > 1"><input type="radio" id="one" style="margin-top:2px;" checked="checked" value="1">All of the qualifications below are required</label>
+      </div>
+
+
+      <table class="grd" cellpadding="0" cellspacing="0" align="center">
+        <thead>
+          <tr style="height:35px !important;" [style.backgroundColor]="[IsDefaultTheme ? DefaultFontColor : ThemeFontColor]">
+            <th class="align-left;" style="color:white; font-weight:500;"> &nbsp;Qualification  </th>
+          </tr>
+        </thead>
+        <tbody *ngIf="forGridData.showAcademicQualifications" >
+          <tr *ngFor="let item of Object.academicQualifications">
+            <td class="align-left">&nbsp;{{ item.AcademicQualification }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <br />
+  </div>
+
+
+
+
+  <div  class="tblWidthFormat" *ngIf="forGridData.showTrainings">
+    <div>
+      <div class="PanelSeparator"></div>
+      <span class="PanelHeading" style="font-size:14px;">Trainings </span><br />
+       
+
+      <div class="radio" *ngIf="forGridData.showTrainings">
+        <label name="optradio" for="one" *ngIf="!Object.trainings[0].chkTraining && Object.trainings.length > 1"><input type="radio" id="one" style="margin-top:2px;" checked="checked" value="1">At least one of the trainings below is required</label>
+        <label name="optradio" for="two" *ngIf="Object.trainings[0].chkTraining && Object.trainings.length > 1"><input type="radio" id="one" style="margin-top:2px;" checked="checked" value="1">All of the trainings below are required</label>
+      </div>
+
+      <table class="grd tblWidth" cellpadding="0" cellspacing="0" align="center">
+        <thead>
+          <tr style="height:35px !important;" [style.backgroundColor]="[IsDefaultTheme ? DefaultFontColor : ThemeFontColor]">
+            <th class="align-left" style="color:white; font-weight:500;">&nbsp;Training  </th>
+            <th class="align-left" style="color:white; font-weight:500;">Subject   </th>
+          </tr>
+
+        </thead>
+        <tbody *ngIf="forGridData.showTrainings">
+          <tr *ngFor="let item of Object.trainings">
+
+            <td class="align-left">&nbsp;{{ item.Training }}</td>
+            <td class="align-left">&nbsp; {{ item.Subject }}</td>
+
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <br />
+  </div>
+
+
+
+
+<div class="tblWidthFormat" *ngIf="forGridData.showCertification">  
+  <div>
+    <div class="PanelSeparator"></div>
+    <span class="PanelHeading" style="font-size:14px;">Certification</span><br />
+ 
+    <div class="radio" *ngIf="forGridData.showCertification">
+      <label name="optradio" for="one" *ngIf="!Object.certification[0].chkCertificate && Object.certification.length > 1"><input type="radio" id="one" style="margin-top:2px;" checked="checked" value="1">At least one of the certificates below is required</label>
+      <label name="optradio" for="two" *ngIf="Object.certification[0].chkCertificate && Object.certification.length > 1"><input type="radio" id="one" style="margin-top:2px;" checked="checked" value="1">All of the certificates below are required</label>
+    </div>
+
+    <table class="grd tblWidth" cellpadding="0" cellspacing="0" align="center">
+      <thead>
+        <tr style="height:35px !important;" [style.backgroundColor]="[IsDefaultTheme ? DefaultFontColor : ThemeFontColor]">
+          <th class="align-left; " style="color:white; font-weight:500;">&nbsp;Certification  </th>
+        </tr>
+
+      </thead>
+      <tbody *ngIf="forGridData.showCertification">
+        <tr *ngFor="let item of Object.certification">
+
+          <td class="align-left">&nbsp;{{ item.Certificate }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+  <br /><br />
+  </div>
+
+ 
+
+
+
+<div class="tblWidthFormat" *ngIf="forGridData.showCompetencies">
+
+
+    <span class="PanelHeading" style="font-size:14px;">Competencies  </span><br />
+    <table class="grd tblWidth" cellpadding="0" cellspacing="0" align="center">
+      <thead>
+        <tr style="height:35px !important;" [style.backgroundColor]="[IsDefaultTheme ? DefaultFontColor : ThemeFontColor]">
+          <th class="align-left; " style="color:white; font-weight:500;">&nbsp;Competency  </th>
+          <th class="align-left; "  style="color:white; font-weight:500;">Required Rating </th>
+          <th class="align-left; "  style="color:white; font-weight:500;">Core Competency </th>
+        </tr>
+
+      </thead>
+      <tbody *ngIf="Object.competencies">
+        <tr  *ngFor="let item of Object.competencies">
+
+          <td class="align-left">&nbsp;{{ item.Competeny3 }}</td>
+          <td class="align-left">{{ item.RequiredRating }}</td>
+          <td class="align-left">
+            <label class="checkbox-inline" >
+             
+              <input type="checkbox" *ngIf="item.CoreCompetency == '1'" style="margin-top:-7px;" disabled="disabled" checked="checked" />
+              <input type="checkbox" *ngIf="item.CoreCompetency == '0'" style="margin-top:-7px;" disabled="disabled" />
+
+            </label>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+
+    </div>
+  <br /><br />
+  
+  <br />

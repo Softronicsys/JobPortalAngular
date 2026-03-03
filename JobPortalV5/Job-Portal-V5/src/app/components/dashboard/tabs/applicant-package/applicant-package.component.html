@@ -1,0 +1,813 @@
+
+
+<div class="fntFmly GreyClr" id="moveprevious">
+  <div class="container" style="width:100%;">
+    <!-- ERROR MESSAGES -->
+    <div class="row" *ngIf="isApplicantPackageInfo || MndApplicantPackageInfo || DisconnectInternet">
+      <div class="col-sm-8"></div>
+      <div class="col-sm-4">
+        <div class="form-group">
+          <label class="forValidation text-danger" *ngIf="isApplicantPackageInfo">
+            * Please enter mandatory fields.
+          </label>
+          <label class="forValidation text-danger" *ngIf="DisconnectInternet">
+            * Please check your internet connection and try again.
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <table style="margin-bottom:8px;width:100%">
+        <tbody style="overflow: hidden; height: auto;">
+          <tr style="float:right;margin-right: 4%;margin-top: 1%;">
+            <td *ngIf="!isMobile" [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="viewStyle">
+              <div *ngIf="updateProfService.IsGridStyle && !isMobile"
+                   [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                   class="View-Normal"
+                   id="imgNormalView"
+                   (click)="SaveGridViewStyle(0)"></div>
+              <div *ngIf="!updateProfService.IsGridStyle && !isMobile"
+                   [ngStyle]="{'outline-color': ThemeFontColor ? ThemeFontColor  : DefaultFontColor, 'background': ThemeFontColor ? ThemeFontColor  : DefaultFontColor}"
+                   class="View-Normal-Selected"
+                   id="imgNormalView"></div>
+              <div *ngIf="(!updateProfService.IsGridStyle || isMobile)"
+                   [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                   class="View-Grid"
+                   id="imgGridView"
+                   (click)="SaveGridViewStyle(1)">
+                <hr *ngFor="let item of HRLooping" class="View-Grid-Lines" [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" />
+              </div>
+              <div *ngIf="updateProfService.IsGridStyle || isMobile"
+                   [ngStyle]="{'outline-color': ThemeFontColor ? ThemeFontColor  : DefaultFontColor, 'background': ThemeFontColor ? ThemeFontColor  : DefaultFontColor}"
+                   class="View-Grid-Selected"
+                   id="imgGridView"
+                   (click)="SaveGridViewStyle(1)">
+                <hr *ngFor="let item of HRLooping" class="View-Grid-Lines" style="border-color:white;" />
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12 col-lg-8">
+        <form [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]"
+              style="font-size:12px;">
+          <br />
+          <div class="row" style="display:flex;">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="form-group">
+                <p [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]" style="font-size:20px;display:flex; align-items:center;flex-wrap:nowrap;">
+                  <span *ngIf="MndApplicantPackageInfo" style="color:red; font-size:22px; margin-left:-10px !important;">*</span>
+                  Applicant & Package Information
+                </p>
+              </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3">
+              <div class="form-group"></div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 padding-unset">
+              <div class="form-group">
+                <a id="BasicinfoEdit1"
+                   class="btnClass popupStyle clrhover uppercase"
+                   [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]"
+                   [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+                   *ngIf="!isBtnHide25 && (ApprovalStatus == 'R' || ApprovalStatus == null)"
+                   (click)="LblchangeToTextBoxInfo25_Click()">
+                  <span class="glyphicon glyphicon-edit"></span> {{Edit}}
+                </a>
+                <a class="btn btn-lg btnTextColor greenBackgroundClr clrhover uppercase PISaveButton"
+                   *ngIf="isBtnHide25"
+                   (click)="UpdateApplicantPackage25_click();"
+                   style="border-radius:50px; height:23px; width:72px; font-size:10px; text-justify:auto; padding:3px;">
+                  <img src="assets/images/btnSave.png" style="height:12px; margin-bottom:5px;">&nbsp; {{Save}}
+                </a>&nbsp;&nbsp;
+                <a class="btn btn-lg btnTextColor redBackgroundClr clrhover uppercase"
+                   *ngIf="isBtnHide25"
+                   (click)="isCloseEditLbl25_Click();"
+                   style="border-radius:50px; height:23px; width:72px; font-size:10px; text-justify:auto; padding:4px;">
+                  <span class="glyphicon glyphicon-remove"></span>&nbsp; {{Close}}
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="row lineHeight" style="word-break: break-all !important;">
+            <div class="col-lg-12" style="padding-left: 0px !important;">
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <p class="BlackTxtClr"><span *ngIf="isBasicInformation25" style="color:red" class="mandatoryStar">*</span>Applicant Name</p>
+                  <div *ngIf="!isBasicInformation25">
+                    <label class="mar fontSize12" [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]">{{LabelApplicantName || 'N/A'}}</label>
+                  </div>
+                  <div *ngIf="isBasicInformation25">
+                    <input type="text"
+                           [(ngModel)]="ApplicantName"
+                           name="ApplicantName"
+                           class="form-control fontSize12"
+                           [ngClass]="{'BorderColor':isApplicantPackageInfo && !ApplicantName}"
+                           style="border-radius:0px;">
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <p class="BlackTxtClr"><span *ngIf="isBasicInformation25" style="color:red" class="mandatoryStar">*</span>Position Applied</p>
+                  <div *ngIf="!isBasicInformation25">
+                    <label class="mar fontSize12" [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]">{{LabelPositionApplied || 'N/A'}}</label>
+                  </div>
+                  <div *ngIf="isBasicInformation25">
+                    <input type="text"
+                           [(ngModel)]="PositionApplied"
+                           name="PositionApplied"
+                           class="form-control fontSize12"
+                           [ngClass]="{'BorderColor':isApplicantPackageInfo && !PositionApplied}"
+                           style="border-radius:0px;">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row lineHeight" style="word-break: break-all !important;">
+            <div class="col-lg-12" style="padding-left: 0px !important;">
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <p class="BlackTxtClr"><span *ngIf="isBasicInformation25" style="color:red" class="mandatoryStar">*</span>Basic Salary</p>
+                  <div *ngIf="!isBasicInformation25">
+                    <label class="mar fontSize12" [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]">{{LabelBasicSalary || 'N/A'}}</label>
+                  </div>
+                  <div *ngIf="isBasicInformation25">
+                    <input type="number"
+                           [(ngModel)]="BasicSalary"
+                           name="BasicSalary"
+                           class="form-control fontSize12"
+                           style="border-radius:0px;">
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                <div class="form-group">
+                  <p class="BlackTxtClr"><span *ngIf="isBasicInformation25" style="color:red" class="mandatoryStar">*</span>Monthly Gross Salary</p>
+                  <div *ngIf="!isBasicInformation25">
+                    <label class="mar fontSize12" [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]">{{LabelGrossSalary || 'N/A'}}</label>
+                  </div>
+                  <div *ngIf="isBasicInformation25">
+                    <input type="number"
+                           [(ngModel)]="MonthlyGrossSalary"
+                           name="MonthlyGrossSalary"
+                           class="form-control fontSize12"
+                           style="border-radius:0px;">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="col-xs-12 col-lg-4">
+        <div class="app-package-summary" >
+          <div class="form-group" >
+
+            <p [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]" style="font-size:20px;">Package Summary</p>
+          </div>
+          <table class="table table-borderless fontSize12">
+            <tr>
+              <td><strong>Total Current Package</strong></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Gross Monthly</td>
+              <td><strong>Rs {{grossMonthly | number}}</strong></td>
+            </tr>
+            <tr>
+              <td>Less: Est. Tax</td>
+              <td class="tax-deduction">(Rs {{estimatedTax | number}})</td>
+            </tr>
+            <tr>
+              <td><strong>Net Monthly</strong></td>
+              <td><strong>Rs {{netMonthly | number}}</strong></td>
+            </tr>
+            <tr>
+              <td><strong>Current Annual Gross</strong></td>
+              <td><strong>Rs {{currentAnnualGross | number}}</strong></td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+
+
+
+  <form action="/action_page.php" style="font-size:12px;" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+    <br />
+    <div class="row" style="display:flex;">
+      <div class="col-xs-12 col-sm-12" style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="form-group">
+          <p [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]" style="font-size:20px;">
+            <span *ngIf="MndBenefits == true" style="color:red; font-size:22px; margin-left:-10px !important;">*</span>
+            {{Benefits}}
+          </p>
+        </div>
+      </div>
+      <div class="col-sm-7">
+        <div class="form-group"></div>
+      </div>
+
+      <div class="col-sm-2 padding-unset">
+        <div class="form-group">
+          <a data-toggle="modal" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+             (click)="btnAdd_Click('Benefit');"
+             [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]"
+             [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+             style="margin-top: 4px;"
+             data-target="#myModalBenefits"
+             class="btnClass popupStyle clrhover uppercase"
+             data-backdrop="static" data-keyboard="false">
+            <span class="glyphicon glyphicon-plus"></span> {{Add}}
+          </a>
+
+          <!-- Benefits Modal -->
+          <div class="modal fade" id="myModalBenefits" role="dialog">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header" style="border-bottom: 0px solid #e5e5e5;">
+                  <button type="button" class="close textColor" data-dismiss="modal"><img src="assets/images/lookupclose.png"></button>
+                  <h4 class="modal-title PopupLeftRightPdngHeading" [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]">
+                    <span *ngIf="MndBenefits == true" style="color:red;">*</span>
+                    {{Benefits}}
+                  </h4>
+                </div>
+                <div class="modal-body">
+
+                  <div class="row" *ngIf="isMandatoryfields || DisconnectInternet || isDateValid || isAmountValidation">
+                    <div class="col-sm-4"><div class="form-group"></div></div>
+                    <div class="col-sm-4"><div class="form-group"></div></div>
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label style="color:red; float:right; margin-right:25px;" class="forValidation" *ngIf="isMandatoryfields">
+                          <span style="color:red;font-size:14px !important" class="forValidation">*</span>Please enter mandatory fields.
+                        </label>
+                        <label style="color:red; float:right; margin-right:25px;" class="forValidation" *ngIf="DisconnectInternet">
+                          <span style="color:red;font-size:14px !important" class="forValidation">*</span>Please check your internet connection and try again.
+                        </label>
+                        <label style="color:red; float:right; margin-right:25px;" class="forValidation" *ngIf="isDateValid">'Start Date' should be less than 'End Date'</label>
+                        <label style="color:red; float:right; margin-right:25px;" class="forValidation" *ngIf="isAmountValidation">Please enter Amount between 1-100000</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row PopupLeftRightPdngBox">
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label for="benefitName" class="fntWght fontSize12">
+                          <span style="color:red;" class="mandatoryStar">*</span> {{lblBenefitName}}
+                        </label>
+                        <input type="text" maxlength="100" [(ngModel)]="BenefitName"
+                               [ngClass]="{'BorderColor':isMandatoryfields && !BenefitName}"
+                               class="form-control fontSize12" id="txtBenefitName" name="txtBenefitName" style="border-radius:0px;">
+                      </div>
+                    </div>
+
+
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label for="" class="fntWght fontSize12">{{lblAmount}}</label>
+                        <input appBlockCopyPaste NumericInput type="number" [(ngModel)]="BenefitAmount" class="form-control fontSize12" id="txtBenefitAmount" name="txtBenefitAmount" placeholder="Enter Amount" style="border-radius:0px;">
+                      </div>
+                    </div>
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label for="" class="fntWght fontSize12">{{lblTaxable}}</label>
+                        <input type="text" maxlength="100" [(ngModel)]="BenefitProvider" class="form-control fontSize12" id="txtBenefitProvider" name="txtBenefitProvider" placeholder="Enter Provider" style="border-radius:0px;">
+                      </div>
+                    </div>
+                  </div>
+
+
+                  <div class="row">
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4" align="center">
+                      <a class="btn btnTextColor greenBackgroundClr btn-lg SaveBtn1 ltrSpc clrhover" (click)="SaveBenefit()">
+                        <img src="assets/images/btnSave.png" style="height:12px; margin-bottom:5px;"> &nbsp; {{Save}}
+                      </a>
+                    </div>
+                    <div class="col-sm-4"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Modal close -->
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="word-break: break-all !important;">
+      <div class="col-sm-12" style="margin-bottom:10px;">
+        <div *ngIf="!updateProfService.IsGridStyle" class="normalView">
+          <table *ngIf="!BenefitsDetail || BenefitsDetail.length <= 0" style="width:100%;font-size: 12px;">
+            <tbody style="overflow-y:hidden;">
+              <tr style="width:100%; display: block;">
+                <td style="width:100%; text-align: center; display: block;">
+                  <h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="fntFmly">
+                    {{Nodata}}
+                  </h5>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngFor="let item of BenefitsDetail; let i = index">
+            <div class="otherDetailsNormalView">
+              <span class="ListViewHeading" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
+                {{i+1}} - {{item?.BenefitName || 'N/A'}}
+              </span>
+            </div>
+            <div class="otherDetailsNormalView aligned-row"><b>{{lblAmount}}: &nbsp;&nbsp;</b>{{item?.Amount || 'N/A'}}</div>
+            <div class="otherDetailsNormalView aligned-row"><b>{{lblTaxable}}: &nbsp;&nbsp;</b>{{item?.Taxable || 'N/A'}}</div>
+            <div class="click-to-top">
+              <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                 class="glyphicon glyphicon-edit"
+                 (click)="handleBenefitsEdit(item)">
+                <span class="forEditTooltip" style=" bottom: 1px !important;">Edit</span>
+              </a>
+            </div>
+            &nbsp;&nbsp;
+            <div class="click-to-top">
+              <a onclick="return false" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                 class="fa fa-times"
+                 style="color: #C77874; vertical-align: middle; cursor:pointer;"
+                 (click)="handleBenefitsDeleteClick(item)">
+                <span class="forDeleteTooltip">Delete</span>
+              </a>
+            </div>
+            <hr *ngIf="BenefitsDetail.length > 1" />
+            <br />  <br />
+          </div>
+        </div>
+        <div class="ex2" *ngIf="updateProfService.IsGridStyle">
+          <table class="table fixed_header">
+            <thead class="tableHeaderBackground tablePanelHeading" style="font-size:12px;">
+              <tr>
+                <th class="fntFmly tblHeaderFnt" style="width:84px;"></th>
+                <th class="fntFmly tblHeaderFnt" style="width:237px;text-align:center;"><strong style="color: #524d4d !important;">{{lblBenefitName}}</strong></th>
+                <th class="fntFmly tblHeaderFnt" style="width:206px;text-align:center;"><strong style="color: #524d4d !important;">{{lblAmount}}</strong></th>
+                <th class="fntFmly tblHeaderFnt" style="width:295px;text-align:center;"><strong style="color: #524d4d !important;">{{lblTaxable}}</strong></th>
+
+
+              </tr>
+            </thead>
+            <tbody class="tblbodyclr member">
+              <tr *ngIf="!BenefitsDetail || BenefitsDetail.length <= 0" style="font-size:12px;">
+                <td colspan="7" style="text-align:center;">
+                  <span class="fntFmly">
+                    {{Nodata}}
+                  </span>
+                </td>
+              </tr>
+              <tr *ngFor="let item of BenefitsDetail">
+                <td style="width:84px !important;">
+                  <div class="click-to-top">
+                    <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                       class="glyphicon glyphicon-edit"
+                       (click)="handleBenefitsEdit(item)">
+                      <span class="forEditTooltip">Edit</span>
+                    </a>
+                  </div>
+                  &nbsp;&nbsp;
+                  <div class="click-to-top">
+                    <a onclick="return false" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                       class="fa fa-times"
+                       style="color: #C77874; vertical-align: middle; cursor:pointer;"
+                       (click)="handleBenefitsDeleteClick(item)">
+                      <span class="forDeleteTooltip">Delete</span>
+                    </a>
+                  </div>
+                </td>
+                <td style="width:237px;text-align:center; word-wrap: break-word;">{{ item.BenefitName }}</td>
+                <td style="width:206px;text-align:center;">{{ item.Amount }}</td>
+                <td style="width:206px;text-align:center;">{{ item.Taxable }}</td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <br />
+  </form>
+
+
+
+
+  <hr />
+
+  <!-- annual-benefits-->
+
+  <form action="/action_page.php" style="font-size:12px;" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+    <br />
+
+    <!-- Header -->
+    <div class="row" style="display:flex;">
+      <div class="col-xs-12 col-sm-12" style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="form-group">
+          <p [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]" style="font-size:20px;">
+            <span *ngIf="MndAnnualBenefits" style="color:red; font-size:22px; margin-left:-10px !important;">*</span>
+            Annual Benefits (Amortized Monthly)
+          </p>
+        </div>
+      </div>
+
+      <div class="col-sm-7"><div class="form-group"></div></div>
+
+      <div class="col-sm-2 padding-unset">
+        <div class="form-group">
+          <a data-toggle="modal" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+             (click)="btnAdd_Click('AnnualBenefit');"
+             [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]"
+             [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+             style="margin-top: 4px;"
+             data-target="#myModalAnnualBenefits"
+             class="btnClass popupStyle clrhover uppercase"
+             data-backdrop="static" data-keyboard="false">
+            <span class="glyphicon glyphicon-plus"></span> {{Add}}
+          </a>
+
+          <!-- Annual Benefits Modal -->
+          <div class="modal fade" id="myModalAnnualBenefits" role="dialog">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header" style="border-bottom: 0px solid #e5e5e5;">
+                  <button type="button" class="close textColor" data-dismiss="modal">
+                    <img src="assets/images/lookupclose.png">
+                  </button>
+                  <h4 class="modal-title PopupLeftRightPdngHeading" [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]">
+                    <span *ngIf="MndAnnualBenefits" style="color:red;">*</span> Add Annual Benefit
+                  </h4>
+                </div>
+
+                <div class="modal-body">
+                  <!-- Validation messages -->
+                  <div class="row" *ngIf="isMandatoryfields || isDateInvalid || isAmountInvalid">
+                    <div class="col-sm-4"><div class="form-group"></div></div>
+                    <div class="col-sm-4"><div class="form-group"></div></div>
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label style="color:red; float:right; margin-right:25px;" *ngIf="isMandatoryfields">
+                          <span style="color:red;font-size:14px !important">*</span>Please enter mandatory fields.
+                        </label>
+                        <label style="color:red; float:right; margin-right:25px;" *ngIf="isDateInvalid">
+                          'Start Date' should be less than 'End Date'
+                        </label>
+                        <label style="color:red; float:right; margin-right:25px;" *ngIf="isAmountInvalid">
+                          Please enter Amount between 1-100000
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Annual Benefit Fields -->
+                  <div class="row PopupLeftRightPdngBox">
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label class="fntWght fontSize12">
+                          <span style="color:red;" *ngIf="MndAnnualBenefits">*</span> Benefit Name
+                        </label>
+                        <input type="text" maxlength="100" [(ngModel)]="annualBenefitName" id="annualBenefitName" name="annualBenefitName"
+                               [ngClass]="{'BorderColor':isMandatoryFields && !annualBenefitName}"
+                               class="form-control fontSize12" style="border-radius:0px;">
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label class="fntWght fontSize12">Amount</label>
+                        <input type="number" appBlockCopyPaste NumericInput [(ngModel)]="annualBenefitAmount" id="annualBenefitAmount" name="annualBenefitAmount"
+                               class="form-control fontSize12" placeholder="Enter Amount" style="border-radius:0px;">
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label class="fntWght fontSize12">{{lblTaxable}}</label>
+                        <input type="text" maxlength="100" [(ngModel)]="annualBenefitProvider" id="annualBenefitProvider" name="annualBenefitProvider"
+                               class="form-control fontSize12" placeholder="Enter Provider" style="border-radius:0px;">
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Save Button -->
+                  <div class="row">
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4" align="center">
+                      <a class="btn btnTextColor greenBackgroundClr btn-lg SaveBtn1 ltrSpc clrhover"
+                         (click)="saveAnnualBenefit()">
+                        <img src="assets/images/btnSave.png" style="height:12px; margin-bottom:5px;"> &nbsp; Save
+                      </a>
+                    </div>
+                    <div class="col-sm-4"></div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Modal close -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Annual Benefits Table -->
+    <div class="row" style="word-break: break-all !important;">
+      <div class="col-sm-12" style="margin-bottom:10px;">
+        <div *ngIf="!updateProfService.IsGridStyle" class="normalView">
+          <table *ngIf="!AnnualBenefitsList || AnnualBenefitsList.length <= 0" style="width:100%;font-size: 12px;">
+            <tbody style="overflow-y:hidden;">
+              <tr style="width:100%; display: block;">
+                <td style="width:100%; text-align: center; display: block;">
+                  <h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="fntFmly">
+                    {{Nodata}}
+                  </h5>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngFor="let item of AnnualBenefitsList; let i = index">
+            <div class="otherDetailsNormalView">
+              <span class="ListViewHeading" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
+                {{i+1}} - {{item?.BenefitName || 'N/A'}}
+              </span>
+            </div>
+            <div class="otherDetailsNormalView aligned-row"><b>{{lblAmount}}: &nbsp;&nbsp;</b>{{item?.Amount || 'N/A'}}</div>
+            <div class="otherDetailsNormalView aligned-row"><b>{{lblTaxable}}: &nbsp;&nbsp;</b>{{item?.Taxable || 'N/A'}}</div>
+            <div class="click-to-top">
+              <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                 class="glyphicon glyphicon-edit"
+                 (click)="handleAnnualBenefitEdit(item)">
+                <span class="forEditTooltip" style=" bottom: 1px !important;">Edit</span>
+              </a>
+            </div>
+            &nbsp;&nbsp;
+            <div class="click-to-top">
+              <a onclick="return false" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                 class="fa fa-times"
+                 style="color: #C77874; vertical-align: middle; cursor:pointer;"
+                 (click)="handleAnnualBenefitDelete(item)">
+                <span class="forDeleteTooltip">Delete</span>
+              </a>
+            </div>
+            <hr *ngIf="AnnualBenefitsList.length > 1" />
+            <br />  <br />
+          </div>
+        </div>
+        <div class="ex2" *ngIf="updateProfService.IsGridStyle">
+          <table class="table fixed_header">
+            <thead class="tableHeaderBackground tablePanelHeading" style="font-size:12px;">
+              <tr>
+                <th class="fntFmly tblHeaderFnt" style="width:84px;"></th>
+                <th class="fntFmly tblHeaderFnt" style="width:237px;text-align:center;"><strong style="color: #524d4d !important;">Benefit Name</strong></th>
+                <th class="fntFmly tblHeaderFnt" style="width:206px;text-align:center;"><strong style="color: #524d4d !important;">Amount</strong></th>
+                <th class="fntFmly tblHeaderFnt" style="width:295px;text-align:center;"><strong style="color: #524d4d !important;">{{lblTaxable}}</strong></th>
+
+
+
+              </tr>
+            </thead>
+            <tbody class="tblbodyclr member">
+              <tr *ngIf="!AnnualBenefitsList || AnnualBenefitsList.length <= 0" style="font-size:12px;">
+                <td colspan="5" style="text-align:center;">
+                  <span class="fntFmly">
+                    {{Nodata}}
+                  </span>
+                </td>
+              </tr>
+              <tr *ngFor="let item of AnnualBenefitsList">
+                <td style="width:84px !important;">
+                  <div class="click-to-top">
+                    <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                       class="glyphicon glyphicon-edit"
+                       (click)="handleAnnualBenefitEdit(item)">
+                      <span class="forEditTooltip">Edit</span>
+                    </a>
+                  </div>
+                  &nbsp;&nbsp;
+                  <div class="click-to-top">
+                    <a onclick="return false" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                       class="fa fa-times"
+                       style="color: #C77874; vertical-align: middle; cursor:pointer;"
+                       (click)="handleAnnualBenefitDelete(item)">
+                      <span class="forDeleteTooltip">Delete</span>
+                    </a>
+                  </div>
+                </td>
+                <td style="text-align:center; word-wrap: break-word;">{{ item.BenefitName }}</td>
+                <td style="text-align:center; word-wrap: break-word;">{{ item.Amount }}</td>
+                <td style="text-align:center; word-wrap: break-word;">{{ item.Taxable }}</td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <br />
+  </form>
+
+
+
+  <form action="/action_page.php" style="font-size:12px;" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+    <br />
+    <div class="row" style="display:flex;">
+      <div class="col-xs-12 col-sm-12" style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="form-group">
+          <p [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]" style="font-size:20px;">
+            Employee Loan Facility
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group" style="width:97%">
+          <textarea class="form-control fontSize12"
+                    rows="3"
+                    name="employeeLoanDetails"
+                    placeholder="Enter details about any existing loans or loan requirements..."
+                    [(ngModel)]="employeeLoanDetails"
+                    style="border-radius:0px;"></textarea>
+        </div>
+      </div>
+    </div>
+    <br />
+  </form>
+
+  <form action="/action_page.php" style="font-size:12px;" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+    <br />
+    <div class="row" style="display:flex;">
+      <div class="col-xs-12 col-sm-12" style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="form-group">
+          <p [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]" style="font-size:20px;">
+            Applicant's Other Benefits
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group" style="width:97%">
+          <textarea class="form-control fontSize12"
+                    rows="3"
+                    name="applicantsOtherBenefits"
+                    placeholder="Enter Applicant's current non-monetary benefits..."
+                    [(ngModel)]="applicantsOtherBenefits"
+                    style="border-radius:0px;"></textarea>
+        </div>
+      </div>
+    </div>
+    <br />
+  </form>
+
+  <form action="/action_page.php" style="font-size:12px;" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+    <br />
+
+    <!-- Header -->
+    <div class="row" style="display:flex;">
+      <div class="col-xs-12 col-sm-12" style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="form-group">
+          <p [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]" style="font-size:20px;">
+            Attach Last Payslip (If Ever Employed)
+          </p>
+        </div>
+      </div>
+
+      <div class="col-sm-7"></div>
+
+      <div class="col-sm-2 padding-unset">
+        <a *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+           class="btnClass popupStyle clrhover uppercase"
+           [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]"
+           [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+           onclick="document.getElementById('payslipUpload').click()">
+          <span class="glyphicon glyphicon-plus"></span> {{Add}}
+        </a>
+
+        <input id="payslipUpload"
+               type="file"
+               style="display:none"
+               (change)="onFileSelected($event)">
+      </div>
+    </div>
+
+    <!-- Grid -->
+    <div class="row">
+      <div class="col-sm-12" style="margin-bottom:10px;">
+        <div *ngIf="!updateProfService.IsGridStyle" class="normalView">
+          <table *ngIf="!AttachmentList || AttachmentList.length <= 0" style="width:100%;font-size: 12px;">
+            <tbody style="overflow-y:hidden;">
+              <tr style="width:100%; display: block;">
+                <td style="width:100%; text-align: center; display: block;">
+                  <h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="fntFmly">
+                    {{Nodata}}
+                  </h5>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="AttachmentList && AttachmentList.length > 0">
+            <div *ngFor="let item of AttachmentList; let i = index">
+              <div class="otherDetailsNormalView">
+                <span class="ListViewHeading" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
+                  {{i+1}} - {{item?.FileName || 'N/A'}}
+                </span>
+              </div>
+              <div class="otherDetailsNormalView aligned-row"><b>Upload Date: &nbsp;&nbsp;</b>{{item?.UploadDate | date:'dd/MM/yyyy'}}</div>
+              <div class="otherDetailsNormalView aligned-row"><b>Size (KB): &nbsp;&nbsp;</b>{{item?.FileSize}}</div>
+              <div class="click-to-top">
+                <a class="glyphicon glyphicon-eye-open"
+                   style="cursor:pointer;"
+                   (click)="viewAttachment(item)">
+                  <span class="forEditTooltip" style=" bottom: 1px !important;">View</span>
+                </a>
+              </div>
+              &nbsp;&nbsp;
+              <div class="click-to-top">
+                <a *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                   class="fa fa-times"
+                   style="color:#C77874; cursor:pointer;"
+                   (click)="deleteAttachment(item)">
+                  <span class="forDeleteTooltip">Delete</span>
+                </a>
+              </div>
+              <hr *ngIf="AttachmentList.length > 1" />
+              <br />  <br />
+            </div>
+          </div>
+        </div>
+        <div *ngIf="updateProfService.IsGridStyle">
+          <table class="table fixed_header">
+            <thead class="tableHeaderBackground tablePanelHeading" style="font-size:12px;">
+              <tr>
+                <th class="fntFmly tblHeaderFnt" style="width:84px;"></th>
+                <th class="fntFmly tblHeaderFnt" style="width:300px;text-align:center;"><strong style="color: #524d4d !important;">File Name</strong></th>
+                <th class="fntFmly tblHeaderFnt" style="width:200px;text-align:center;"><strong style="color: #524d4d !important;">Upload Date</strong></th>
+                <th class="fntFmly tblHeaderFnt" style="width:150px;text-align:center;"><strong style="color: #524d4d !important;">Size (KB)</strong></th>
+              </tr>
+            </thead>
+
+            <tbody class="tblbodyclr member">
+              <tr *ngIf="!AttachmentList || AttachmentList.length == 0">
+                <td colspan="4" style="text-align:center;">
+                  <span class="fntFmly">
+                    {{Nodata}}
+                  </span>
+                </td>
+              </tr>
+
+              <tr *ngFor="let item of AttachmentList || []">
+                <td style="width:84px !important;">
+
+                  <!-- View -->
+                  <a class="glyphicon glyphicon-eye-open"
+                     style="cursor:pointer;"
+                     (click)="viewAttachment(item)">
+                  </a>
+
+                  &nbsp;&nbsp;
+
+                  <!-- Delete -->
+                  <a *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                     class="fa fa-times"
+                     style="color:#C77874; cursor:pointer;"
+                     (click)="deleteAttachment(item)">
+                  </a>
+                </td>
+
+                <td style="text-align:center;">{{item.FileName}}</td>
+                <td style="text-align:center;">{{item.UploadDate | date:'dd/MM/yyyy'}}</td>
+                <td style="text-align:center;">{{item.FileSize}}</td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <br />
+  </form>
+  </div>
+</div>
+
+
+  <!--<div class="buttons">
+    <button class="btn btn-secondary" (click)="resetForm()">Reset</button>
+    <button class="btn btn-primary" (click)="saveDetails()">Save Details</button>
+  </div>-->
+

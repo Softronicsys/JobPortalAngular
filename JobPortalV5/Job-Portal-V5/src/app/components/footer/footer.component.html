@@ -1,0 +1,37 @@
+<br /><br /><br />
+<!-- Footer -->
+<footer style="background-color:#F2F2F2 !important; padding: 0.5rem; position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0; font-size:12px;" class="page-footer font-small blue">
+  <div >
+    <div class="footer-copyright text-center  py-3" style="float:left; margin-top:5px;">
+      <!--© 2020 Copyright-->
+      {{lblCopyRight}}
+      <a [attr.href]="CompanyWebsite" target="_blank">
+        {{lblWebsiteLinkTest}} </a>
+    </div>
+  </div>
+  <!-- Copyright -->
+  <div style="float:right;">
+    <!-- Facebook -->
+    <a class="fb-ic" [attr.href]="FbUrl" target="_blank" *ngIf="IsFbUrl">
+      <img src="./assets/images/Facebook.png" style="width:25px;height:25px;" />
+      <!--<i class="fab fa-facebook-f fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>-->
+    </a>
+    <!-- Twitter -->
+    <a class="tw-ic" style="padding-left:5px;" [attr.href]="TwitterUrl" target="_blank" *ngIf="IsTwitterUrl">
+      <img src="./assets/images/Twitter.png" style="width:25px;height:25px;" />
+      <!--<i class="fab fa-twitter fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>-->
+    </a>
+    <!--Instagram-->
+    <a class="ins-ic" style="padding-left:5px;" [attr.href]="InstaUrl" target="_blank" *ngIf="IsInstaUrl">
+      <img src="./assets/images/Instagram.png" style="width:25px;height:25px;" />
+      <!--<i class="fab fa-instagram fa-lg white-text mr-md-5 mr-3 fa-2x"> </i>-->
+    </a>
+
+
+
+  </div>
+  <!-- Copyright -->
+</footer>

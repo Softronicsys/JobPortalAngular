@@ -1,0 +1,297 @@
+h4,h5{
+  font-weight: bold;
+}
+h6{  
+  margin-bottom: 3px;
+}
+.subHeadOpac{
+  opacity:76%
+}
+.otherDetailsNormalView {
+  color: #524d4d;
+  font-size: 12px;
+}
+.socialMediaClass{
+  cursor:pointer;
+  opacity: 80%;
+}
+.socialMediaClass:hover{
+  cursor:pointer;
+  opacity: 100%;
+}
+.viewStyle{
+  padding: 5px 2px 5px 4px !important;
+  width: 59px;
+  text-align: center;
+  border: 4px solid;
+  border-radius: 2px;
+  display: block;
+  height: 29px;
+}
+.View-Normal{
+  width: 18px;
+  height: 11px;
+  cursor: pointer;
+  border: 2px solid;
+  float: left;
+  border-radius: 2px;
+  margin-left: 0px;
+  /* margin-bottom: 1px; */
+}
+.View-Normal-Selected{
+  width: 18px;
+  height: 11px;
+  border: 2px solid white;
+  outline: 3px solid;
+  float: left;
+  border-radius: 2px;
+  margin-left: 1px;
+  /* margin-bottom: 1px; */
+}
+.View-Grid{
+  width: 18px;
+  height: 11px;
+  cursor: pointer;
+  border: 2px solid;
+  float: right;
+  border-radius: 2px;    
+  margin-right: 2px;
+  /* margin-bottom: 1px; */
+}
+.View-Grid-Selected{
+  width: 18px;
+  height: 11px;
+  border: 2px solid white;
+  outline: 3px solid;
+  float: right;
+  border-radius: 2px;    
+  margin-right: 3px;
+  /* margin-bottom: 1px; */
+}
+.View-Grid-Lines{
+  margin:1px 0px; 
+  width:14px;
+}
+.srchTxt{
+  cursor: text;
+  outline: unset;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  /* width: 176px; */
+  font-size: 12px;
+  text-align:left;
+  float: left;
+  margin-bottom: 7px;
+}
+  .srchTxt:focus {
+    border-bottom: 2px solid #5c94c6;
+  }
+  .srchTxt:hover {
+    box-shadow: 2px 2px 2px #ade1fd;
+  }
+.relativeBackground{
+  height: auto !important;
+  background: url(../../../assets/images/007FFF/LoginBackground.png) bottom -22px right -156px no-repeat !important;
+}
+.normalView{
+  margin-bottom: 126px !important;
+}
+* {box-sizing: border-box}
+body {font-family: Verdana, sans-serif; margin:0}
+.mySlides {display: none}
+.mySlides img {vertical-align: middle; border-radius: 16px;max-height: 400px;
+  transition: 1s;left:-100%}
+.slideActive{display: block !important;}
+.slideActive img{
+  left: 0;
+}
+/* Slideshow container */
+.slideshow-container {
+  /*max-width: 1113px;*/
+  max-width: calc(100% - 17%);
+  position: relative;
+  margin: auto;
+}
+
+/* Next & previous buttons */
+.prev, .next {
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  width: auto;
+  padding: 16px;
+  margin-top: -28px;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  transition: 0.6s ease;
+  border-radius: 0 3px 3px 0;
+  user-select: none;
+  text-decoration: none;
+}
+
+/* Position the "next button" to the right */
+.next {
+  right: 0;
+  border-radius: 3px 0 0 3px;
+}
+
+/* On hover, add a black background color with a little bit see-through */
+.prev:hover, .next:hover {
+  background-color: rgba(0,0,0,0.8);
+}
+
+/* Caption text */
+.text {
+  color: #f2f2f2;
+  font-size: 15px;
+  padding: 8px 12px;
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+  color: #f2f2f2;
+  font-size: 12px;
+  padding: 8px 12px;
+  position: absolute;
+  top: 0;
+}
+
+.active, .dot:hover {
+  background-color: #717171;
+}
+
+/* Fading animation */
+.fade {
+  -webkit-animation-name: fade;
+  -webkit-animation-duration: 1.5s;
+  animation-name: fade;
+  animation-duration: 1.5s;
+}
+
+@-webkit-keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+@keyframes fade {
+  from {opacity: .4} 
+  to {opacity: 1}
+}
+
+/* On smaller screens, decrease text size */
+@media only screen and (max-width: 300px) {
+  .prev, .next,.text {font-size: 11px}
+
+  .slideshow-container {
+    max-width: calc(100% - 6%);
+  }
+}
+
+#BackgroundImageHome {
+  width: 100%;
+  margin-top: -495px !important;
+  /* margin-top: -530px !important; */
+}
+
+
+@media screen and (min-width: 1226px) and (max-width: 1362px) {
+
+  #BackgroundImageHome {
+    width: 100%;
+    margin-top: -495px !important;
+  }
+}
+
+@media screen and (min-width: 1126px) and (max-width: 1226px) {
+
+  #BackgroundImageHome {
+    width: 100%;
+    margin-top: -425px !important;
+  }
+}
+
+@media screen and (min-width: 1000px) and (max-width: 1126px) {
+
+  #BackgroundImageHome {
+    width: 100%;
+    margin-top: -395px !important;
+  }
+}
+
+@media screen and (min-width: 900px) and (max-width: 1000px) {
+
+  #BackgroundImageHome {
+    width: 100%;
+    margin-top: -350px !important;
+  }
+}
+
+@media screen and (min-width: 800px) and (max-width: 900px) {
+
+  #BackgroundImageHome {
+    width: 100%;
+    margin-top: -295px !important;
+  }
+}
+
+@media screen and (min-width: 700px) and (max-width: 800px) {
+
+  #BackgroundImageHome {
+    width: 100%;
+    margin-top: -208px !important;
+  }
+}
+
+@media screen and (min-width: 600px) and (max-width: 700px) {
+
+  #BackgroundImageHome {
+    width: 100%;
+    margin-top: -195px !important;
+  }
+  .slideshow-container {
+    max-width: calc(100% - 6%);
+  }
+}
+
+@media screen and (min-width: 500px) and (max-width: 600px) {
+
+  #BackgroundImageHome {
+    width: 100%;
+    margin-top: -142px !important;
+  }
+  .slideshow-container {
+    max-width: calc(100% - 6%);
+  }
+}
+
+@media screen and (min-width: 400px) and (max-width: 500px) {
+
+  #BackgroundImageHome {
+    width: 100%;
+    margin-top: -115px !important;
+  }
+  .slideshow-container {
+    max-width: calc(100% - 6%);
+  }
+}
+
+@media screen and (min-width: 300px) and (max-width: 400px) {
+
+  #BackgroundImageHome {
+    width: 100%;
+    margin-top: -114px !important;
+  }
+  .slideshow-container {
+    max-width: calc(100% - 6%);
+  }
+}
+
+
+/*for fix header responsive*/
+

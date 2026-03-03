@@ -1,0 +1,80 @@
+/***header css*/
+
+.atco-logo {
+  width: 50px;
+  margin-left: 130px;
+  margin-bottom: 15px;
+  float: left;
+}
+
+.btn-position {
+  text-align: right;
+  margin-top: 9px;
+  margin-bottom: 9px;
+  padding: 0px;
+  /* margin-right: 7%;
+  margin-left: 7%; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* 
+#headerSize {
+  height: 70px !important;
+} */
+
+
+#vldMargin {
+  margin: 66px 0px 10px 0px !important;
+}
+
+
+#logoAdjstmnt {
+  /*height: 32px;
+  width: 200px;*/
+  /*height: 74px;
+  width: auto;*/
+  /*margin: 45px 0px 0px 110px;*/
+  /*min-height: 65px !important;
+  max-height: 200px !important;
+  min-width: 150px;
+  max-width: 210px;*/
+  margin-right: 120px;
+  float: left;
+  /* margin-top: 30px; */
+}
+
+@media screen and (min-width: 320px) and (max-width: 480px) {
+
+  /*#mb-5{
+    margin-bottom: 5px !important;
+  }*/
+  #logoAdjstmnt {
+    /*height: 32px;*/
+    /* width: 150px; */
+    /*margin: 45px 0px 0px 80px;*/
+    margin-right: 25px !important;
+  }
+
+  #vldMargin {
+    margin: 0px !important;
+  }
+
+  /* #headerSize {
+    height: 130px !important;
+  } */
+
+}
+
+@media screen and (min-width: 300px) and (max-width: 900px) {
+
+  /*#logoAdjstmnt {
+    height: 32px;
+    width: 200px;
+    margin: 45px 0px 0px 80px;
+  }*/
+
+  /* #headerSize {
+    height: 130px !important;
+  } */
+}

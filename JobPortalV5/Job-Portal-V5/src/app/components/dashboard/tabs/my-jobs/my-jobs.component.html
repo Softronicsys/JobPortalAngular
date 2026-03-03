@@ -1,0 +1,1223 @@
+<style>
+
+  .fixed_header {
+    max-width: 1060px;
+    min-width: 500px;
+    /*table-layout: fixed;*/
+    border-collapse: collapse;
+    font-size: 12px !important;
+  }
+
+    .fixed_header tbody {
+      display: block;
+      width: 100%;
+      overflow: auto;
+      /*height: 90px;*/
+      min-height: 20px !important;
+      max-height: 90px !important;
+    }
+
+    .fixed_header thead tr {
+      display: block;
+      color: black;
+    }
+
+    .fixed_header thead {
+      background: black;
+      color: #fff;
+    }
+
+    .fixed_header th, .fixed_header td {
+      padding: 5px;
+      text-align: left;
+      /*width: 212px;*/
+            max-width: 265px;
+         min-width: 130px;
+    }
+
+
+
+
+
+
+  body {
+    font-size: 0.9em;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+
+  thead {
+    background-color: #f1f1f1;
+    color: black;
+  }
+  table > thead > tr > th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #f1f1f1;
+  }
+
+  thead, tbody {
+    display: block;
+  }
+
+  th, td {
+    padding: 7px 2px 5px 4px !important;
+    width: 2330px;
+    box-sizing: border-box;
+  }
+
+  button:hover {
+    background-color: #00b2ff;
+    color: white;
+  }
+
+  tbody {
+    /*height: 90px;*/
+    overflow-y: scroll;
+  }
+
+  /* Custom Toggle Switch Style */
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 47px;
+    height: 24px;
+    margin-right: 10px;
+  }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+  }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 15px;
+      width: 15px;
+      border-radius: 50%;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+    }
+
+ 
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+
+  .custom-btn:hover {
+    color: black !important;
+    background-color: #9e9999 !important;
+    text-decoration: none !important;
+  }
+
+
+  .custom-btnOne:hover {
+    color: black !important;
+    background-color: #9e9999 !important;
+    text-decoration: none !important;
+  }
+
+
+
+  .button-center {
+    height: 32px !important; 
+    justify-content: center;
+    display:inline-flex;
+    align-items: center; 
+    padding: 0; 
+  }
+
+
+
+
+
+</style> 
+
+
+<div class="fntFmly ">
+  <div>
+    <!--<table style="margin-bottom:8px;width:100%">
+      <tbody style="overflow: hidden; height: auto;">
+        <tr style="float:right;margin-right: 4%;margin-top: 1%;">
+          <td [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="viewStyle">
+            <div *ngIf="isGrid" [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="View-Normal" id="imgNormalView" (click)="SaveGridViewStyle(0)"></div>
+            <div *ngIf="!isGrid" [ngStyle]="{'outline-color': ThemeFontColor ? ThemeFontColor  : DefaultFontColor, 'background': ThemeFontColor ? ThemeFontColor  : DefaultFontColor}" class="View-Normal-Selected" id="imgNormalView"></div>
+            <div *ngIf="!isGrid" [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="View-Grid" id="imgGridView" (click)="SaveGridViewStyle(1)">
+              <hr *ngFor="let item of HRLooping" class="View-Grid-Lines" [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" />
+            </div>
+            <div *ngIf="isGrid" [ngStyle]="{'outline-color': ThemeFontColor ? ThemeFontColor  : DefaultFontColor, 'background': ThemeFontColor ? ThemeFontColor  : DefaultFontColor}" class="View-Grid-Selected" id="imgGridView" (click)="SaveGridViewStyle(1)">
+              <hr *ngFor="let item of HRLooping" class="View-Grid-Lines" style="border-color:white;" />
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>-->
+
+    <table style="margin-bottom:8px;width:100%">
+      <tbody style="overflow: hidden; height: auto;">
+        <tr style="float:right;margin-right: 4%;margin-top: 1%;">
+          <td [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="viewStyle">
+            <div *ngIf="updateProfService.IsGridStyle" [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="View-Normal" id="imgNormalView" (click)="SaveGridViewStyle(0)"></div>
+            <div *ngIf="!updateProfService.IsGridStyle" [ngStyle]="{'outline-color': ThemeFontColor ? ThemeFontColor  : DefaultFontColor, 'background': ThemeFontColor ? ThemeFontColor  : DefaultFontColor}" class="View-Normal-Selected" id="imgNormalView"></div>
+            <div *ngIf="!updateProfService.IsGridStyle" [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="View-Grid" id="imgGridView" (click)="SaveGridViewStyle(1)">
+              <hr *ngFor="let item of HRLooping" class="View-Grid-Lines" [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" />
+            </div>
+            <div *ngIf="updateProfService.IsGridStyle" [ngStyle]="{'outline-color': ThemeFontColor ? ThemeFontColor  : DefaultFontColor, 'background': ThemeFontColor ? ThemeFontColor  : DefaultFontColor}" class="View-Grid-Selected" id="imgGridView" (click)="SaveGridViewStyle(1)">
+              <hr *ngFor="let item of HRLooping" class="View-Grid-Lines" style="border-color:white;" />
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <!--Grid work for Jobs i have applied for-->
+  <div *ngIf="appliedJobs?.length >= 1">
+    <h4 data-toggle="collapse" data-target="#AppliedJobsCollapseExpand" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+        style="margin: 15px 0px;cursor:pointer;">
+      <!--Jobs I have applied for-->
+      {{lblJobsIhaveAppliedFor}} ({{appliedJobs.length}})
+      <img src="./assets/images/imgExpand.png" data-toggle="collapse" data-target="#AppliedJobsCollapseExpand" (click)="CollapseExpand('Expand',1)" *ngIf="IsCollapse" style="margin-top: -4px;" />
+      <img src="./assets/images/imgCollapse.JPG" data-toggle="collapse" data-target="#AppliedJobsCollapseExpand" (click)="CollapseExpand('Collapse',1)" *ngIf="!IsCollapse" style="margin-top: -4px;" />
+    </h4>
+
+    <div id="AppliedJobsCollapseExpand" *ngIf="!IsCollapse" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+      <div *ngIf="!updateProfService.IsGridStyle" class='normalView'>
+        <table *ngIf="!appliedJobs || appliedJobs.length <= 0" style="width:100%;font-size: 12px;">
+          <tbody style="overflow-y:hidden;">
+            <tr style="width:100%; display: block;">
+              <td style="width:100%; text-align: center; display: block;">
+                <h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="fntFmly">
+                  {{Nodata}}
+                </h5>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngFor="let item of appliedJobs; let i = index">
+
+          <table>
+            <tbody style="overflow: hidden; height: auto;">
+              <tr>
+                <td style="text-align:left;">
+                  <h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="cursor:pointer;">
+                    {{i+1}} -
+                    <div class="click-to-top" style="position: relative;max-width: unset;">
+                      <a data-open="modal" style="color:unset;" data-target="#MPRCODE1"
+                         data-backdrop="static" data-keyboard="false" (click)="GetMPRDetail(item); ForSelectedRowColor();">
+                        {{item?.JobTitle}}
+                        <span style="width: 100px !important; height: 19px !important; bottom: 5px !important;
+                              right: -106px !important; padding-top: 4px;">View Job Details</span>
+                      </a>
+                    </div>
+                  </h5>
+                </td>
+                <td style="text-align:right;">
+
+                  <span style="margin-left: 30px;">
+                    <span class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/"
+                          data-layout="button" data-size="small">
+                      <!-- <a (click)="ShareOnSocialMedia('https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse&quote=testing')"-->
+                      <a (click)="ShareOnSocialMedia('https://facebook.com/sharer.php?u=<%link%>,&amp;src=sdkpreparse',item.JobCode,item.JobTitle,item.CompanyId,item.CompanyName)"
+                         class="fb-xfbml-parse-ignore">
+                        <img class="socialMediaClass" style="cursor:pointer;"
+                             src="./assets/images/SocialMediaIcons/Facebook.png"
+                              title="Share this job on Facebook">
+                      </a>
+                    </span>
+
+
+                    <span>
+                      <!--https://careers.serena.com.pk/View/JobDetails?JId=2-022020-03--> <!--Job Opening IT Officer at Islamabad Serena Hotel-->
+                      <a (click)="ShareOnSocialMedia('https://twitter.com/intent/tweet?url=<%link%>&amp;text=<%text%>&amp;hashtags=serena_hotels&text=Hello%20world',item.JobCode,item.JobTitle,item.CompanyId,item.CompanyName)"
+                         class="twitter-share-button" data-size="large">
+                        <img class="socialMediaClass" style="cursor:pointer;" src="./assets/images/SocialMediaIcons/twitter.png"
+                             title="Share this job on Twitter">
+                      </a>
+                    </span>
+
+                    <span>
+                      <!--<a (click)="ShareOnSocialMedia('http://www.linkedin.com/shareArticle?mini=true&amp;url=https://careers.serena.com.pk/View/JobDetails?JId=2-022020-03,2&amp;title=Job Opening IT Officer at Islamabad Serena Hotel')"-->
+                      <a (click)="ShareOnSocialMedia('http://www.linkedin.com/shareArticle?mini=true&amp;url=<%link%>&amp;title=<%text%>',item.JobCode,item.JobTitle,item.CompanyId,item.CompanyName)"
+                         data-size="large">
+                        <img class="socialMediaClass" style="cursor:pointer;" src="./assets/images/SocialMediaIcons/linkedIn.png"
+                             title="Share this job on LinkedIn">
+                      </a>
+
+                    </span>
+                  </span>
+
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+
+
+
+
+          <h6 *ngIf="item?.Location && item?.Location.trim().toUpperCase() !== 'N/A'" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="subHeadOpac" style="margin-top:0px;">{{item?.Location}}</h6>
+          <div *ngIf="HideJobCode != true" class="otherDetailsNormalView aligned-row"><b>{{lblJobCode}}: &nbsp;&nbsp;</b>{{item?.JobCode}}</div>
+          <div *ngIf="ShowCompanyInfo && HideOrganization != true" class="otherDetailsNormalView aligned-row"><b>{{lblCompany}}: &nbsp;&nbsp;</b>{{item?.CompanyName}}</div>
+          <div *ngIf="HideJobAttributeName == true" class="otherDetailsNormalView aligned-row"><b>{{lblJobAttributeName}}: &nbsp;&nbsp;</b>{{item?.JobAttributeName}}</div>
+
+          <div class="otherDetailsNormalView aligned-row" *ngIf="item.JobStatus != '' && ShowAppStatusAtjobportal"><b>{{lblJobStatus}}: &nbsp;&nbsp;</b><span [style.color]="item.JobStatus == 'Close' ? 'red' : ''">{{item?.JobStatus}}</span></div>
+          <div class="otherDetailsNormalView click-to-top aligned-row" style="position: relative;max-width: unset;"
+               *ngIf="item.ApplicantStatus != '' && ShowAppStatusAtjobportal">
+            <b>{{ApplicantStatus}}: &nbsp;&nbsp;</b>
+
+            <a data-toggle="modal" style="cursor:pointer;" data-target="#jobHistoryModal"
+               data-backdrop="static" data-keyboard="false" (click)="getJobDHistory(item)">{{item?.ApplicantStatus}}</a>
+
+            <span style="width: 100px !important; height: 19px !important; bottom: 5px !important;
+            right: -106px !important; padding-top: 2px;">View Status History</span>
+          </div>
+          <!--<div *ngIf="!offerLetter" class="fntFmly fntWght fntFmly" style="cursor:pointer;"><a data-toggle="modal" data-target="#myModaloffer" data-backdrop="static" data-keyboard="false">View</a> </div>
+          <div *ngIf="!offerLetter" class="fntFmly fntWght fntFmly">Pending for Acceptance</div>-->
+
+          <div class="otherDetailsNormalView aligned-row" *ngIf="HasApplicantOfferletterData == true ">
+            <b>{{OfferLetter}}: &nbsp;&nbsp;</b>
+            <a style="cursor:pointer;" *ngIf="item.Offerletterissued == true" (click)="viewOfferLetter(item.DocText, item)">&nbsp;&nbsp;View</a>
+          </div>
+          <div class="otherDetailsNormalView aligned-row" *ngIf="HasApplicantOfferRescind == true ">
+            <b>{{OfferRescind}}: &nbsp;&nbsp;</b>
+            <a style="cursor:pointer;" *ngIf="item.IsOfferRescinded == true" (click)="viewOfferLetter(item.DocText, 4)">&nbsp;&nbsp;View</a>
+          </div>
+          <div *ngIf="HasApplicantOfferletterData == true" class="aligned-row otherDetailsNormalView">
+            <b>{{lblOfferLetterStatus}}: &nbsp;&nbsp;</b>
+            <span *ngIf="item.Offerletterissued == true">{{item?.OfferLetterStatusName}}</span>
+          </div>
+          <div class="otherDetailsNormalView aligned-row" *ngIf="IsOfferLetter == true ">
+            <b>{{lblChat}}: &nbsp;&nbsp;</b>
+            <a style="cursor:pointer;" (click)="onChatClick($event ,item.JobCode , item.JobTitle)">
+              &nbsp;&nbsp;View
+              <span *ngIf="unreadMessageCounts[item.JobCode] > 0" class="unread-counter"
+                    style="background: red; color: white; border-radius: 50%; padding: 4px 8px; font-size: 9px;">
+                {{ unreadMessageCounts[item.JobCode] }}
+              </span>
+            </a>
+          </div>
+          <!-- <br /> -->
+          <hr *ngIf="appliedJobs.length > 1" />
+        </div>
+      </div>
+      <div class="ex2" *ngIf="updateProfService.IsGridStyle">
+        <table class="table fixed_header">
+          <thead class="tableHeaderBackground tablePanelHeading" style="font-size: 12px;">
+            <tr>
+              <th *ngIf="ShowCompanyInfo && HideOrganization != true" class="fntFmly tblHeaderFnt fntWght2" style="color: #524d4d !important;"><strong>{{lblCompany}}</strong></th>
+              <th *ngIf="HideJobAttributeName == true" class="fntFmly tblHeaderFnt ">
+                <strong class="fntWght2" style="color: #524d4d !important;">{{lblJobAttributeName}}</strong>
+              </th>
+              <th *ngIf="HideJobCode != true" class="fntFmly tblHeaderFnt fntWght2" style="max-width:262px; color: #524d4d !important;"><strong>{{lblJobCode}}</strong></th>
+              <th class="fntFmly tblHeaderFnt fntWght2" style="color: #524d4d !important;"><strong>{{JobTitle}}</strong></th>
+              <th *ngIf="ShowAppStatusAtjobportal && HasJobStatusData" class="fntFmly tblHeaderFnt fntWght2" style="color: #524d4d !important;"><strong>{{lblJobStatus}}</strong></th>
+              <th *ngIf="ShowAppStatusAtjobportal && HasApplicantStatusData" class="fntFmly tblHeaderFnt fntWght2" style="color: #524d4d !important;"><strong>{{ApplicantStatus}}</strong></th>
+              <th *ngIf="HasApplicantOfferletterData == true" class="fntFmly tblHeaderFnt fntWght2" style="color: #524d4d !important; text-align: center"><strong>{{OfferLetter}}</strong></th>
+              <th *ngIf="HasApplicantOfferRescind == true" class="fntFmly tblHeaderFnt fntWght2" style="color: #524d4d !important; text-align: center"><strong>{{OfferRescind}}</strong></th>
+
+              <th *ngIf="HasApplicantOfferletterData == true" class="fntFmly tblHeaderFnt fntWght2" style="color: #524d4d !important;"><strong>{{lblOfferLetterStatus}}</strong></th>
+              <th *ngIf="IsOfferLetter == true" class="fntFmly tblHeaderFnt fntWght2" style="color: #524d4d !important;text-align:center;"><strong>{{lblChat}}</strong></th>
+
+              <th></th>
+            </tr>
+          </thead>
+          <tbody class="tblbodyclr member" style="max-height: 250px !important;">
+            <tr *ngIf="!appliedJobs || appliedJobs.length <= 0" style="font-size: 12px;">
+              <td colspan="8" style="text-align: center; max-width: 2330px !important;">
+                <span class="fntFmly">{{Nodata}}</span>
+              </td>
+            </tr>
+
+            <tr *ngFor="let item of appliedJobs" (click)="GetMPRDetail(item); ForSelectedRowColor()">
+              <td *ngIf="ShowCompanyInfo && HideOrganization != true" data-open="modal" data-target="#MPRCODE1" data-backdrop="static" data-keyboard="false" class="fntFmly fntWght fntFmly">{{ item.CompanyName }}</td>
+              <td *ngIf="HideJobAttributeName == true" class="PdgTop fntWght fntFmly">{{ item.JobAttributeName }}</td>
+              <td *ngIf="HideJobCode != true" data-open="modal" data-target="#MPRCODE1" data-backdrop="static" data-keyboard="false" class="PdgTop fntWght">
+                {{ item.JobCode }}
+              </td>
+
+              <td data-open="modal" data-target="#MPRCODE1" data-backdrop="static" data-keyboard="false" class="PdgTop fntWght fntFmly">
+                <div class="click-to-top" style="position: relative;">
+                  <a>
+                    {{ item.JobTitle }}
+                    <span style="width: 100px !important;height: 19px !important; bottom: 5px !important;right: -100px !important;">
+                      View Job Details
+                    </span>
+                  </a>
+                </div>
+              </td>
+
+              <td *ngIf="ShowAppStatusAtjobportal && HasJobStatusData" data-open="modal" data-target="#MPRCODE1" data-backdrop="static" data-keyboard="false"
+                  class="fntFmly fntWght fntFmly" [style.color]="item.JobStatus == 'Close' ? 'red' : ''">
+                {{ item.JobStatus }}
+              </td>
+
+              <td *ngIf="ShowAppStatusAtjobportal && HasApplicantStatusData" class="fntFmly fntWght fntFmly">
+                <div class="otherDetailsNormalView click-to-top" style="position: relative;max-width: unset;">
+                  <a data-toggle="modal" style="cursor:pointer;" data-target="#jobHistoryModal" data-backdrop="static" data-keyboard="false" (click)="getJobDHistory(item)">
+                    {{item?.ApplicantStatus}}
+                  </a>
+                  <span style="width: 100px !important; height: 19px !important; bottom: 5px !important; right: -106px !important; padding-top: 2px;">
+                    View Status History
+                  </span>
+                </div>
+              </td>
+
+
+              <td *ngIf="HasApplicantOfferletterData == true " class="fntFmly fntWght fntFmly" style="cursor:pointer; text-align: center">
+                <a *ngIf="item.Offerletterissued == true" (click)="viewOfferLetter(item.DocText, item)">&nbsp;&nbsp;View</a>
+              </td>
+
+              <td *ngIf="HasApplicantOfferRescind == true " class="fntFmly fntWght fntFmly" style="cursor:pointer; text-align: center">
+                <a *ngIf="item.IsOfferRescinded  == true" (click)="viewOfferLetter(item.DocText, 4)">&nbsp;&nbsp;View</a>
+              </td>
+
+              <td *ngIf="HasApplicantOfferletterData == true" data-keyboard="false" class="fntFmly fntWght fntFmly">
+                <span *ngIf="item.Offerletterissued == true">{{item?.OfferLetterStatusName}}</span>
+              </td>
+
+
+              <td *ngIf="IsOfferLetter" class="fntFmly fntWght fntFmly" style="cursor:pointer; text-align: center">
+                <a (click)="onChatClick($event, item.JobCode , item.JobTitle)">
+                  &nbsp;&nbsp;View <span *ngIf="unreadMessageCounts[item.JobCode] > 0" class="unread-counter"
+                      style="background: red; color: white; border-radius: 50%; padding: 5px 10px; font-size: 12px;">
+                  {{ unreadMessageCounts[item.JobCode] }}
+                </span>
+                </a>
+              </td>
+
+
+              <td style="vertical-align:middle;">
+                <span>
+                  <span class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button" data-size="small">
+                    <a (click)="ShareOnSocialMedia('https://facebook.com/sharer.php?u=<%link%>,&amp;src=sdkpreparse',item.JobCode,item.JobTitle,item.CompanyId,item.CompanyName)"
+                       class="fb-xfbml-parse-ignore">
+                      <img class="socialMediaClass" style="cursor:pointer;" src="./assets/images/SocialMediaIcons/Facebook.png"
+                            title="Share this job on Facebook">
+                    </a>
+                  </span>
+
+                  <span>
+                    <a (click)="ShareOnSocialMedia('https://twitter.com/intent/tweet?url=<%link%>&amp;text=<%text%>&amp;hashtags=serena_hotels&text=Hello%20world',item.JobCode,item.JobTitle,item.CompanyId,item.CompanyName)"
+                       class="twitter-share-button" data-size="large">
+                      <img class="socialMediaClass" style="cursor:pointer;" src="./assets/images/SocialMediaIcons/twitter.png"
+                           title="Share this job on Twitter">
+                    </a>
+                  </span>
+
+                  <span>
+                    <a (click)="ShareOnSocialMedia('http://www.linkedin.com/shareArticle?mini=true&amp;url=<%link%>&amp;title=<%text%>',item.JobCode,item.JobTitle,item.CompanyId,item.CompanyName)"
+                       data-size="large">
+                      <img class="socialMediaClass" style="cursor:pointer;" src="./assets/images/SocialMediaIcons/linkedIn.png"
+                           title="Share this job on LinkedIn">
+                    </a>
+                  </span>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <br />
+    </div>
+  </div>
+  <!--end-->
+  <!--Company Dropdown-->
+  <div *ngIf="ShowCompany" style="margin-top: 20px !important;">
+    <p style="float: left; font-size: 13px; margin-top: 4px;"> {{lblCompany}} &nbsp;&nbsp;&nbsp;</p>
+    <select [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="selectpicker form-control fontSize12" (change)="onChange()" [(ngModel)]="SelectedCompany" name="SponsorShipCategory" id="SponsorShipCategory" style="border-radius:0px; max-width: 15% !important; width: auto; height:28px !important">
+      <option *ngFor="let item of AssociatedCompaniesDropdown" [ngValue]="item.Id">{{ item.Name }}</option>
+    </select>
+  </div>
+  <!--Grid work for Vacancies you can apply for-->
+  <h4 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" *ngIf="isFF" style="margin: 15px 0px;"><!--Vacancies you can apply for--> {{lblWelcomeHeading1}}</h4>
+  <div [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]" *ngIf="isFF">
+    <table *ngIf="isJobAvailable" style="margin-bottom:8px;">
+      <tbody style="overflow: hidden; height: auto;">
+        <tr>
+          <td style="text-align:left;">
+            <input [(ngModel)]="textToFilter" id='srchTxt' (keyup.enter)="fnFilterJob(textToFilter)" class="srchTxt" type="text" placeholder="search for vacancies...">
+            <select [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="selectpicker form-control fontSize12" [(ngModel)]="searchFilter" name="searchFilter" id="searchFilter" style="border-radius:0px; float: left; width: 75px; height:26px !important; margin-left: 6px; padding: 2px">
+              <option value="0">{{lblAll}}</option>
+              <option value="JobTitle">{{JobTitle}}</option>
+              <option value="Location">{{lblLocation}}</option>
+              <option *ngIf="ShowCompanyInfo" value="CompanyName">{{lblCompany}}</option>
+            </select>
+            <img (click)="fnFilterJob(textToFilter)" style="padding: 6px; float: left; cursor: pointer;" src="./assets/images/searchIconBlue.png">
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="!updateProfService.IsGridStyle" class='normalView'>
+      <table *ngIf="!filteredJobs || filteredJobs.length <= 0" style="width:100%;font-size: 12px;">
+        <tbody style="overflow-y:hidden;">
+          <tr style="width:100%; display: block;">
+            <td style="width:100%; text-align: center; display: block;">
+              <h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="fntFmly">
+                {{Nodata}}
+              </h5>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngFor="let item of filteredJobs; let i = index">
+        <!-- <hr style="border-top: 1px solid" [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"/> -->
+        <h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="cursor:pointer;">
+          {{i+1}} -
+          <div class="click-to-top" style="position: relative;max-width: unset;">
+            <a style="color:unset;"
+               (click)="GetMPRDetail(item); ForSelectedRowColor1();">
+              {{item?.JobTitle}}
+              <span style="width: 100px !important; height: 19px !important; bottom: 5px !important; right: -106px !important; padding-top: 4px;">View Job Details</span>
+            </a>
+          </div>
+        </h5>
+        <h6 *ngIf="item?.Location && item?.Location.trim().toUpperCase() !== 'N/A'" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="subHeadOpac">{{item?.Location}}</h6>
+        <div *ngIf="ShowCompanyInfo && HideOrganization != true" class="otherDetailsNormalView aligned-row"><b>{{lblCompany}}: &nbsp;&nbsp;</b>{{item?.CompanyName}}</div>
+        <div *ngIf="HideJobAttributeName == true" class="otherDetailsNormalView aligned-row"><b>{{lblJobAttributeName}}: &nbsp;&nbsp;</b>{{item?.JobAttributeName}}</div>
+        <div *ngIf="HideJobCode != true" class="otherDetailsNormalView aligned-row"><b>{{lblJobCode}}: &nbsp;&nbsp;</b>{{item?.JobCode}}</div>
+        <!--<div class="otherDetailsNormalView"><b>{{JobTitle}}: &nbsp;&nbsp;</b>{{item?.JobTitle}}</div>-->
+        <!--<div class="otherDetailsNormalView"><b>{{DepartmentMyJobs}}: &nbsp;&nbsp;</b>{{item?.Department}}</div>-->
+        <div *ngIf="HideTotalPositions != true" class="otherDetailsNormalView aligned-row"><b>{{lblTotalPositions}}: &nbsp;&nbsp;</b>{{item?.TotalPositions}}</div>
+        <div class="otherDetailsNormalView aligned-row"><b>{{lblApplicationDeadline}}: &nbsp;&nbsp;</b>{{item?.ApplicationDeadline}}</div>
+        <table>
+          <tbody style="overflow: hidden; height: auto;">
+            <tr>
+              <td style="text-align:left;width:auto;">
+                <button style="width:auto;" type="button" class="btn tbl-btn app-btn clrhover uppercase"
+                        [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                        (click)="GetMPRDetail(item); ForSelectedRowColor1()">
+                  <!--(click)="ApplyJob(item)">-->
+                  <!--APPLY-->{{btnApplyListView}}
+                </button>
+              </td>
+              <td style="text-align:right;">
+
+                <span style="margin-left: 30px;">
+                  <span class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/"
+                        data-layout="button" data-size="small">
+                    <!-- <a (click)="ShareOnSocialMedia('https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse&quote=testing')"-->
+                    <a (click)="ShareOnSocialMedia('https://facebook.com/sharer.php?u=<%link%>,&amp;src=sdkpreparse',item.JobCode,item.JobTitle,item.CompanyId,item.CompanyName)"
+                       class="fb-xfbml-parse-ignore">
+                      <img class="socialMediaClass" style="cursor:pointer;"
+                           src="./assets/images/SocialMediaIcons/Facebook.png"
+                            title="Share this job on Facebook">
+                    </a>
+                  </span>
+
+
+                  <span>
+                    <!--https://careers.serena.com.pk/View/JobDetails?JId=2-022020-03--> <!--Job Opening IT Officer at Islamabad Serena Hotel-->
+                    <a (click)="ShareOnSocialMedia('https://twitter.com/intent/tweet?url=<%link%>&amp;text=<%text%>&amp;hashtags=serena_hotels&text=Hello%20world',item.JobCode,item.JobTitle,item.CompanyId,item.CompanyName)"
+                       class="twitter-share-button" data-size="large">
+                      <img class="socialMediaClass" style="cursor:pointer;" src="./assets/images/SocialMediaIcons/twitter.png"
+                           title="Share this job on Twitter">
+                    </a>
+                  </span>
+
+                  <span>
+                    <!--<a (click)="ShareOnSocialMedia('http://www.linkedin.com/shareArticle?mini=true&amp;url=https://careers.serena.com.pk/View/JobDetails?JId=2-022020-03,2&amp;title=Job Opening IT Officer at Islamabad Serena Hotel')"-->
+                    <a (click)="ShareOnSocialMedia('http://www.linkedin.com/shareArticle?mini=true&amp;url=<%link%>&amp;title=<%text%>',item.JobCode,item.JobTitle,item.CompanyId,item.CompanyName)"
+                       data-size="large">
+                      <img class="socialMediaClass" style="cursor:pointer;" src="./assets/images/SocialMediaIcons/linkedIn.png"
+                           title="Share this job on LinkedIn">
+                    </a>
+
+                  </span>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <hr *ngIf="filteredJobs.length > 1" />
+
+      </div>
+      <!-- <br /> -->
+    </div>
+    <!--<app-job-detail></app-job-detail>-->
+    <div class="ex2" *ngIf="updateProfService.IsGridStyle">
+      <table class="table fixed_header">
+        <thead class=" tableHeaderBackground tablePanelHeading">
+          <tr>
+            <th *ngIf="ShowCompanyInfo && HideOrganization != true" class="fntFmly tblHeaderFnt fntWght2">
+              <strong style=" color: #524d4d !important; "> {{lblCompany}}</strong>
+            </th>
+            <th *ngIf="HideJobAttributeName == true" class="fntFmly tblHeaderFnt ">
+              <strong class="fntWght2" style="color: #524d4d !important;">{{lblJobAttributeName}}</strong>
+            </th>
+            <th *ngIf="HideJobCode != true" class="fntFmly tblHeaderFnt fntWght2" style="text-align:center;">
+              <strong style=" color: #524d4d !important; margin-left: 8px;"> <!--Job Code--> {{lblJobCode}}</strong>
+            </th>
+            <th class="fntFmly tblHeaderFnt fntWght2">
+              <strong style=" color: #524d4d !important; margin-left: 16px; "> <!--Job Title--> {{JobTitle}}</strong>
+            </th>
+            <!--<th class="fntFmly tblHeaderFnt fntWght2">
+              <strong style=" color: #524d4d !important; margin-left: 26px;"> Department {{DepartmentMyJobs}}</strong>
+            </th>-->
+            <th *ngIf="HideTotalPositions != true" class="fntFmly tblHeaderFnt fntWght2" style="text-align:center; ">
+              <strong style=" color: #524d4d !important;"> <!--Total Positions--> {{lblTotalPositions}}</strong>
+            </th>
+            <th class="fntFmly tblHeaderFnt fntWght2" style="text-align:center; ">
+              <strong style="color: #524d4d !important; ">  <!--Application Deadline--> {{lblApplicationDeadline}}</strong>
+            </th>
+            <th class="fntFmly tblHeaderFnt">&nbsp;&nbsp;</th>
+            <th class="fntFmly tblHeaderFnt">&nbsp;&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody class="tblbodyclr member" style="max-height: 250px  !important;">
+          <tr *ngIf="!filteredJobs || filteredJobs.length <= 0" style="font-size: 12px;">
+            <td colspan="7" style="text-align: center; max-width: 2330px !important;">
+              <span class="fntFmly">
+                <!--No data--> {{Nodata}}
+              </span>
+            </td>
+          </tr>
+          <tr *ngFor="let item of filteredJobs" (click)="GetMPRDetail(item); ForSelectedRowColor1()">
+            <td *ngIf="ShowCompanyInfo && HideOrganization != true" class="PdgTop fntWght fntFmly">  {{ item.CompanyName }}</td>
+            <td *ngIf="HideJobAttributeName == true" class="PdgTop fntWght fntFmly">{{ item.JobAttributeName }}</td>
+
+            <td *ngIf="HideJobCode != true" class="PdgTop fntWght" style="text-align:center;">
+              {{ item.JobCode }}
+            </td>
+
+            <td class="PdgTop fntWght fntFmly ">
+              <div class="click-to-top" style="position: relative;">
+
+                <a> {{ item.JobTitle }}<span style="width: 100px !important;height: 19px !important;bottom: 5px !important;">View Job Details</span> </a>
+              </div>
+            </td>
+            <!--<td class="PdgTop fntWght fntFmly " style="width: 176px !important">{{ item.Department }}</td>-->
+            <td *ngIf="HideTotalPositions != true" class="PdgTop fntWght fntFmly " style="text-align:center; "> {{ item.TotalPositions }}</td>
+            <td class="PdgTop fntWght fntFmly " style="text-align:center; ">{{ item.ApplicationDeadline }}</td>
+
+            <td style="vertical-align:middle;">
+              <span>
+                <span class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/"
+                      data-layout="button" data-size="small">
+                  <!-- <a (click)="ShareOnSocialMedia('https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2F&amp;src=sdkpreparse&quote=testing')"-->
+                  <a (click)="ShareOnSocialMedia('https://facebook.com/sharer.php?u=<%link%>,&amp;src=sdkpreparse',item.JobCode,item.JobTitle,item.CompanyId,item.CompanyName)"
+                     class="fb-xfbml-parse-ignore">
+                    <img class="socialMediaClass" style="cursor:pointer;"
+                         src="./assets/images/SocialMediaIcons/Facebook.png"
+                          title="Share this job on Facebook">
+                  </a>
+                </span>
+
+
+                <span>
+                  <!--https://careers.serena.com.pk/View/JobDetails?JId=2-022020-03--> <!--Job Opening IT Officer at Islamabad Serena Hotel-->
+                  <a (click)="ShareOnSocialMedia('https://twitter.com/intent/tweet?url=<%link%>&amp;text=<%text%>&amp;hashtags=serena_hotels&text=Hello%20world',item.JobCode,item.JobTitle,item.CompanyId,item.CompanyName)"
+                     class="twitter-share-button" data-size="large">
+                    <img class="socialMediaClass" style="cursor:pointer;" src="./assets/images/SocialMediaIcons/twitter.png"
+                         title="Share this job on Twitter">
+                  </a>
+                </span>
+
+                <span>
+                  <!--<a (click)="ShareOnSocialMedia('http://www.linkedin.com/shareArticle?mini=true&amp;url=https://careers.serena.com.pk/View/JobDetails?JId=2-022020-03,2&amp;title=Job Opening IT Officer at Islamabad Serena Hotel')"-->
+                  <a (click)="ShareOnSocialMedia('http://www.linkedin.com/shareArticle?mini=true&amp;url=<%link%>&amp;title=<%text%>',item.JobCode,item.JobTitle,item.CompanyId,item.CompanyName)"
+                     data-size="large">
+                    <img class="socialMediaClass" style="cursor:pointer;" src="./assets/images/SocialMediaIcons/linkedIn.png"
+                         title="Share this job on LinkedIn">
+                  </a>
+
+                </span>
+              </span>
+            </td>
+            <td class="PdgTop fntWght fntFmly " style="vertical-align: middle;width: 286px !important">
+              <button type="button" style="width:auto;" class="btn tbl-btn app-btn clrhover uppercase"
+                      [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                      (click)="GetMPRDetail(item); ForSelectedRowColor1()">
+                <!--(click)="ApplyJob(item)">-->
+                <!--APPLY-->{{btnApplyListView}}
+              </button>
+
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <br />
+    <!-- Modal -->
+    <div class="modal fade" id="MPRCODE" role="dialog">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header" style="border-bottom: 0px solid #e5e5e5;">
+            <button type="button" style="background: none;" class="close" data-dismiss="modal"><img src="assets/images/lookupclose.png"></button>
+            <h4 class="modal-title fntFmly " style="margin-left: 12px; font-size:25px;" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]"><strong [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><!--Job Details-->{{lblJobDetail}}</strong></h4>
+          </div>
+
+          <div *ngIf="MPRDETAIL" class="btn-position" style="text-align: center;">
+            <a class="btn app-btn mr-10 fntFmly clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" (click)="ApplyJob(selectedJobCode,selectedCompanyId)"><span class="fa fa-check"></span> APPLY</a>
+            <hr style="margin-top:10px !important">
+          </div>
+
+          <div class="modal-body " style="font-size: 11px;">
+
+            <app-generall-popup [MPRDETAIL]="MPRDETAIL" [arrHeadings]="arrHeadings" [forGridData]="forGridData" [Object]="Object"></app-generall-popup>
+
+          </div>
+
+          <div class="modal-footer">
+
+            <div *ngIf="MPRDETAIL" class="btn-position" style="text-align: center;">
+              <a class="btn app-btn mr-10 fntFmly clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" (click)="ApplyJob(selectedJobCode,selectedCompanyId)"><span class="fa fa-check"></span> APPLY</a>
+              <!--<a class="btn app-btn btnBackgroundColor fntFmly clrhover" style="background-color: #CE7C7C;" data-dismiss="modal"><span class="fa fa-times"></span> CLOSE</a>-->
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+    <!--Popup Close-->
+    <!--Popup open For job Applicant-->
+    <div class="modal fade" id="JobApplicantMsg" role="dialog">
+      <div class="modal-dialog modal-sm fade1">
+        <div class="modal-content" style="width: 340px; height: auto !important; max-height: 340px !important; position: absolute; top: 40%;left: 48%; transform: translate(-48%, 150%) !important;">
+
+          <div class="modal-body">
+
+            <div class="row" style="text-align:center" *ngIf="isTick">
+
+              <div class="col-lg-12 ">
+
+                <img class="popupThankLogo" [src]="tickImage" />
+
+              </div>
+
+
+            </div>
+
+
+
+            <div class="row" style=" margin-top: 5px !important;">
+
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+                <p style="text-align: center;" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">{{ message }}</p>
+
+              </div>
+
+
+
+            </div>
+
+
+            <!--<div class="row">
+
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group" style="text-align: center;">
+                  <a class="btn btn-lg btnTextColor SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-left: 5px; color: white;" (click)="removeMsg()"><span class="fa fa-check"></span> &nbsp;OK  </a>
+                </div>
+              </div>
+
+
+
+
+            </div>-->
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!--Popup Close For job Applicant-->
+    <!--Popup open For job Applicant-->
+    <div class="modal fade" id="JobApplicantMsg1" role="dialog" data-keyboard="false" data-backdrop="static">
+      <div class="modal-dialog modal-sm fade1">
+        <div class="modal-content" style="height: auto !important; max-height: 400px !important;" id="widthForpop">
+
+          <div class="modal-body">
+
+            <div class="row" style="text-align:center" *ngIf="isTick">
+
+              <div class="col-lg-12">
+
+                <img class="popupThankLogo" [src]="tickImage" />
+
+              </div>
+
+
+            </div>
+
+            <div class="row" style=" margin-top: 5px !important;">
+              <div class="col-lg-12">
+                <pre style="white-space: normal;word-break: keep-all; font-family: Barlow,Medium !important; background-color: white !important; border: white !important;" [innerHTML]="formatValidationMsg(message)" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"></pre>
+              </div>
+            </div>
+
+
+            <div class="row">
+              <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="form-group" style="text-align: center;">
+                  <a class="btn btn-lg btnTextColor SaveBtn1 clrhover" data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-left: 5px; color: white;" (click)="removeMsg()"><span class="fa fa-check"></span> &nbsp;OK  </a>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!--Popup Close For job Applicant-->
+
+
+
+  </div>
+  <!--end-->
+  <!-- Modal dialog for showing job detail -->
+  <div class="modal fade" id="MPRCODE1" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header" style="border-bottom: 0px solid #e5e5e5;">
+          <button type="button" style="background: none;" class="close" data-dismiss="modal"><img src="assets/images/lookupclose.png"></button>
+          <h4 class="modal-title fntFmly " style="margin-left: 12px; font-size:25px;" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]"><strong [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><!--Job Details-->{{lblJobDetail}}</strong></h4>
+        </div>
+        <div class="modal-body " style="font-size: 11px;">
+
+
+          <app-generall-popup [MPRDETAIL]="MPRDETAIL" [arrHeadings]="arrHeadings" [forGridData]="forGridData" [Object]="Object"></app-generall-popup>
+
+        </div>
+
+        <div class="modal-footer">
+
+          <div class="btn-position" style="text-align: center;">
+
+            <a class="btn app-btn fntFmly clrhover" style="background-color: #CE7C7C;" data-dismiss="modal"><span class="fa fa-times"></span> CLOSE</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <!--Popup Close-->
+  <!-- Modal dialog for showing Applicant Status History -->
+  <div class="modal fade" id="jobHistoryModal" role="dialog">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header" style="border-bottom: 0px solid #e5e5e5;">
+          <button type="button" style="background: none;" class="close" data-dismiss="modal"><img src="assets/images/lookupclose.png"></button>
+          <h4 class="modal-title fntFmly " style="margin-left: 12px; font-size:20px;" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]"><strong [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><!--Job Details-->{{ApplicantStatus}} History</strong></h4>
+        </div>
+        <div class="modal-body " style="margin-left: 12px;padding-top:0px; font-size: 11px;">
+
+          <h5 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="subHeadOpac">{{appStatusJobTitle}}</h5>
+          <table class="table fixed_header" style="width: unset;min-width: unset;max-width: unset;">
+            <thead class="tableHeaderBackground tablePanelHeading" style="font-size: 12px; ">
+              <tr>
+                <th class="fntFmly tblHeaderFnt fntWght2" style="color: #524d4d !important; min-width: 73px;"><strong>Date</strong></th>
+                <th class="fntFmly tblHeaderFnt fntWght2" style="color: #524d4d !important;"><strong>{{ApplicantStatus}}</strong></th>
+
+              </tr>
+            </thead>
+            <tbody class="tblbodyclr" style="max-height: unset !important;">
+              <tr *ngIf="!jobHistory || jobHistory.length <= 0" style="font-size: 12px;cursor: unset;">
+                <td colspan="7" style="text-align: center; max-width: 2330px !important;">
+                  <span [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" class="fntFmly">
+                    <!--No data--> {{Nodata}}
+                  </span>
+                </td>
+              </tr>
+              <tr *ngFor="let item of jobHistory" style="cursor: unset;">
+                <td class="fntFmly fntWght fntFmly" style="min-width: 73px;">{{ item.Date }} </td>
+                <td class="fntFmly fntWght fntFmly">{{ item.ApplicantStatus }}</td>
+
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+
+        <div class="modal-footer">
+
+          <div class="btn-position" style="text-align: center;">
+
+            <a class="btn app-btn fntFmly clrhover" style="background-color: #CE7C7C;" data-dismiss="modal"><span class="fa fa-times"></span> CLOSE</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+  <!--Popup Close-->
+  <!--loader for job i have applied for-->
+  <!--<div *ngIf="!appliedJobs || appliedJobs.length <= 0" class="loader"></div>-->
+  <!--<div *ngIf="!openVacancies || openVacancies.length <= 0" class="loader" style=" margin-top: -42px; margin-left: 500px;"></div>-->
+  <!--Grid work for Apply for any suitable Department in the Organization-->
+  <div *ngIf="(departmentJobs?.length >= 1) && isFF">
+    <h4 data-toggle="collapse" data-target="#DepartJobsCollapseExpand"
+        [style.color]="[iscolor ? ThemeFontColor  : DefaultFontColor]"
+        style="margin: 15px 0px;cursor:pointer;">
+      <!--Apply for any suitable Department in the Organization--> {{ApplyForAnySuiDept}} ({{departmentJobs.length}})
+      <img src="./assets/images/imgExpand.png" data-toggle="collapse" data-target="#DepartJobsCollapseExpand" (click)="CollapseExpand('Expand',2)" *ngIf="IsCollapseDepart" style="margin-top: -4px;" />
+      <img src="./assets/images/imgCollapse.JPG" data-toggle="collapse" data-target="#DepartJobsCollapseExpand" (click)="CollapseExpand('Collapse',2)" *ngIf="!IsCollapseDepart" style="margin-top: -4px;" />
+    </h4>
+    <div id="DepartJobsCollapseExpand" *ngIf="!IsCollapseDepart">
+      <div *ngIf="!updateProfService.IsGridStyle" class='normalView'>
+        <div *ngFor="let a of departmentJobs; let i = index" style="margin-bottom:8px">
+          <!-- <hr style="border-top: 1px solid" [style.border-color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"/> -->
+          <div class="aligned-row" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="color:#524d4d; font-size: 13px;">
+            <b>{{i+1}} - {{DepartmentMyJobs}}: &nbsp;&nbsp;</b><span class="subHeadOpac">{{a?.Department}}</span>
+          </div>
+          <!--<br />-->
+          <div class="otherDetailsNormalView aligned-row" *ngIf="a.CompanyName && ShowCompanyInfo"><b>{{lblCompany}}: &nbsp;&nbsp;</b>{{a?.CompanyName}}</div>
+          <div class="otherDetailsNormalView aligned-row" *ngIf="a.DepartmentDescription"><b>{{Description}}: &nbsp;&nbsp;</b>{{a?.DepartmentDescription}}</div>
+
+          <div *ngIf="a.Register == false; else registered">
+            <button type="button" class="btn tbl-btn app-btn clrhover"
+                    [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                    style="width:90px !important; height:17px !important; margin-top:3px;"
+                    (click)="ApplyForDepartmentJob(a.JobCode, a.CompanyId)">
+              <div class="click-to-top" style="position: relative;">
+
+                SUBSCRIBE
+                <span style="bottom: -20px !important; ">
+                  If you get subscribe on this department, you will get notified via email in case if any vacancy on this department is opened.
+                </span>
+              </div>
+            </button>
+          </div>
+          <ng-template #registered>
+            <div class="Subscribed">Subscribed &nbsp; | &nbsp; <a (click)="ApplyForDepartmentJob(a.JobCode, a.CompanyId)" style="cursor:pointer; text-decoration: underline;font-size: 12px;">Unsubscribe</a></div>
+
+          </ng-template>
+          <!-- <br /> -->
+          <hr *ngIf="departmentJobs.length > 1" />
+        </div>
+
+      </div>
+      <div class="ex2" *ngIf="updateProfService.IsGridStyle">
+        <table id="DeptInOrganization" class="table fixed_header">
+          <thead class="tableHeaderBackground tablePanelHeading" style="font-size: 12px;">
+            <tr>
+              <th *ngIf="ShowCompanyInfo" class="fntFmly tblHeaderFnt" style="max-width: 303px;">
+                <strong style="color: #524d4d !important;"><!--Company--> {{lblCompany}}</strong>
+              </th>
+              <th class="fntFmly tblHeaderFnt" style="max-width: 248px;">
+                <strong style="color: #524d4d !important;"><!--Department--> {{DepartmentMyJobs}}</strong>
+              </th>
+
+              <th class="fntFmly tblHeaderFnt" style="max-width: 248px;">
+                <strong style="color: #524d4d !important; "><!--Description--> {{Description}}</strong>
+              </th>
+
+              <th class="fntFmly tblHeaderFnt" style="max-width: 248px;">
+                <strong style="color: #524d4d !important; "><!--LblAlert--> {{LblAlert}}</strong>
+              </th>
+
+
+              <!--<th class="fntFmly tblHeaderFnt"> </th>-->
+            </tr>
+          </thead>
+          <tbody class="tblbodyclr member" style="max-height:200px !important;">
+            <tr *ngIf="!departmentJobs || departmentJobs.length <= 0" style="font-size: 12px;">
+              <td colspan="7" style="text-align:center; width:1060px;">
+                <span class="fntFmly">
+                  <!--No data--> {{Nodata}}
+                </span>
+              </td>
+            </tr>
+            <tr *ngFor="let item of departmentJobs" style="color:black;" (click)="ForSelectedRowColor2()">
+
+
+              <td *ngIf="ShowCompanyInfo" class="PdgTop fntWght fntFmly" style=" vertical-align: middle;     max-width: 248px;">{{ item.CompanyName }}</td>
+              <td class="PdgTop fntWght fntFmly" style=" vertical-align: middle;     max-width: 248px;">{{ item.Department }}</td>
+              <td class="PdgTop fntWght fntFmly" style=" vertical-align: middle; max-width:none;">{{ item.DepartmentDescription }} </td>
+              <td style=" vertical-align: middle;     max-width: 248px;">
+                <div *ngIf="item.Register == false; else registered">
+                  <!--<button type="button" class="btn tbl-btn app-btn clrhover"
+                          [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                          style="width:90px !important; height:17px !important"
+                          (click)="ApplyForDepartmentJob(item.JobCode, item.CompanyId)">
+                    <div class="click-to-top" style="position: relative;">
+
+                      SUBSCRIBE
+                      <span style="bottom: -20px !important;right: 35px; ">
+                        If you get subscribe on this department, you will get notified via email in case if any vacancy on this department is opened.
+                      </span>
+                    </div>
+                  </button>-->
+                  <label class="switch" style="display: inline-block; position: relative; margin-right: 10px;">
+                    <input type="checkbox"
+                           [checked]="item.Register"
+                           (change)="ApplyForDepartmentJob(item.JobCode, item.CompanyId)" [style.backgroundColor]="ThemeFontColor ? ThemeFontColor : DefaultFontColor" >
+                    <span class="slider"></span>
+                  </label>
+                  <!--<div class="click-to-top" style="position: relative;">
+                    Subscribe
+                    <span style="bottom: -20px !important;right: 35px; ">
+                      If you get subscribed to this department, you will get notified via email if any vacancy opens in this department.
+                    </span>
+                  </div>-->
+                              </div>
+                              <!--<ng-template #registered>
+                  &nbsp;&nbsp;&nbsp;&nbsp;<label style="color:#39B54A"> Subscribed</label><br />
+                  &nbsp;&nbsp;&nbsp;&nbsp;<a (click)="ApplyForDepartmentJob(item.JobCode, item.CompanyId)" style="cursor:pointer; text-decoration: underline;">Unsubscribe</a>
+                </ng-template>-->
+                <ng-template #registered>
+                  <label class="switch" style="display: inline-block; position: relative; margin-right: 10px;">
+                    <input type="checkbox" [checked]="item.Register" (change)="ApplyForDepartmentJob(item.JobCode, item.CompanyId)"
+                           [style.backgroundColor]="ThemeFontColor ? ThemeFontColor : DefaultFontColor">
+                    <span class="slider" [style.backgroundColor]="item.Register ? ThemeFontColor : DefaultFontColor"></span>
+                  </label>
+                  <!--<span style="font-size: 14px; color: #39B54A; margin-left: 10px;">Subscribed</span>-->
+                </ng-template>
+              </td> 
+            </tr>
+          </tbody>
+        </table>
+        <br />
+
+        <label style="color: red; font-size:13px !important;">{{errormsgRegistration}} </label>
+
+      </div>
+    </div>
+
+  </div>
+  <!--end-->
+  <br />
+
+
+  <!--<button  data-toggle="modal" data-target="#myModaloffer" data-backdrop="static" data-keyboard="false">popup</button>-->
+  <!-- Modal -->
+  <div class="modal fade" id="myModaloffer" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header"
+             [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]"
+             style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+
+          <h4 class="modal-title PopupLeftRightPdngHeading"
+              [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+              style="flex-grow: 1; text-align: center;">
+            <strong>{{ModalHeading}}</strong>
+          </h4>
+
+          <button type="button" class="close"style="background: none; border: none;color:#007FFF;" (click)="closeModals()">
+            <img src="assets/images/lookupclose.png">
+          </button>
+
+        </div>
+
+      
+
+        <div class="modal-body">
+          <!-- Dynamic content for the offer letter will be injected here -->
+        </div>
+
+
+        <div class="row PopupLeftRightPdngBox">
+          <div class="col-sm-12">
+            <div class="form-group" style="text-align: center; display: flex; justify-content: center; ">
+              <a *ngIf="selectedJob !== 1 && selectedJob !== 2 && selectedJob !== 4"
+                 class="btn btnTextColor btn-lg SaveBtn1 ltrSpc custom-btnOne button-center"
+                 [style.backgroundColor]="ThemeFontColor ? ThemeFontColor : DefaultFontColor"
+                 [style.color]="'black'"
+                 (click)="openDateModal(selectedRow,1)"
+                  style="height:32px !important;">
+                <!--[ngClass]="{'disabled-link': selectedJob == 3}">-->
+                <img src="assets/images/btnSave1.png" style="height: 12px; margin-bottom: 1px;"> &nbsp; Accept
+              </a> &nbsp;&nbsp;
+
+              <a *ngIf="selectedJob !== 1 && selectedJob !== 2 && selectedJob !== 4 "
+                 class="btn btnTextColor btn-lg SaveBtn1 ltrSpc custom-btn button-center"
+                 [style.border]="'2px solid ' + (ThemeFontColor ? ThemeFontColor : DefaultFontColor)"
+                 [style.color]="'black'"
+                 (click)="openDateModal(selectedRow,2)"
+                 [ngClass]="{'disabled-link': selectedJob == 1}"
+                 style="height:32px !important;">
+                <img src="assets/images/close11.png" style="height: 12px; margin-bottom: 1px;">
+                <!--<span class="glyphicon glyphicon-folder-close"></span>--> &nbsp; Reject
+              </a>&nbsp;&nbsp;
+
+              <a *ngIf="selectedJob !== 1 && selectedJob !== 2 && selectedJob !== 4"
+                 class="btn btnTextColor btn-lg SaveBtn1 ltrSpc custom-btn button-center"
+                 [style.border]="'2px solid ' + (ThemeFontColor ? ThemeFontColor : DefaultFontColor)"
+                 [style.color]="'black'"
+                 style="width: 190px !important;height:32px !important;"
+                 (click)="openDateModal(selectedRow,3)">
+                <!--[ngClass]="{'disabled-link': selectedJob == 3}">-->
+                <img src="assets/images/reply11.png" style="height: 12px; margin-bottom: 1px;">
+                <!--<span class="glyphicon glyphicon-folder-close"></span>--> &nbsp; Respond with Comments
+              </a>&nbsp;&nbsp;
+
+              <!--<a class="btn app-btn fntFmly clrhover" style="background-color: #CE7C7C;" data-dismiss="modal" (click)="closeModals()" id="BtnOfferMrgn">
+          <span class="glyphicon glyphicon-remove"></span> &nbsp; Close
+        </a>-->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal for Expected Date of Joining -->
+  <!--<div id="expectedDateModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="expectedDateModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 500px; width: 100%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="expectedDateModalLabel">
+            Enter Expected Date of Joining  <button type="button" class="close" data-dismiss="modal" aria-label="Close"
+                                                    style="color: red; font-size: 3rem; border: none; background: none; padding: 0; margin: 0;">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </h5>
+
+        </div>
+        <div class="modal-body">
+          <form (ngSubmit)="submitExpectedDate()">
+            <div class="form-group">
+              <label for="expectedJoiningDate">Expected Date of Joining</label>
+              <input type="date" id="expectedJoiningDate" class="form-control" [(ngModel)]="expectedJoiningDate"
+                     [ngClass]="{'BorderColor': ExpectedDateMandatory && !expectedJoiningDate || PreviousDateMandatory && expectedJoiningDate}"
+                     name="expectedJoiningDate" required>
+              <div *ngIf="ExpectedDateMandatory && !expectedJoiningDate" class="text-danger mt-2">
+                Please enter the expected date of joining.
+              </div>
+              <div *ngIf="PreviousDateMandatory" class="text-danger mt-2">
+                The expected date of joining cannot be in the past. Please select a valid date.
+              </div>
+            </div>
+            <div style="display: flex; justify-content: center;">
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+
+
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>-->
+
+  <div id="expectedDateModal" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 500px;">
+      <div class="modal-content">
+        <!--<div class="modal-header">-->
+        <div class="modal-header" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]" style="border-bottom: 0px solid #e5e5e5; display: flex; justify-content: space-between; align-items: center;">
+          <h5 class="modal-title" style="margin: 0;" [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]">
+            {{ selectedAction === 1 ? 'Accept Offer' : selectedAction === 2 ? 'Reject Offer' : 'Respond with Comments' }}
+          </h5>
+
+          <button type="button" style="background: none; border: none;margin-left: auto;" class="close" (click)="closeOfferModals()" data-dismiss="modal">
+            <img src="assets/images/lookupclose.png" alt="Close">
+          </button>
+        </div>
+
+          <!--<button type="button" class="close" data-dismiss="modal" (click)="closeOfferModals()">
+      &times;
+    </button>-->
+        <!--</div>-->
+        <div class="modal-body">
+          <!-- Expected Joining Date -->
+          <div *ngIf="selectedAction === 1" class="form-group">
+            <label>Expected Date of Joining</label>
+            <input type="date" [(ngModel)]="expectedJoiningDate" [ngClass]="{'BorderColor': ExpectedDateMandatory && !expectedJoiningDate || PreviousDateMandatory && expectedJoiningDate}"
+                   class="form-control" />
+            <div *ngIf="ExpectedDateMandatory && !expectedJoiningDate" class="text-danger mt-2">
+              Please enter the expected date of joining.
+            </div>
+            <div *ngIf="PreviousDateMandatory" class="text-danger mt-2">
+              The expected date of joining cannot be in the past. Please select a valid date.
+            </div>
+          </div>
+
+          <!-- Remarks -->
+          <div *ngIf="selectedAction === 1 || selectedAction === 2 || selectedAction === 3" class="form-group">
+            <label>Remarks</label>
+            <textarea [(ngModel)]="remarks" class="form-control" rows="3"></textarea>
+            <div *ngIf="isRejectOrRespond && !remarks" class="text-danger mt-2">
+              Remarks are required.
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+
+          <button *ngIf="selectedAction === 1" type="button" class="btn btn-primary" [style.backgroundColor]="ThemeFontColor ? ThemeFontColor : DefaultFontColor"
+                  (click)="submitExpectedDate()">
+            Submit
+          </button>
+
+
+          <button *ngIf="selectedAction === 2 || selectedAction === 3" type="button" [style.backgroundColor]="ThemeFontColor ? ThemeFontColor : DefaultFontColor"
+                  class="btn btn-primary" (click)="submitOfferResponse(selectedAction, '')">
+            Submit
+          </button>
+
+          <!--<button type="button" class="btn btn-secondary" data-dismiss="modal" (click)="closeOfferModals()">Close</button>-->
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="responseModal" tabindex="-1" role="dialog" aria-labelledby="responseModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="responseModalLabel">Offer Response</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- This will display the response message -->
+          {{ responseMessage }}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!--Popup Close-->
+
+
+
+</div> 
+
+
+
+<script>
+  $('.example-table tbody').slimscroll({
+    height: '160px',
+    alwaysVisible: true,
+    color: '#007FFF'
+  })
+</script>
+<!--<script>
+  $(document).ready(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+</script>-->

@@ -1,0 +1,67 @@
+<style>
+  button:hover {
+    background-color: #00b2ff;
+    color: white;
+  }
+</style>
+
+<div class="container-fluid fntFmly" id="headerSize" style="font-size:12px;">
+
+  <div class="row" style="margin-left: 0px;">
+   
+     
+    <div class="row">
+       
+  
+      <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12" style="left:8%">
+        <h3 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" id="lblJobDetail"
+            style="font-weight:bold; margin-bottom: 20px; margin-left: 10px;">
+          Job Detail
+        </h3>
+        <app-generall-popup [MPRDETAIL]="MPRDETAIL" [arrHeadings]="arrHeadings" [forGridData]="forGridData" [Object]="Object" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"></app-generall-popup>
+        
+        <div *ngIf="IsShowValidation" class="btn-position" style="text-align: center;">
+          <div style="color:red;font-size:12px;">
+            To apply for a job please <a routerLink="/login">Login here</a>. If you have no account? <a routerLink="/registration/2/{{this.JID}}">Register here</a>
+          </div> 
+        </div>
+        <div class="btn-position" style="text-align: center;">
+
+          <span [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                (click)="btnApply_Click()" class="btn app-btn  mr-10 fntFmly clrhover uppercase">
+            <span class="fa fa-check"></span> {{btnApplyNormalView}}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--style="margin-left: 92px; margin-right: 97px;"-->
+  <!--<div class="fntFmly">
+    
+
+
+  </div>-->
+
+</div>
+<!--<div class="container-fluid fntFmly" id="headerSize">
+
+  <div class="row" style="margin-left: 0px;">
+
+    <div class="row btn-position col-lg-10 col-md-10 col-sm-12 col-xs-12">
+      <div class="col-lg-2 col-md-2 col-sm-12 col-xs-2" style="margin: 0px; min-height: 70px !important;">
+        <div [ngStyle]="{'background-image': 'url(' + CompanyIdService.CompanyLogoBase64 + ')'}" id="logoAdjstmnt"></div>
+        <img id="logoAdjstmnt" [src]=getSantizeUrl(CompanyIdService.CompanyLogoBase64) alt="" />
+      </div>
+      <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12" style="padding-right: 0px;">
+        <label *ngIf="isValidationForBrowser"
+               [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+               style="color: white; float: left !important; font-size:12px !important;
+font-weight: 500 !important">It is recommended that you use Google Chrome for the best user experience.</label>
+
+      </div>
+    </div>
+
+  </div>
+</div>-->
+
+
