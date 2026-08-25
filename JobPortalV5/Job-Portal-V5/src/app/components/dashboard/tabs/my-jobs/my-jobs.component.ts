@@ -1244,22 +1244,16 @@ export class MyJobsComponent implements OnInit {
    // selectedRow: any   -- > use in ApplyJob Bracket
 
     ApplyJob(JobCode, CompanyId) {
-      debugger;
         this.clickRow = false;
         //this.selectedRow;  
         let RequestObject = {
-
-            ApplicantId: localStorage.getItem("AppId"),
             Culture: Constants.Culture,
-            MPRCode: JobCode,//Vac.JobCode,//this.selectedRow.JobCode,
-            CompanyId: CompanyId,//Vac.CompanyId,//this.selectedRow.CompanyId,
-            ApplicantEmail: localStorage.getItem("Email"),
-            LoginCompanyId: this.CompanyIdService.CompanyId// Vac.CompanyId //this.CompanyIdService.CompanyId
+            MPRCode: JobCode//Vac.JobCode,//this.selectedRow.JobCode
         }
         this.myJobCounter();
         this.openSpinner();
         let applyJob = this._config.environment.baseUrl + Constants.ApplyJob;
-        this.http.post(applyJob, RequestObject, { headers: this.dataService.headers })
+        this.dataService.post(applyJob, RequestObject)
             .subscribe((response: any) => {
 
                 this.applyJobs = response;

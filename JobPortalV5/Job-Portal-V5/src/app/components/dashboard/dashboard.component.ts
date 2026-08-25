@@ -600,12 +600,17 @@ export class DashboardComponent implements OnInit {
 
 
   emptyIDandCode() {
+    let logoutUrl = this._config.environment.baseUrl + 'Auth/Logout';
+    this.dataService.post(logoutUrl, {}).subscribe(() => { }, () => { });
 
     localStorage.removeItem("AppId");
     localStorage.removeItem("Email");
     localStorage.removeItem("UserName");
+    localStorage.removeItem("AccessToken");
+    localStorage.removeItem("AccessTokenExpiresUtc");
     localStorage.removeItem('StaySignedIn');
     localStorage.removeItem("DateOfBirthForProf");
+    this.dataService.PassHeader();
 
     var str = this._config.environment.CompanyGroupID + "," + this.CompanyIdService.CompanyId + "," + "false" + ",,,,";
     localStorage.setItem(this._config.environment.CompanyGroupID, JSON.stringify(str));

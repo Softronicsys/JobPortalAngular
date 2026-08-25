@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError, observable } from 'rxjs';
-import { catchError, retry, map } from 'rxjs/operators';
+import { catchError, retry, map, switchMap } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
 
 //import { environment } from '@env/environment';
@@ -27,8 +27,7 @@ export class DataService {
     }
 
     PassHeader() {
-         this.headers = new HttpHeaders();
-        this.headers = this.headers.set('Authorization', 'Basic maazo:abc');
+        this.headers = this.buildHeaders();
     }
 
 
@@ -48,17 +47,13 @@ export class DataService {
         let uniqueName = this.generateUniqueName();
         //this.HandleLongProcess(uniqueName);
         //let options = this.getHeaders('login', this._TokenKey);
-        let options = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json'
-            })
-        };
+        let options = this.getHeaders('login');
         return this._http.get<any>(url, options).pipe(
             map((res) => {
                 this.clearLongProcessRequest(uniqueName);
                 return res;
             }),
-            catchError((error) => this.handleError(error, uniqueName, 'GET'))
+            catchError((error) => this.handleAuthError(error, uniqueName, 'GET', url, () => this._http.get<any>(url, this.getHeaders('login'))))
         );
     };
 
@@ -76,7 +71,7 @@ export class DataService {
                 this.clearLongProcessRequest(uniqueName);
                 return res;
             }),
-            catchError((error) => this.handleError(error, uniqueName, 'POST'))
+            catchError((error) => this.handleAuthError(error, uniqueName, 'POST', url, () => this._http.post<any>(url, body, this.getHeaders('login'))))
         );
     };
 
@@ -89,17 +84,13 @@ export class DataService {
         //this.HandleLongProcess(uniqueName);
         let body = JSON.stringify(model);
        // let options = this.getHeaders('login');
-        let options = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json'
-            })
-        };
+        let options = this.getHeaders('login');
         return this._http.put<any>(url + '/' + id, body, options).pipe(
             map((res) => {
                 this.clearLongProcessRequest(uniqueName);
                 return res;
             }),
-            catchError((error) => this.handleError(error, uniqueName, 'PUT'))
+            catchError((error) => this.handleAuthError(error, uniqueName, 'PUT', url, () => this._http.put<any>(url + '/' + id, body, this.getHeaders('login'))))
         );
     };
 
@@ -111,17 +102,13 @@ export class DataService {
         let uniqueName = this.generateUniqueName();
         //this.HandleLongProcess(uniqueName);
         //let options = this.getHeaders('login');
-        let options = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json'
-            })
-        };
+        let options = this.getHeaders('login');
         return this._http.delete<any>(url + '/' + id, options).pipe(
             map((res) => {
                 this.clearLongProcessRequest(uniqueName);
                 return res;
             }),
-            catchError((error) => this.handleError(error, uniqueName, 'Delete'))
+            catchError((error) => this.handleAuthError(error, uniqueName, 'Delete', url, () => this._http.delete<any>(url + '/' + id, this.getHeaders('login'))))
         );
     };
 
@@ -164,6 +151,47 @@ export class DataService {
         this.clearLongProcessRequest(name);
         return throwError(error || 'Server error');
     };
+
+    private handleAuthError(error: HttpErrorResponse, name, type, url: string, retryRequest: () => Observable<any>) {
+        if (error && error.status === 401 && url && url.indexOf('/Auth/Refresh') === -1) {
+            return this.refreshAccessToken(url).pipe(
+                switchMap(() => retryRequest()),
+                catchError((refreshError) => this.handleError(refreshError || error, name, type))
+            );
+        }
+        return this.handleError(error, name, type);
+    }
+
+    private refreshAccessToken(sourceUrl: string): Observable<any> {
+        var refreshUrl = this.getApiRoot(sourceUrl) + 'Auth/Refresh';
+        return this._http.post<any>(refreshUrl, {}, {
+            headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+            withCredentials: true
+        }).pipe(
+            map((response) => {
+                if (response && response.AccessToken) {
+                    localStorage.setItem('AccessToken', response.AccessToken);
+                    localStorage.setItem('AccessTokenExpiresUtc', response.AccessTokenExpiresUtc || '');
+                    this.PassHeader();
+                }
+                return response;
+            })
+        );
+    }
+
+    private getApiRoot(sourceUrl: string): string {
+        var url = new URL(sourceUrl, window.location.origin);
+        return url.protocol + '//' + url.host + '/';
+    }
+
+    private buildHeaders(): HttpHeaders {
+        let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        var accessToken = localStorage.getItem('AccessToken');
+        if (accessToken) {
+            headers = headers.set('Authorization', 'Bearer ' + accessToken);
+        }
+        return headers;
+    }
 
     isNetworkAvailable(): boolean {
         if (!navigator.onLine) {
@@ -216,9 +244,8 @@ export class DataService {
     getHeaders(name, token?) {
         var data = this.getUserAgent(name);
         let httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type': 'application/json'
-            })
+            headers: this.buildHeaders(),
+            withCredentials: true
         };
         if (data) {
             httpOptions.headers = httpOptions.headers.set('login', data);

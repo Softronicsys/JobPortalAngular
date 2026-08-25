@@ -398,20 +398,13 @@ export class LoginComponent implements OnInit {
                
 
                 let RequestObject = {
-
-                    ApplicantId: localStorage.getItem('AppId'),
                     Culture: "en-GB",
-                    MPRCode: jobCode,
-                    CompanyId: companyID,
-                    ApplicantEmail: localStorage.getItem('Email'),
-                    //IsApplicantPicForWeb: true,
-                    //IsRequestFromMobile: false,
-                    LoginCompanyId: this.CompanyIdService.CompanyId
+                    MPRCode: jobCode
                 }
 
                 this.openSpinner();
                 let applyJob = this._config.environment.baseUrl + Constants.ApplyJob;
-                this.http.post(applyJob, RequestObject)
+                this.dataService.post(applyJob, RequestObject)
                     .subscribe((response: any) => {
                          localStorage.setItem("IsValid", response.IsValid);
                         if (response.IsValid == true) {
@@ -450,7 +443,7 @@ export class LoginComponent implements OnInit {
         
 
         if (navigator.onLine) {
-        const retVal = this.http.post(url, model, headers)
+        const retVal = this.http.post(url, model, this.dataService.getHeaders('login'))
             .subscribe(async (response: any) => {
                 
             //    console.log(response);
@@ -461,6 +454,11 @@ export class LoginComponent implements OnInit {
                     localStorage.setItem('UserName', response.UserName);
                     localStorage.setItem('Email', response.Email);
                     localStorage.setItem('AppId', response.AppId);
+                    if (response.AccessToken) {
+                        localStorage.setItem('AccessToken', response.AccessToken);
+                        localStorage.setItem('AccessTokenExpiresUtc', response.AccessTokenExpiresUtc || '');
+                        this.dataService.PassHeader();
+                    }
 
                     localStorage.setItem("IsLinkedInLogin", "0");
                     this.CompanyIdService.IsLinkedInLogin = "0";

@@ -70,12 +70,17 @@ export class HeaderComponent implements OnInit {
 
 
     emptyIDandCode() {
+        let logoutUrl = this._config.environment.baseUrl + 'Auth/Logout';
+        this.dataService.post(logoutUrl, {}).subscribe(() => { }, () => { });
 
         localStorage.removeItem("JobCode");
         localStorage.removeItem("CompanyID");
         localStorage.removeItem("showMessage");
         localStorage.removeItem('Email')
         localStorage.removeItem('UserName')
+        localStorage.removeItem("AccessToken");
+        localStorage.removeItem("AccessTokenExpiresUtc");
+        this.dataService.PassHeader();
     }
 
     // Get browser name for header validation.
