@@ -56,7 +56,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "jobPortal:build"
+            "browserTarget": "jobPortal:build",
+            "disableHostCheck": true
           },
           "configurations": {
             "production": {

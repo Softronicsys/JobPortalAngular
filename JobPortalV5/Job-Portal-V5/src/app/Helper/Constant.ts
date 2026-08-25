@@ -77,6 +77,14 @@ export class Constants {
 
     /// Applicant
     static readonly GetApplicantData: string = "GetApplicantData";
+    static readonly GetApplicantOfferByRecPositionAppliedId: string = "GetApplicantOfferByRecPositionAppliedId";
+    static readonly GetApplicantOfferByRecPositionAppliedIdFromPolicy: string = "GetApplicantOfferByRecPositionAppliedIdFromPolicy";
+    static readonly GetCtcSubmissionStatusByRecPositionAppliedId: string = "GetCtcSubmissionStatusByRecPositionAppliedId";
+    static readonly UpdateApplicantBenefitByRecPositionAppliedId: string = "UpdateApplicantBenefitByRecPositionAppliedId";
+    static readonly DeleteApplicantBenefitByRecPositionAppliedId: string = "DeleteApplicantBenefitByRecPositionAppliedId";
+    static readonly UpdateApplicantOfferHeaderCurrentSalary: string = "UpdateApplicantOfferHeaderCurrentSalary";
+    static readonly UpdateApplicantOfferHeaderTextFields: string = "UpdateApplicantOfferHeaderTextFields";
+    static readonly SubmitApplicantPackageToEmployeeEmail: string = "SubmitApplicantPackageToEmployeeEmail";
     static readonly GetApplicantDataForApproval: string = "GetApplicantDataForApproval";
 
     static readonly UpdateApplicantData: string = "UpdateApplicantData";
@@ -163,6 +171,7 @@ export class Constants {
 
     //DocumentAttachment
     static readonly GetDocumentAttachments: string = "GetDocumentAttachments";
+    static readonly SaveBankAccountEvidence: string = "SaveBankAccountEvidence";
     static readonly SaveDocumentAttachment: string = "SaveDocumentAttachment";
     static readonly DeleteDocumentAttachment: string = "DeleteDocumentAttachment";
     static readonly DeleteApplicantUploadedDocumentAttachment: string = "DeleteApplicantUploadedDocumentAttachment";

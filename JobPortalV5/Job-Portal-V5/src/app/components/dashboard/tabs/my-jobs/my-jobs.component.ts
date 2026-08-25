@@ -13,6 +13,7 @@ import { Labels } from '@app/Service/DatabaseLbl.service';
 import { AssessmentService } from '@app/Service/UpdateProfile.service';
 import { DataService } from '@app/Shared/Services/data.services';
 import { ChatService } from '@app/Service/chat.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -61,7 +62,8 @@ export class MyJobsComponent implements OnInit {
 
     constructor(private Labels: Labels, private _config: AppConfigService, private http: HttpClient, private spinner: NgxSpinnerService,
         private toastr: ToastrService, public CompanyIdService: GetCompanyParameter, public ClrThemeChng: ThemeColorService,
-        public assessService: AssessmentService, private dataService: DataService, public updateProfService: UpdateProfileService, private chatService: ChatService) {
+        public assessService: AssessmentService, private dataService: DataService, public updateProfService: UpdateProfileService, private chatService: ChatService,
+        private router: Router) {
 
         this.getCounter = new EventEmitter<any>();
     }
@@ -147,7 +149,7 @@ export class MyJobsComponent implements OnInit {
     // For Labels //
 
     ApplicantStatus: string = "Applicant Status";
-    OfferLetter: string = "Offer Letter";
+    OfferLetterLegacy: string = "Offer Letter";
     OfferRescind: string = "Rescind Letter";
     lblChat : string = "Chat with Us";
 
@@ -177,9 +179,6 @@ export class MyJobsComponent implements OnInit {
         if (this.Labels.dashLabels == true) {
           if (this.Labels.ApplicantStatus != "" && !isNullOrUndefined(this.Labels.ApplicantStatus))
             this.ApplicantStatus = this.Labels.ApplicantStatus;
-
-          if (this.Labels.OfferLetter != "" && !isNullOrUndefined(this.Labels.OfferLetter))
-            this.OfferLetter = this.Labels.OfferLetter;
 
           if (this.Labels.OfferRescind != "" && !isNullOrUndefined(this.Labels.OfferRescind))
             this.OfferRescind = this.Labels.OfferRescind;
@@ -238,6 +237,8 @@ export class MyJobsComponent implements OnInit {
           if (this.Labels.Company != "" && !isNullOrUndefined(this.Labels.Company))
             this.lblCompany = this.Labels.Company;
       }
+
+      this.OfferLetterLegacy = "Offer Letter";
 
     }
 
@@ -598,6 +599,7 @@ export class MyJobsComponent implements OnInit {
     ModalHeading: string = "";
     OfferResponded: boolean = false;
     unreadMessageCounts: { [jobCode: string]: number } = {};
+    private hasAutoOpenedOfferLetterPopup: boolean = false;
 
 
     onChatClick(event: MouseEvent, jobCode: string, JobTitle: string): void {
@@ -709,9 +711,26 @@ export class MyJobsComponent implements OnInit {
                  }
                 }
 
+              this.autoOpenOfferLetterPopupIfNeeded();
+
             }, (error: any) => {
                 console.log(error);
             });
+    }
+
+    private autoOpenOfferLetterPopupIfNeeded() {
+      if (this.hasAutoOpenedOfferLetterPopup || !this.HasApplicantOfferletterData || !this.appliedJobs || this.appliedJobs.length <= 0) {
+        return;
+      }
+
+      const offerJob = this.appliedJobs.find((item: any) => item && item.Offerletterissued === true && item.IsOfferRescinded !== true);
+      if (!offerJob) {
+        return;
+      }
+
+      this.hasAutoOpenedOfferLetterPopup = true;
+      this.ModalHeading = "Offer Letter";
+      setTimeout(() => this.showOfferLetterModal(offerJob.DocText || '', offerJob), 0);
     }
     //viewOfferLetter(DocText: string) {
     //  // Inject the dynamic offer letter content into the modal body
@@ -871,13 +890,46 @@ export class MyJobsComponent implements OnInit {
 
     selectedJob: number;
 
-    viewOfferLetter(DocText: string, job: any) {
+    viewOfferLetter(DocText: string, job: any, event?: Event) {
       debugger;
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
 
+      if (job && typeof job === 'object') {
+        var recIdCandidate: any = 0;
+        var recIdKeys = ['RecPositionAppliedId', 'RecPositionAppliedID', 'recPositionAppliedId', 'recPositionAppliedID', 'RecId', 'recId', 'Id', 'id'];
+        for (var i = 0; i < recIdKeys.length; i++) {
+          var k = recIdKeys[i];
+          if (job[k] != null && job[k] !== '') {
+            recIdCandidate = job[k];
+            break;
+          }
+        }
+        const recPositionAppliedId = Number(recIdCandidate);
 
+        if (recPositionAppliedId > 0) {
+          this.router.navigate(['/ctc-offer-letter'], {
+            queryParams: {
+              recPositionAppliedId: recPositionAppliedId,
+              offerLetterStatus: job.OfferLetterStatus,
+              jobCode: job.JobCode,
+              recommendedByEmpId: job.RecommendedByEmpId,
+              companyId: job.CompanyId,
+              docText: job.DocText,
+              viewMode: 'ctc'
+            }
+          });
+          return;
+        }
+      }
+
+      this.showOfferLetterModal(DocText, job);
+    }
+
+    private showOfferLetterModal(DocText: string, job: any) {
       $('#myModaloffer .modal-body').html(DocText);
-
-      
 
       $('#myModaloffer .modal-body').css('color', 'inherit');
       $('#myModaloffer .modal-body b').css('color', 'inherit');
@@ -890,10 +942,19 @@ export class MyJobsComponent implements OnInit {
 
       this.selectedRow = job;  
 
-      this.selectedJob = job.OfferLetterStatus;
-
+      this.selectedJob = job && job.OfferLetterStatus;
 
       $('#myModaloffer').modal('show');  //
+    }
+
+    viewLegacyOfferLetter(job: any, event?: Event) {
+      debugger;
+      if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+      }
+      this.ModalHeading = "Offer Letter";
+      this.showOfferLetterModal(job && job.DocText ? job.DocText : '', job);
     }
 
     closeModals() {

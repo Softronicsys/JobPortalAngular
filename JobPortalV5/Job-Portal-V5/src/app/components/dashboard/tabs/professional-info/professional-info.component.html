@@ -2042,11 +2042,6 @@
               </div>
               <hr *ngIf="ProfessRefDetail.length > 1" />
               <!-- <br /> -->
-
-              <p [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
-                 style="font-style: italic; margin-top: 10px;">
-                We may contact the individuals listed in your references section.
-              </p>
             </div>
           </div>
           <div class="ex2" *ngIf="updateProfService.IsGridStyle">
@@ -2117,19 +2112,13 @@
                   <td class="fntWght fntFmly" style="width: 103px !important;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;" *ngIf="item.AddressType == 'P'">Personal</td>
                   <td class="fntWght fntFmly" style="width: 103px !important;word-wrap: break-word; word-break: break-word;text-align: center; white-space: normal;" *ngIf="item.AddressType == 'B'">Business</td>
                 </tr>
-                <tr *ngIf="ProfessRefDetail && ProfessRefDetail.length > 0">
-                  <td colspan="10" style="text-align: center;">
-                    <p 
-                       [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
-                       style="font-style: italic; font-size: 13px; margin-top: 10px; text-align: center;">
-                      We may contact the individuals listed in your references section.
-                    </p>
-                  </td>
-                </tr>
-
               </tbody>
             </table>
           </div>
+          <p [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+             style="font-style: italic; font-size: 13px; margin-top: 10px; text-align: center;">
+            We may contact the individuals listed in your references section.
+          </p>
         </div>
       </div>
 

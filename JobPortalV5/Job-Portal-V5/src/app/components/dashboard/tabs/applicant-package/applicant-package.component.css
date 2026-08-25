@@ -125,9 +125,15 @@ div.click-to-top:hover span {
   display: block;
 }
 
+.summary-floating-col {
+  position: static;
+}
+
 .app-package-summary {
-  position: sticky;
-  top: 12px;
+  position: static;
+  top: auto;
+  right: auto;
+  z-index: auto;
 }
 
 .app-package-summary table {
@@ -141,7 +147,8 @@ div.click-to-top:hover span {
 
 
 .app-package-summary {
-  /*background-color: #fff;*/
+  background-color: #fff;
+  opacity: 1;
   border-radius: 8px;
   box-shadow: 0 3px 10px rgb(0 0 0 / 0.15);
   padding: 20px 24px;
@@ -227,8 +234,15 @@ div.click-to-top:hover span {
     display: block !important;
   }
 
+  .summary-floating-col {
+    position: static;
+    top: auto;
+  }
+
   .app-package-summary {
     position: static;
+    right: auto;
+    z-index: auto;
     margin-top: 12px;
   }
 }

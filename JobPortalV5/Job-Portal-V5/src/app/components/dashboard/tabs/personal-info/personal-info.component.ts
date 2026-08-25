@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, ViewChildren, QueryList, ViewChild, Input, ChangeDetectorRef  } from '@angular/core';
+﻿import { Component, OnInit, EventEmitter, Output, ViewChildren, QueryList, ViewChild, Input, ChangeDetectorRef  } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { isNullOrUndefined } from 'util';
 import { Router } from '@angular/router';
@@ -72,7 +72,7 @@ export class PersonalInfoComponent implements OnInit {
     HRLooping: any[3] = [1, 2, 3];
     IsLinkedInLogin: boolean = false;
 
-    isValidIBAN: boolean = true; // IBAN validity flag
+    isValidIBAN: boolean = false; // IBAN validity flag
 
     
     public responseData;
@@ -429,6 +429,17 @@ export class PersonalInfoComponent implements OnInit {
     LabelAccounttitle: string = "";
     Accounttitle: string = "";
     PreviousBankId: number = 0;
+    accountEvidenceLabel: string = "Account Evidance";
+    accountEvidenceAllowedTypes: string = ".png,.jpg,.jpeg,.doc,.docx,.pdf";
+    accountEvidenceSelectedFile: File | null = null;
+    accountEvidenceSelectedFileName: string = "";
+    accountEvidenceValidationMsg: string = "";
+    accountEvidenceTypeId: number = 0;
+    accountEvidenceTypeName: string = "";
+    accountEvidenceDocCategoryId: number = 0;
+    accountEvidenceExistingDocId: number = 0;
+    accountEvidenceExistingDocName: string = "";
+    accountEvidenceNeedsUpload: boolean = false;
 
     Branchcode: string = "";
     Bankdropdownid: string = "";
@@ -593,6 +604,8 @@ export class PersonalInfoComponent implements OnInit {
 
     isBasicInformation22: boolean = false;
     isBtnHide22: boolean = false;
+    showFFBankAccountQuestion: boolean = false;
+    ffBankAccountChoice: string = 'No';
 
     isBasicInformation23: boolean = false;
     isBtnHide23: boolean = false;
@@ -915,6 +928,10 @@ export class PersonalInfoComponent implements OnInit {
       this.isBasicInformation22 = true;
       this.isBtnHide22 = true;
       this.DisconnectInternet1 = false;
+      this.showFFBankAccountQuestion = this.isFF === true;
+      this.accountEvidenceValidationMsg = "";
+      this.accountEvidenceSelectedFile = null;
+      this.accountEvidenceSelectedFileName = "";
 
 
       this.AccountNoIBAN_No = this.LabelAccountNoIBAN_No;
@@ -922,6 +939,11 @@ export class PersonalInfoComponent implements OnInit {
       //this.ddlBankName = (isNullOrUndefined(this.LabelBankName) || this.LabelBankName == '') ? this.BankDropdown[0].id : this.PreviousBankId;
 
       this.ddlBankName = (isNullOrUndefined(this.BankDropdown) || this.BankDropdown == '') ? this.GetBankDropdown[0] : this.GetBankDropdown.find(bankDropdown => bankDropdown.Name == this.BankDropdown) || null;
+      if (this.isFF === true) {
+        this.ffBankAccountChoice = this.hasAnyBankInfoData() ? 'Yes' : 'No';
+        this.persistFFBankAccountChoiceForValidation();
+        this.refreshAccountEvidenceBinding();
+      }
 
       //const selectedBank = this.Bankdropdownid ? this.BankDropdown.find(bank => bank.Id == this.Bankdropdownid) : this.BankDropdown[0];
 
@@ -945,11 +967,15 @@ export class PersonalInfoComponent implements OnInit {
 
       this.isBasicInformation22 = false;
       this.isBtnHide22 = false;
+      this.showFFBankAccountQuestion = false;
       this.isMandatoryfieldsAnyOne = false;
       this.SelectCurrency = false;
       this.ExpectedRange = false;
       this.isMndBankInfo = false;
       this.isValidIBAN = false;
+      this.accountEvidenceValidationMsg = "";
+      this.accountEvidenceSelectedFile = null;
+      this.accountEvidenceSelectedFileName = "";
 
     }
 
@@ -2171,7 +2197,7 @@ export class PersonalInfoComponent implements OnInit {
 
       });
         
-         //console.log(this.isFF);
+         console.log(this.isFF);
      
         this.applicantId = localStorage.getItem('AppId');
 
@@ -3790,83 +3816,88 @@ export class PersonalInfoComponent implements OnInit {
 
                 this.HideSpinner();
 
+                const row = response && response.Data && response.Data.length > 0 ? response.Data[0] : null;
+                if (!row) {
+                  return;
+                }
+
                 // Basic information 1 //
 
-                this.Title = response.Data[0].Title;
-                this.FirstName = response.Data[0].FirstName;
-                this.MiddleName = response.Data[0].MiddleName;
-                this.LastName = response.Data[0].LastName;
-                this.Gender = response.Data[0].Gender;
-                this.DateOB = response.Data[0].DateOB;//this.getDisplayDate(response.Data[0].DateOB);
+                this.Title = row.Title;
+                this.FirstName = row.FirstName;
+                this.MiddleName = row.MiddleName;
+                this.LastName = row.LastName;
+                this.Gender = row.Gender;
+                this.DateOB = row.DateOB;//this.getDisplayDate(response.Data[0].DateOB);
                 //console.log(response.Data[0].DateOB);
 
                 localStorage.setItem("DateOfBirthForProf", this.DateOB)
 
-                this.MaritalStatus = response.Data[0].MaritalStatus;
-                this.CountryOfBirth = response.Data[0].CountryOfBirth;
+                this.MaritalStatus = row.MaritalStatus;
+                this.CountryOfBirth = row.CountryOfBirth;
             //    console.log("this.CountryOfBirth", this.CountryOfBirth)
-                this.CityOfBirth = response.Data[0].CityOfBirth;
+                this.CityOfBirth = row.CityOfBirth;
 
-                this.PreviousTitleId = response.Data[0].TitleId;
-                this.PreviousMaritalStatusId = response.Data[0].MaritalStatusId;
-                this.PreviousGenders = response.Data[0].GenderId;
-                this.PreviousCountryOfBirth = response.Data[0].CountryOfBirthId;
-                this.PreviousCitiesByCountryId = response.Data[0].CityOfBirthId;
+                this.PreviousTitleId = row.TitleId;
+                this.PreviousMaritalStatusId = row.MaritalStatusId;
+                this.PreviousGenders = row.GenderId;
+                this.PreviousCountryOfBirth = row.CountryOfBirthId;
+                this.PreviousCitiesByCountryId = row.CityOfBirthId;
 
 
                 // Basic information 2 //
-                this.ExpectedSalary = response.Data[0].ExpectedSalary;
-                this.CurrentSalary = response.Data[0].CurrentSalary;
-                this.Religion = response.Data[0].Religion;
-                this.PassportNo = response.Data[0].PassportNo;
-                this.Nationality = response.Data[0].Nationality;
-                this.NativeLanguage = response.Data[0].NativeLanguage;
-                this.FamilyCardNo = response.Data[0].FamilyCardNo;
-                this.NICNo = response.Data[0].NICNo;
-                this.JoiningDate = response.Data[0].JoiningDate;
-                this.ExpectedSalaryTo = response.Data[0].ExpectedSalaryTo;
-                this.CurrentCurrency = response.Data[0].CurrentCurrency;
-                this.ExpectedSalaryType = response.Data[0].ExpectedSalaryType;
-                this.CurrentSalaryType = response.Data[0].CurrentSalaryType;
-                this.ExpectedSalaryTypeName = response.Data[0].ExpectedSalaryTypeName;
-                this.CurrentSalaryTypeName = response.Data[0].CurrentSalaryTypeName;
-                this.IdCardRemarks = response.Data[0].IdCardRemarks;
-                //this.AreaOfInterest = response.Data[0].AreaOfInterest;
-                this.ExpectedCurrencyId = response.Data[0].ExpectedCurrencyId;
+                this.ExpectedSalary = row.ExpectedSalary;
+                this.CurrentSalary = row.CurrentSalary;
+                this.Religion = row.Religion;
+                this.PassportNo = row.PassportNo;
+                this.Nationality = row.Nationality;
+                this.NativeLanguage = row.NativeLanguage;
+                this.FamilyCardNo = row.FamilyCardNo;
+                this.NICNo = row.NICNo;
+                this.JoiningDate = row.JoiningDate;
+                this.ExpectedSalaryTo = row.ExpectedSalaryTo;
+                this.CurrentCurrency = row.CurrentCurrency;
+                this.ExpectedSalaryType = row.ExpectedSalaryType;
+                this.CurrentSalaryType = row.CurrentSalaryType;
+                this.ExpectedSalaryTypeName = row.ExpectedSalaryTypeName;
+                this.CurrentSalaryTypeName = row.CurrentSalaryTypeName;
+                this.IdCardRemarks = row.IdCardRemarks;
+                //this.AreaOfInterest = row.AreaOfInterest;
+                this.ExpectedCurrencyId = row.ExpectedCurrencyId;
 
-                this.PreviousReligions = response.Data[0].ReligionId;
-                this.PreviousNationalities = response.Data[0].NationalityId;
-                this.PreviousNativeLanguages = response.Data[0].NativeLanguageId;
-                this.PreviousWhenCanYouJoin = response.Data[0].JoiningDate;
-                this.PreviousCurrency = response.Data[0].CurrencyId;
-                this.PreviousExpectedSalaryTo = response.Data[0].ExpectedSalaryTo;
-                this.PreviousCurrentCurrencyId = response.Data[0].CurrentCurrencyId;
-                this.PreviousExpectedCurrency = response.Data[0].ExpectedCurrencyId;
+                this.PreviousReligions = row.ReligionId;
+                this.PreviousNationalities = row.NationalityId;
+                this.PreviousNativeLanguages = row.NativeLanguageId;
+                this.PreviousWhenCanYouJoin = row.JoiningDate;
+                this.PreviousCurrency = row.CurrencyId;
+                this.PreviousExpectedSalaryTo = row.ExpectedSalaryTo;
+                this.PreviousCurrentCurrencyId = row.CurrentCurrencyId;
+                this.PreviousExpectedCurrency = row.ExpectedCurrencyId;
 
-                this.CurrentCurrency = response.Data[0].CurrentCurrency;
-                this.ExpectedCurrency = response.Data[0].ExpectedCurrency;
+                this.CurrentCurrency = row.CurrentCurrency;
+                this.ExpectedCurrency = row.ExpectedCurrency;
 
                 // Newly added
                 //this.CNICEXpry = response.Data[0].CNICExpDate;
                 //console.log(this.CNICEXpry);
 
-                this.IDCardExpiry = this.getFormattedDateString(response.Data[0].CNICExpiryDate);
+                this.IDCardExpiry = this.getFormattedDateString(row.CNICExpiryDate);
                 //console.log(this.IDCardExpiry);
 
-                this.DrivingLicenseExpiry = this.getFormattedDateString(response.Data[0].DrivingLicenseExpiryDate);
-               //console.log(response.Data[0].DrivingLicenseExpiryDate);
+                this.DrivingLicenseExpiry = this.getFormattedDateString(row.DrivingLicenseExpiryDate);
+               //console.log(row.DrivingLicenseExpiryDate);
 
-                const bloodGroup = this.GetBloodGroup.find(r => r.Id == response.Data[0].bldId);
+                const bloodGroup = this.GetBloodGroup.find(r => r.Id == row.bldId);
                 this.BloodGroup = bloodGroup ? bloodGroup.Name : 'N/A';
 
-                //this.BloodGroup = this.bloodGroups.find(r => r.Id == response.Data[0].bldId).Name;//this.BloodGroup = response.Data[0].bldId;
-                this.LabelDrivingLicenseNo = response.Data[0].DrivingLicenseNo;
-                this.IsSpouseEmployed = this.spouseEmploymentStatuses.find(sp => sp.Id == response.Data[0].isSpouseEmployed).Name;//this.IsSpouseEmployed = response.Data[0].isSpouseEmployed;
-                this.AnyotherSourceofIncome = this.otherIncomeSelect.find(a => a.Id == response.Data[0].isAnyOtherIncomeSource).Name; //this.AnyotherSourceofIncome = response.Data[0].isAnyOtherIncomeSource;
-                this.LabelOtherSourceofIncomeDetail = response.Data[0].OtherIncomeSourceDetails;
+                //this.BloodGroup = this.bloodGroups.find(r => r.Id == row.bldId).Name;//this.BloodGroup = row.bldId;
+                this.LabelDrivingLicenseNo = row.DrivingLicenseNo;
+                this.IsSpouseEmployed = (this.spouseEmploymentStatuses.find(sp => sp.Id == row.isSpouseEmployed) || { Name: 'N/A' }).Name;//this.IsSpouseEmployed = row.isSpouseEmployed;
+                this.AnyotherSourceofIncome = (this.otherIncomeSelect.find(a => a.Id == row.isAnyOtherIncomeSource) || { Name: 'N/A' }).Name; //this.AnyotherSourceofIncome = row.isAnyOtherIncomeSource;
+                this.LabelOtherSourceofIncomeDetail = row.OtherIncomeSourceDetails;
 
 
-                const selectedIncome = this.otherIncomeSelect.find(a => a.Id == response.Data[0].isAnyOtherIncomeSource);
+                const selectedIncome = this.otherIncomeSelect.find(a => a.Id == row.isAnyOtherIncomeSource) || { Name: 'N/A' };
 
                 if (selectedIncome.Name.toLowerCase() == 'yes') {
                   this.otherIncome = { Id: true, Name: selectedIncome.Name };
@@ -3875,10 +3906,10 @@ export class PersonalInfoComponent implements OnInit {
                 }
 
 
-                this.AnyPhysicalDisability = this.Disability_Select.find(d => d.Id == response.Data[0].isAnyPhysicalDisability).Name; //this.AnyPhysicalDisability = response.Data[0].isAnyPhysicalDisability;
-                this.LabelDisabilityDetail = response.Data[0].PhysicalDisabilityDetails;
+                this.AnyPhysicalDisability = (this.Disability_Select.find(d => d.Id == row.isAnyPhysicalDisability) || { Name: 'N/A' }).Name; //this.AnyPhysicalDisability = row.isAnyPhysicalDisability;
+                this.LabelDisabilityDetail = row.PhysicalDisabilityDetails;
 
-                const SelectedDisability = this.Disability_Select.find(a => a.Id == response.Data[0].isAnyPhysicalDisability);
+                const SelectedDisability = this.Disability_Select.find(a => a.Id == row.isAnyPhysicalDisability) || { Name: 'N/A' };
                 if (SelectedDisability.Name.toLowerCase() == 'yes') {
                   this.DisabilitySelect = { Id: true, Name: SelectedDisability.Name };
                 } else {
@@ -3889,37 +3920,41 @@ export class PersonalInfoComponent implements OnInit {
 
 
                 // Basic information 3 // (Contact information)
-                this.TelMobile = response.Data[0].TelMobile;
-                this.Address = response.Data[0].Address;
-                this.TelRes = response.Data[0].TelRes;
-                this.TelOffice = response.Data[0].TelOffice;
-                this.CountryOfResidence = response.Data[0].CountryOfResidence;
-                this.CityOfResidence = response.Data[0].CityOfResidence;
-                this.CountryOfResidence1 = response.Data[0].CountryOfResidenceId;
-                this.CityOfResidence1 = response.Data[0].CityOfResidenceId;
-                this.Age = response.Data[0].Age;
-                this.Email = response.Data[0].Email;
+                this.TelMobile = row.TelMobile;
+                this.Address = row.Address;
+                this.TelRes = row.TelRes;
+                this.TelOffice = row.TelOffice;
+                this.CountryOfResidence = row.CountryOfResidence;
+                this.CityOfResidence = row.CityOfResidence;
+                this.CountryOfResidence1 = row.CountryOfResidenceId;
+                this.CityOfResidence1 = row.CityOfResidenceId;
+                this.Age = row.Age;
+                this.Email = row.Email;
                 // Newly added
 
                 //this.ResidStatus = this.residentialStatuses.find(r => r.Id == response.Data[0].ResidStatus).Name;//this.ResidStatus = response.Data[0].ResidStatus;
                
-                const residentialStatus = this.residentialStatuses.find(r => r.Id == response.Data[0].ResidStatus);
+                const residentialStatus = this.residentialStatuses.find(r => r.Id == row.ResidStatus);
                 this.ResidStatus = residentialStatus ? residentialStatus.Name : 'N/A';
 
 
 
                 // Bank Information
 
-                this.LabelAccountNoIBAN_No = response.Data[0].AccountNo;
-                this.LabelAccounttitle = response.Data[0].PayeeName;
+                this.LabelAccountNoIBAN_No = row.AccountNo;
+                this.LabelAccounttitle = row.PayeeName;
 
                 //const Bankdropdownid = this.BankDropdown.find(r => r.Id == response.Data[0].bnkid);
                 //this.ddlBankName.Name = Bankdropdownid ? Bankdropdownid.Name : 'N/A';
 
                 //this.Bankdropdownid = response.Data[0].bnkid;
 
-                const BankDropdown = this.GetBankDropdown.find(r => r.Id == response.Data[0].bnkid);
+                const BankDropdown = this.GetBankDropdown.find(r => r.Id == row.bnkid);
                 this.BankDropdown = BankDropdown ? BankDropdown.Name : 'N/A';
+                if (this.isFF === true) {
+                  this.ffBankAccountChoice = this.hasAnyBankInfoData() ? 'Yes' : 'No';
+                  this.persistFFBankAccountChoiceForValidation();
+                }
 
                 //this.PreviousBankId = response.Data[0].bnkid;
 
@@ -3942,19 +3977,19 @@ export class PersonalInfoComponent implements OnInit {
 
                // Father's Information
 
-                this.LabelFatherFullName = response.Data[0].FatherfullName;
-                this.LabelFatherPhoneNoCell = response.Data[0].FatherPhoCell;
-                this.labelFatherOccupation = response.Data[0].FatherOccup;
-                this.labelFatherIDCardNo = response.Data[0].FatherIdcard;
+                this.LabelFatherFullName = row.FatherfullName;
+                this.LabelFatherPhoneNoCell = row.FatherPhoCell;
+                this.labelFatherOccupation = row.FatherOccup;
+                this.labelFatherIDCardNo = row.FatherIdcard;
 
                // Emergency Contact Information
 
 
-                this.LabelEmergencyFullName = response.Data[0].EmergencyName;
-                this.LabelEmergencyPhoneNoCell = response.Data[0].EmergencyPhone;
+                this.LabelEmergencyFullName = row.EmergencyName;
+                this.LabelEmergencyPhoneNoCell = row.EmergencyPhone;
                 //this.EmergencyRelation = this.relation.find(r => r.Id == response.Data[0].EmergencyRelationship).Name; //this.EmergencyRelation = response.Data[0].RelId;
 
-                const EmergencyDropDown = this.RelationshipDropdown.find(r => r.Id == response.Data[0].EmergencyRelationship);
+                const EmergencyDropDown = this.RelationshipDropdown.find(r => r.Id == row.EmergencyRelationship);
                 this.EmergencyRelationDropdown = EmergencyDropDown ? EmergencyDropDown.Name : 'N/A';
 
                 //this.Relationshipdropdownid = response.Data[0].EmergencyRelationship;
@@ -3963,10 +3998,10 @@ export class PersonalInfoComponent implements OnInit {
                // Conveyance Information
 
                 
-                this.isOwnConveyance = this.ddlConveyance.find(conveyance => conveyance.Id == response.Data[0].Conveyance).Name;//this.isOwnConveyance = response.Data[0].Conveyance;
+                this.isOwnConveyance = (this.ddlConveyance.find(conveyance => conveyance.Id == row.Conveyance) || { Name: 'N/A' }).Name;//this.isOwnConveyance = row.Conveyance;
                 //this.ConveyanceType1 = response.Data[0].ConveyanceType;
 
-                const SelectedConveyance = this.ddlConveyance.find(a => a.Id == response.Data[0].Conveyance);
+                const SelectedConveyance = this.ddlConveyance.find(a => a.Id == row.Conveyance) || { Name: 'N/A' };
 
                 if (SelectedConveyance.Name.toLowerCase() == 'yes') {
                   this.selectedConveyance = { Id: true, Name: SelectedConveyance.Name };
@@ -3974,53 +4009,53 @@ export class PersonalInfoComponent implements OnInit {
                   this.selectedConveyance = { Id: false, Name: SelectedConveyance.Name || '' };
                 }
 
-                this.ConveyanceType1 = (this.conveyanceTypes.find(conveyancetype => conveyancetype.Id == response.Data[0].ConveyanceType) || { Name: "N/A" }).Name;
+                this.ConveyanceType1 = (this.conveyanceTypes.find(conveyancetype => conveyancetype.Id == row.ConveyanceType) || { Name: "N/A" }).Name;
 
 
-                this.LabelConveyancemake = response.Data[0].ConveyanceMake;
-                this.LabelConveyanceModal = response.Data[0].ConveyModal;
-                this.LabelConveyanceYear = response.Data[0].ConveyYear;
-                this.LabelConveyancemakeRegNo = response.Data[0].ConveyRegNo;
+                this.LabelConveyancemake = row.ConveyanceMake;
+                this.LabelConveyanceModal = row.ConveyModal;
+                this.LabelConveyanceYear = row.ConveyYear;
+                this.LabelConveyancemakeRegNo = row.ConveyRegNo;
 
-                this.Company_Name = response.Data[0].CompanyShortName;
-                this.ApprovalStatus = response.Data[0].ApprovalStatus;
+                this.Company_Name = row.CompanyShortName;
+                this.ApprovalStatus = row.ApprovalStatus;
 
                 //console.log(this.ApprovalStatus);
 
 
                 // Basic information 4 //
 
-                this.IqamaNumber = response.Data[0].IqamaNo;
-                this.SponsorContactDetail = response.Data[0].SpnsContactDetails;
-                this.IqamaExpiryHijri = this.getDisplayDate(response.Data[0].IqamaExpiryHijri);
-                this.NoOfSpnsChangedOfVisa = response.Data.NoOfSpnsChangedOfVisa;
-                this.SponsorType = response.Data[0].SpnsType;
-                this.SpnsNatureOfBusiness = response.Data[0].SpnsNatureOfBusiness;
-                this.IqamaExpiryGregorian = this.getDisplayDate(response.Data[0].IqamaExpiryGregorian);
-                this.CurrSpnsName = response.Data[0].CurrSpnsName;
-                this.SpnsCategory = response.Data[0].SpnsCategory;
-                this.IqamaProfession = response.Data[0].IqamaProfession;
-                this.SpnsTransferable1 = response.Data[0].SpnsTransferable;
-                this.SpnsCity = response.Data[0].SpnsCity;
-                this.SpnsCountry = response.Data[0].SpnsCountry;
+                this.IqamaNumber = row.IqamaNo;
+                this.SponsorContactDetail = row.SpnsContactDetails;
+                this.IqamaExpiryHijri = this.getDisplayDate(row.IqamaExpiryHijri);
+                this.NoOfSpnsChangedOfVisa = row.NoOfSpnsChangedOfVisa;
+                this.SponsorType = row.SpnsType;
+                this.SpnsNatureOfBusiness = row.SpnsNatureOfBusiness;
+                this.IqamaExpiryGregorian = this.getDisplayDate(row.IqamaExpiryGregorian);
+                this.CurrSpnsName = row.CurrSpnsName;
+                this.SpnsCategory = row.SpnsCategory;
+                this.IqamaProfession = row.IqamaProfession;
+                this.SpnsTransferable1 = row.SpnsTransferable;
+                this.SpnsCity = row.SpnsCity;
+                this.SpnsCountry = row.SpnsCountry;
 
-                this.PreviousSponsorType = response.Data[0].SpnsTypeId;
-                this.PreviousSpnsCategoryId = response.Data[0].SpnsCategoryId;
-                this.PreviousIqamaProfession = response.Data[0].IqamaProfessionId;
+                this.PreviousSponsorType = row.SpnsTypeId;
+                this.PreviousSpnsCategoryId = row.SpnsCategoryId;
+                this.PreviousIqamaProfession = row.IqamaProfessionId;
 
 
                 //Basic Information 5 //
 
-                this.ValidDrivingLicenseKSA = response.Data[0].ValidDrivingLicenseKSAText;
-                this.DateOfEntryInKSA = this.getDisplayDate(response.Data[0].DOEntryKSA);
-                this.DateOfExitInKSA = this.getDisplayDate(response.Data[0].DOExitKSA);
+                this.ValidDrivingLicenseKSA = row.ValidDrivingLicenseKSAText;
+                this.DateOfEntryInKSA = this.getDisplayDate(row.DOEntryKSA);
+                this.DateOfExitInKSA = this.getDisplayDate(row.DOExitKSA);
 
                 //Basic Information 6 //
 
-                this.HstOfPersecution = response.Data[0].HstOfPersecution;
-                this.HstOfPenalties = response.Data[0].HstOfPenalties;
-                this.PendingCases = response.Data[0].PendingCases;
-                this.Username = response.Data[0].Username;
+                this.HstOfPersecution = row.HstOfPersecution;
+                this.HstOfPenalties = row.HstOfPenalties;
+                this.PendingCases = row.PendingCases;
+                this.Username = row.Username;
 
                 this.GiveLblToDshboard();
 
@@ -4927,7 +4962,7 @@ export class PersonalInfoComponent implements OnInit {
                     CityOfBirthId: this.ddlCitiesByCountryId,//(isNullOrUndefined(this.CitiesByCountryId) || this.CitiesByCountryId == 'N/A') ? this.CitiesByCountryIdDropdown[0].Id : this.ddlCitiesByCountryId,   //this.ddlCitiesByCountryId,  /// this.isUpdateDocumentAttach ? Action.Update : Action.Insert;
                     TitleId: this.ddlTitle,
 
-                    isFieldForceApplicant: !this.isFF,
+                    isFieldForceApplicant: this.isFF,
 
                     ApplicantEmail: localStorage.getItem('Email'),
                     Index: "0"
@@ -5130,7 +5165,7 @@ export class PersonalInfoComponent implements OnInit {
                     CNICExpDate: this.txtIDCardExpiry,
                     DrivingLicenseExpiry: this.txtDrivingLicenseExpiry,
 
-                    isFieldForceApplicant: !this.isFF,
+                    isFieldForceApplicant: this.isFF,
 
                     //AreaOfInterest: this.txtAreaOfInterest,
                     ApplicantEmail: localStorage.getItem('Email'),
@@ -5215,7 +5250,7 @@ export class PersonalInfoComponent implements OnInit {
                     CityOfResidenceId: /*this.CitiesByCountryId,*/   /*this.ddlCitiesByCountryId*/   this.selectedCountry == -1 ? '00' : this.ddlCitiesByCountryId,
                     ApplicantEmail: localStorage.getItem('Email'),
 
-                    isFieldForceApplicant: !this.isFF,
+                    isFieldForceApplicant: this.isFF,
 
                     Index: "2"
 
@@ -5244,6 +5279,10 @@ export class PersonalInfoComponent implements OnInit {
 
 
       if (navigator.onLine) {
+        if (this.isFF === true && this.ffBankAccountChoice === 'No') {
+          this.isCloseEditLbl22_Click();
+          return;
+        }
 
         if (!this.ddlBankName || this.ddlBankName.Name === 'N/A') {
           this.isMndBankInfo = true;
@@ -5262,6 +5301,12 @@ export class PersonalInfoComponent implements OnInit {
           this.isValidIBAN = true;
           this.isMndBankInfo = false;
           return; // stop submit
+        }
+
+        if (this.isFF === true && this.ffBankAccountChoice === 'Yes' && !this.canProceedWithAccountEvidence()) {
+          this.isMndBankInfo = false;
+          this.isBtnHide22 = true;
+          return;
         }
 
         else {
@@ -5283,16 +5328,12 @@ export class PersonalInfoComponent implements OnInit {
           AccountNo: this.AccountNoIBAN_No,
           PayeeName: this.Accounttitle,
           CompanyId: this.CompanyIdService.CompanyId,
-          isFieldForceApplicant: !this.isFF,
+          isFieldForceApplicant: this.isFF,
 
           Index: "22"
 
-        }
-        this.isCloseEditLbl22_Click()
-        this.openSpinner();
-        let UpdateApplicantData = this._config.environment.baseUrl + Constants.UpdateApplicantData;
-        this.PostData(RequestObject, UpdateApplicantData, { headers: this.dataService.headers });
-        // this.PostData(RequestObject, "https://jobportalapi.azurewebsites.net/UpdateApplicantData");
+        };
+        this.saveBankInfoWithAccountEvidence(RequestObject);
 
 
       }
@@ -5340,6 +5381,252 @@ export class PersonalInfoComponent implements OnInit {
 
 
     // update data for Father's Information //
+
+    private canProceedWithAccountEvidence(): boolean {
+      this.accountEvidenceValidationMsg = '';
+      if (this.accountEvidenceExistingDocId > 0) {
+        return true;
+      }
+      if (this.accountEvidenceSelectedFile) {
+        return true;
+      }
+      this.accountEvidenceValidationMsg = 'Please select Account Evidance file.';
+      return false;
+    }
+
+    private saveBankInfoWithAccountEvidence(requestObject: any): void {
+      this.openSpinner();
+      const updateApplicantData = this._config.environment.baseUrl + Constants.UpdateApplicantData;
+      this.http.post(updateApplicantData, requestObject, { headers: this.dataService.headers })
+        .subscribe((response: any) => {
+          if (!response || response.isValid !== true) {
+            this.HideSpinner();
+            $("#videoPopup1").modal('show');
+            this.isTick = false;
+            this.ApplyJobMsg = response && response.Msg ? response.Msg : "Invalid Data.";
+            return;
+          }
+
+          const shouldUploadEvidence = this.isFF === true
+            && this.ffBankAccountChoice === 'Yes'
+            && !!this.accountEvidenceSelectedFile;
+
+          if (!shouldUploadEvidence) {
+            this.finalizeBankSaveSuccess(response.Msg || "Record updated successfully!");
+            return;
+          }
+
+          this.saveAccountEvidenceAttachment(response.Msg || "Record updated successfully!");
+        }, (error: any) => {
+          this.HideSpinner();
+          $("#videoPopup1").modal('show');
+          this.isTick = false;
+          this.ApplyJobMsg = (error && error.error && error.error.Message) ? error.error.Message : "Invalid Data.";
+        });
+    }
+
+    private finalizeBankSaveSuccess(successMsg: string): void {
+      this.isCloseEditLbl22_Click();
+      this.ApplyJobMsg = successMsg;
+      this.isTick = true;
+      $("#videoPopup1").modal('show');
+      this.getApplicantData();
+      this.getDocumentAttachmentGrid();
+      this.getLastProfileUpdateValue();
+      this.popuphide();
+      this.HideSpinner();
+    }
+
+    private saveAccountEvidenceAttachment(bankSuccessMsg: string): void {
+      const isUpdate = this.accountEvidenceExistingDocId > 0;
+      if (!this.accountEvidenceSelectedFile) {
+        this.HideSpinner();
+        $("#videoPopup1").modal('show');
+        this.isTick = false;
+        this.ApplyJobMsg = "Please select Account Evidance file.";
+        return;
+      }
+
+      const model = {
+        Id: isUpdate ? this.accountEvidenceExistingDocId : 0,
+        Status: 2,
+        Subject: this.accountEvidenceLabel,
+        Remarks: this.accountEvidenceLabel,
+        AppId: Number(localStorage.getItem("AppId")) || 0,
+        CompanyId: Number(this.CompanyIdService.CompanyId) || 0,
+        ENTUser: localStorage.getItem("Email"),
+        Action: isUpdate ? "Update" : "Insert"
+      };
+
+      const formData = new FormData();
+      // Keep payload contract identical to existing working document upload flow.
+      formData.append("jpProfileImage", this.accountEvidenceSelectedFile, this.accountEvidenceSelectedFile.name);
+      formData.append("Model", JSON.stringify(model));
+      const request = new XMLHttpRequest();
+      request.onreadystatechange = () => {
+        if (request.readyState !== 4) {
+          return;
+        }
+
+        let docResponse: any = null;
+        try {
+          docResponse = request.responseText ? JSON.parse(request.responseText) : null;
+        } catch (e) {
+          docResponse = null;
+        }
+
+        if (request.status === 200 && docResponse && docResponse.isValid === true) {
+          this.accountEvidenceSelectedFile = null;
+          this.accountEvidenceSelectedFileName = "";
+          this.accountEvidenceValidationMsg = "";
+          this.finalizeBankSaveSuccess(bankSuccessMsg);
+          return;
+        }
+
+        this.HideSpinner();
+        $("#videoPopup1").modal('show');
+        this.isTick = false;
+        const backendMsg =
+          (docResponse && (docResponse.Msg || docResponse.Message))
+            ? (docResponse.Msg || docResponse.Message)
+            : (request.responseText || "");
+        this.ApplyJobMsg = backendMsg ? backendMsg : "Account Evidance could not be saved.";
+      };
+
+      const saveBankAccountEvidence = this._config.environment.baseUrl + Constants.SaveBankAccountEvidence;
+      request.open("POST", saveBankAccountEvidence, true);
+      request.send(formData);
+    }
+
+    onSelectAccountEvidenceFile(event: any): void {
+      const files = event && event.target && event.target.files ? event.target.files : null;
+      const selectedFile = files && files.length > 0 ? files[0] : null;
+      if (!selectedFile) {
+        return;
+      }
+
+      const fileName = selectedFile.name || "";
+      const extension = fileName.substring(fileName.lastIndexOf('.')).toLowerCase();
+      const allowedExtensions = this.accountEvidenceAllowedTypes.split(',').map(ext => ext.trim().toLowerCase());
+      if (allowedExtensions.indexOf(extension) < 0) {
+        this.accountEvidenceSelectedFile = null;
+        this.accountEvidenceSelectedFileName = "";
+        this.accountEvidenceValidationMsg = "Attached document format is not valid!";
+        return;
+      }
+
+      if (selectedFile.size > 2097152) {
+        this.accountEvidenceSelectedFile = null;
+        this.accountEvidenceSelectedFileName = "";
+        this.accountEvidenceValidationMsg = "Document file size cannot be greater than 2 MB.";
+        return;
+      }
+
+      this.accountEvidenceSelectedFile = selectedFile;
+      this.accountEvidenceSelectedFileName = selectedFile.name;
+      this.accountEvidenceValidationMsg = "";
+    }
+
+    private resolveAccountEvidenceType(): any {
+      if (!this.Documents_Cat_Type || !this.Documents_Cat_Type.length) {
+        return null;
+      }
+
+      const normalize = (value: string) => (value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      const candidates = [
+        'accountevidance',
+        'accountevidence',
+        'bankevidance',
+        'bankevidence',
+        'accountproof'
+      ];
+
+      const matched = this.Documents_Cat_Type.find(doc => {
+        const typeName = normalize(doc.TypeName);
+        return candidates.some(candidate => typeName.indexOf(candidate) >= 0);
+      });
+
+      if (matched) {
+        this.accountEvidenceTypeId = Number(matched.DocumentID) || 0;
+        this.accountEvidenceDocCategoryId = Number(matched.DocCategoryTypeId) || 0;
+        this.accountEvidenceTypeName = matched.TypeName || this.accountEvidenceLabel;
+      }
+
+      return matched || null;
+    }
+
+    private refreshAccountEvidenceBinding(): void {
+      if (!this.DocumentAttachmentGrid || !this.DocumentAttachmentGrid.length) {
+        this.accountEvidenceExistingDocId = 0;
+        this.accountEvidenceExistingDocName = "";
+        return;
+      }
+
+      const normalize = (value: string) => (value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+      const candidates = [
+        normalize(this.accountEvidenceLabel),
+        'accountevidance',
+        'accountevidence',
+        'bankaccountevidancedocument',
+        'bankaccountevidencedocument',
+        'bankevidance',
+        'bankevidence'
+      ];
+
+      const found = this.DocumentAttachmentGrid.find(row => {
+        const subject = normalize(row && row.Subject ? String(row.Subject) : '');
+        const category = normalize(row && row.DocumentCategory ? String(row.DocumentCategory) : '');
+        return candidates.some(candidate =>
+          (subject && subject.indexOf(candidate) >= 0) ||
+          (category && category.indexOf(candidate) >= 0));
+      });
+      if (!found) {
+        this.accountEvidenceExistingDocId = 0;
+        this.accountEvidenceExistingDocName = "";
+        return;
+      }
+
+      this.accountEvidenceExistingDocId = Number(found.Id) || 0;
+      const docName = found.DocumentName ? String(found.DocumentName) : "";
+      const extension = found.DocumentExtension ? String(found.DocumentExtension) : "";
+      this.accountEvidenceExistingDocName = (docName + extension).trim();
+    }
+
+    onFFBankAccountChoiceChange(choice: string) {
+      this.ffBankAccountChoice = choice;
+      this.persistFFBankAccountChoiceForValidation();
+      this.accountEvidenceValidationMsg = '';
+      if (choice === 'No') {
+        this.isMndBankInfo = false;
+        this.isValidIBAN = false;
+      }
+    }
+
+    canShowFFBankFields(): boolean {
+      if (this.isFF !== true) {
+        return true;
+      }
+      // Keep load/read-only view unchanged; apply FF Yes/No visibility only in edit mode.
+      if (!this.isBasicInformation22) {
+        return true;
+      }
+      return this.ffBankAccountChoice === 'Yes';
+    }
+
+    private hasAnyBankInfoData(): boolean {
+      const hasBankName = !isNullOrUndefined(this.BankDropdown) && this.safeTrim(this.BankDropdown) !== '' && this.safeTrim(this.BankDropdown) !== 'N/A';
+      const hasIban = this.safeTrim(this.LabelAccountNoIBAN_No) !== '';
+      const hasTitle = this.safeTrim(this.LabelAccounttitle) !== '';
+      return hasBankName || hasIban || hasTitle;
+    }
+
+    private persistFFBankAccountChoiceForValidation(): void {
+      if (this.isFF !== true) {
+        localStorage.removeItem('FFHasBankAccount');
+        return;
+      }
+      localStorage.setItem('FFHasBankAccount', this.ffBankAccountChoice === 'Yes' ? '1' : '0');
+    }
 
     fatherIDCardInvalid: boolean = false;
 
@@ -5467,7 +5754,7 @@ export class PersonalInfoComponent implements OnInit {
           FatherOccup: this.FatherOccupation,
           FatherIdcard: this.FatherIDCardNo,
 
-          isFieldForceApplicant: !this.isFF,
+          isFieldForceApplicant: this.isFF,
           
           ApplicantEmail: localStorage.getItem('Email'),
           Index: "23"
@@ -5554,7 +5841,7 @@ export class PersonalInfoComponent implements OnInit {
             EmergencyPhone: this.EmergencyPhoneNoCell,
             EmergencyRelationship: this.Relationship.Id,
 
-            isFieldForceApplicant: !this.isFF,
+            isFieldForceApplicant: this.isFF,
 
             ApplicantEmail: localStorage.getItem('Email'),
             Index: "24"
@@ -5623,7 +5910,7 @@ export class PersonalInfoComponent implements OnInit {
           ConveyYear: this.selectedConveyance.Id == true ? this.ConveyanceYear : null,
           ConveyRegNo: this.selectedConveyance.Id == true ? this.ConveyancemakeRegNo : null,
 
-          isFieldForceApplicant: !this.isFF,
+          isFieldForceApplicant: this.isFF,
 
           ApplicantEmail: localStorage.getItem('Email'),
           Index: "25"
@@ -5668,7 +5955,7 @@ export class PersonalInfoComponent implements OnInit {
                 SpnsCategory: this.ddlSponsorShipCategory,
                 ValidDrivingLicenseKSA: this.txtValidDrivingLicenseKSA,
 
-                isFieldForceApplicant: !this.isFF,
+                isFieldForceApplicant: this.isFF,
 
                 ApplicantEmail: localStorage.getItem('Email'),
                 Index: "3"
@@ -5699,7 +5986,7 @@ export class PersonalInfoComponent implements OnInit {
                 Appid: localStorage.getItem('AppId'),
                 DateEntryKSA: this.txtdateOfEntryinKSA1,
                 DateExitKSA: this.txtdateOfExitinKSA1,
-                isFieldForceApplicant: !this.isFF,
+                isFieldForceApplicant: this.isFF,
                 Index: "4"
 
             }
@@ -5732,7 +6019,7 @@ export class PersonalInfoComponent implements OnInit {
                 PendingCases: this.dataService.ReplaceApostropheWthTelda(this.txtPendingCases),
                 CompanyId: this.CompanyIdService.CompanyId,
 
-                isFieldForceApplicant: !this.isFF,
+                isFieldForceApplicant: this.isFF,
 
                 ENTTerminal: "mohammad-ali-khan",
                 ApplicantEmail: localStorage.getItem('Email'),
@@ -6056,11 +6343,12 @@ export class PersonalInfoComponent implements OnInit {
 
         }
         let getDocumentAttachments = this._config.environment.baseUrl + Constants.GetDocumentAttachments;
-        this.http.post(getDocumentAttachments, RequestObject, { headers: this.dataService.headers })
+      this.http.post(getDocumentAttachments, RequestObject, { headers: this.dataService.headers })
 
             .subscribe((response: any) => {
 
                 this.DocumentAttachmentGrid = response;
+                this.refreshAccountEvidenceBinding();
 
                 //console.log(response);
               
@@ -6782,6 +7070,7 @@ export class PersonalInfoComponent implements OnInit {
 
 
           this.distinctCategoryID = Array.from(new Set(this.Documents_Cat_Type.map(doc => doc.DocCategoryTypeId))); // Section Id 
+          this.refreshAccountEvidenceBinding();
 
           //console.log(this.distinctCategoryID);
 

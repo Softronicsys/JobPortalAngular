@@ -1,0 +1,407 @@
+<ng-container *ngIf="viewMode !== 'offer-letter'; else legacyOfferLetterView">
+<div class="offer-page">
+  <div class="offer-shell">
+      <div class="offer-header">
+        <div>
+        <h1>{{ pageTitle }}</h1>
+        <p>{{ pageSubtitle }}</p>
+        </div>
+      <div class="offer-header-actions">
+        <button *ngIf="canRespond()" type="button" class="btn-accept" (click)="openDateModal(1)">Accept Offer</button>
+        <button type="button" class="btn-view" (click)="onViewOfferLetter()">View Offer Letter</button>
+        <button *ngIf="canRespond()" type="button" class="btn-reject" (click)="openDateModal(2)">Reject</button>
+        <button *ngIf="canRespond()" type="button" class="btn-comment" (click)="openDateModal(3)">Respond with Comments</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="offer-shell offer-container" *ngIf="!loading">
+    <div class="offer-col-left">
+      <div class="offer-grid-card">
+        <div class="offer-grid-head">
+          <div class="offer-grid-col component">Component</div>
+          <div class="offer-grid-col current">Applicant Current Package <span class="offer-grid-sub">(Input)</span></div>
+          <div class="offer-grid-col probation">Probation</div>
+          <div class="offer-grid-col confirmed">Confirmed</div>
+        </div>
+
+        <div class="offer-grid-body">
+          <div class="form-section-title">Monthly Fixed Cash</div>
+
+          <div class="form-row sticky-gross">
+            <div class="fs-col-label fs-col-label-major">Monthly Gross Salary</div>
+            <div class="fs-col-input">
+              <div class="current-stack">
+                <div class="input-group current-editable">
+                  <span>PKR</span>
+                  <input [value]="(grossCurrent | number:'1.0-0')" readonly />
+                </div>
+                <span class="tax-toggle-readonly on"><span class="knob"></span></span>
+              </div>
+            </div>
+            <div class="fs-col-probation">
+              <span class="output-value">{{asCurrencyNullable(grossProbation)}}</span>
+              <span class="badge badge-taxable" *ngIf="grossProbation != null">TAXABLE</span>
+            </div>
+            <div class="fs-col-output">
+              <span class="output-value">{{asCurrencyNullable(grossConfirmed)}}</span>
+              <span class="badge badge-taxable" *ngIf="grossConfirmed != null">TAXABLE</span>
+            </div>
+          </div>
+
+          <div class="form-section-title">Benefits &amp; Perks (Monthly Eqv)</div>
+          <ng-container *ngIf="monthlyBenefits.length > 0; else noMonthlyBenefits">
+            <div class="form-row" *ngFor="let row of monthlyBenefits">
+              <div class="fs-col-label">
+                <div class="fs-col-label-major">{{row.name}}</div>
+                <span class="label-sub" *ngIf="row.description">{{row.description}}</span>
+              </div>
+              <div class="fs-col-input">
+                <div class="current-stack">
+                  <div class="input-group">
+                    <span>PKR</span>
+                    <input [value]="(row.current | number:'1.0-0')" readonly />
+                  </div>
+                  <span class="tax-toggle-readonly" [ngClass]="row.currentTaxable ? 'on' : 'off'"><span class="knob"></span></span>
+                </div>
+              </div>
+              <div class="fs-col-probation">
+                <span class="output-value">{{asCurrency(row.probation)}}</span>
+                <span class="badge" [ngClass]="row.isTaxable ? 'badge-taxable' : 'badge-nontaxable'">{{row.isTaxable ? 'TAXABLE' : 'NON-TAXABLE'}}</span>
+              </div>
+              <div class="fs-col-output">
+                <span class="output-value">{{asCurrency(row.confirmed)}}</span>
+                <span class="badge" [ngClass]="row.isTaxable ? 'badge-taxable' : 'badge-nontaxable'">{{row.isTaxable ? 'TAXABLE' : 'NON-TAXABLE'}}</span>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #noMonthlyBenefits>
+            <div class="form-row"><div class="fs-col-label">No data</div><div class="fs-col-input"></div><div class="fs-col-probation"></div><div class="fs-col-output"></div></div>
+          </ng-template>
+
+          <div class="form-section-title">Annual Benefits (Amortized Monthly)</div>
+          <ng-container *ngIf="annualBenefits.length > 0; else noAnnualBenefits">
+            <div class="form-row" *ngFor="let row of annualBenefits">
+              <div class="fs-col-label">
+                <div class="fs-col-label-major">{{row.name}}</div>
+                <span class="label-sub" *ngIf="row.description">{{row.description}}</span>
+              </div>
+              <div class="fs-col-input">
+                <div class="current-stack">
+                  <div class="input-group">
+                    <span>PKR</span>
+                    <input [value]="(row.current | number:'1.0-0')" readonly />
+                  </div>
+                  <span class="tax-toggle-readonly" [ngClass]="row.currentTaxable ? 'on' : 'off'"><span class="knob"></span></span>
+                </div>
+              </div>
+              <div class="fs-col-probation">
+                <span class="output-value">{{asCurrency(row.probation)}}</span>
+                <span class="badge" [ngClass]="row.isTaxable ? 'badge-taxable' : 'badge-nontaxable'">{{row.isTaxable ? 'TAXABLE' : 'NON-TAXABLE'}}</span>
+              </div>
+              <div class="fs-col-output">
+                <span class="output-value">{{asCurrency(row.confirmed)}}</span>
+                <span class="badge" [ngClass]="row.isTaxable ? 'badge-taxable' : 'badge-nontaxable'">{{row.isTaxable ? 'TAXABLE' : 'NON-TAXABLE'}}</span>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #noAnnualBenefits>
+            <div class="form-row"><div class="fs-col-label">No data</div><div class="fs-col-input"></div><div class="fs-col-probation"></div><div class="fs-col-output"></div></div>
+          </ng-template>
+
+          <div class="form-section-title contribution-title">Monthly Contributions (Company)</div>
+          <ng-container *ngIf="contributions.length > 0; else noContributions">
+            <div class="form-row" *ngFor="let row of contributions">
+              <div class="fs-col-label">
+                <div class="fs-col-label-major">{{row.name}}</div>
+                <span class="label-sub" *ngIf="row.description">{{row.description}}</span>
+              </div>
+              <div class="fs-col-input">
+                <div class="current-stack">
+                  <div class="input-group">
+                    <span>PKR</span>
+                    <input [value]="(row.current | number:'1.0-0')" readonly />
+                  </div>
+                  <span class="tax-toggle-readonly" [ngClass]="row.currentTaxable ? 'on' : 'off'"><span class="knob"></span></span>
+                </div>
+              </div>
+              <div class="fs-col-probation">
+                <span class="output-value">{{asCurrency(row.probation)}}</span>
+                <span class="badge" [ngClass]="row.isTaxable ? 'badge-taxable' : 'badge-nontaxable'">{{row.isTaxable ? 'TAXABLE' : 'NON-TAXABLE'}}</span>
+              </div>
+              <div class="fs-col-output">
+                <span class="output-value">{{asCurrency(row.confirmed)}}</span>
+                <span class="badge" [ngClass]="row.isTaxable ? 'badge-taxable' : 'badge-nontaxable'">{{row.isTaxable ? 'TAXABLE' : 'NON-TAXABLE'}}</span>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #noContributions>
+            <div class="form-row"><div class="fs-col-label">No data</div><div class="fs-col-input"></div><div class="fs-col-probation"></div><div class="fs-col-output"></div></div>
+          </ng-template>
+
+          <div class="form-section-title deduction-title">Monthly Deductions (Employee)</div>
+          <ng-container *ngIf="deductions.length > 0; else noDeductions">
+            <div class="form-row" *ngFor="let row of deductions">
+              <div class="fs-col-label">
+                <div class="fs-col-label-major">{{row.name}}</div>
+                <span class="label-sub" *ngIf="row.description">{{row.description}}</span>
+              </div>
+              <div class="fs-col-input">
+                <div class="current-stack">
+                  <div class="input-group">
+                    <span>PKR</span>
+                    <input [value]="(row.current | number:'1.0-0')" readonly />
+                  </div>
+                  <span class="tax-toggle-readonly" [ngClass]="row.currentTaxable ? 'on' : 'off'"><span class="knob"></span></span>
+                </div>
+              </div>
+              <div class="fs-col-probation">
+                <span class="output-value">{{asCurrency(row.probation)}}</span>
+                <span class="badge" [ngClass]="row.isTaxable ? 'badge-taxable' : 'badge-nontaxable'">{{row.isTaxable ? 'TAXABLE' : 'NON-TAXABLE'}}</span>
+              </div>
+              <div class="fs-col-output">
+                <span class="output-value output-value-red">{{asCurrency(row.confirmed)}}</span>
+                <span class="badge" [ngClass]="row.isTaxable ? 'badge-taxable' : 'badge-nontaxable'">{{row.isTaxable ? 'TAXABLE' : 'NON-TAXABLE'}}</span>
+              </div>
+            </div>
+          </ng-container>
+
+          <ng-template #noDeductions>
+            <div class="form-row"><div class="fs-col-label">No data</div><div class="fs-col-input"></div><div class="fs-col-probation"></div><div class="fs-col-output"></div></div>
+          </ng-template>
+        </div>
+      </div>
+
+      <div class="offer-loan-card">
+        <div class="offer-loan-accent"></div>
+        <div class="offer-loan-inner">
+          <div class="offer-loan-title">Employee Loan Facility (Applicant's Request)</div>
+          <textarea class="offer-textarea offer-textarea-readonly" rows="4" readonly>{{headerRow?.EmployeeLoanFacility || headerRow?.employeeLoanFacility || 'N/A'}}</textarea>
+        </div>
+      </div>
+
+      <div class="offer-benefits-card">
+        <div class="offer-benefits-grid">
+          <div class="offer-benefit-col">
+            <div class="offer-benefit-title">Applicant's Other Benefits</div>
+            <textarea class="offer-textarea offer-textarea-readonly" rows="4" readonly>{{headerRow?.ApplicantOtherBenefits || headerRow?.applicantOtherBenefits || 'N/A'}}</textarea>
+          </div>
+          <div class="offer-benefit-col">
+            <div class="offer-benefit-title">ATCO's Other Benefits</div>
+            <textarea class="offer-textarea offer-textarea-readonly" rows="4" readonly>{{headerRow?.AtcoOtherBenefits || headerRow?.atcoOtherBenefits || 'N/A'}}</textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="offer-col-right">
+      <div class="summary-card">
+        <div class="summary-header">
+          <h3>Summary Comparison</h3>
+          <span>Current vs Proposed Package Analysis</span>
+        </div>
+        <div class="summary-body">
+          <div class="summary-matrix-head">
+            <div></div>
+            <div class="head">CURRENT</div>
+            <div class="head probation">PROBATION</div>
+            <div class="head confirmed">CONFIRMED</div>
+          </div>
+
+          <div class="summary-matrix-row gross">
+            <div class="label">Gross Salary</div>
+            <div class="value">{{asCurrency(grossCurrent)}}</div>
+            <div class="value probation">{{asCurrencyNullable(grossProbation)}}</div>
+            <div class="value confirmed">{{asCurrencyNullable(grossConfirmed)}}</div>
+          </div>
+
+          <div class="summary-matrix-row">
+            <div class="label muted">Benefits &amp; Perks</div>
+            <div class="value muted">{{asCurrency(benefitsCurrentTotal)}}</div>
+            <div class="value probation muted">{{asCurrency(benefitsProbationTotal)}}</div>
+            <div class="value confirmed muted">{{asCurrency(benefitsConfirmedTotal)}}</div>
+          </div>
+
+          <div class="summary-matrix-row">
+            <div class="label muted">Tax</div>
+            <div class="value muted">({{asCurrency(taxCurrent)}})</div>
+            <div class="value probation muted">({{asCurrency(taxProbation)}})</div>
+            <div class="value confirmed negative">({{asCurrency(taxConfirmed)}})</div>
+          </div>
+
+          <div class="summary-matrix-row">
+            <div class="label muted">Ded.</div>
+            <div class="value muted">({{asCurrency(deductionsCurrentTotal)}})</div>
+            <div class="value probation muted">({{asCurrency(deductionsProbationTotal)}})</div>
+            <div class="value confirmed negative">({{asCurrency(deductionsConfirmedTotal)}})</div>
+          </div>
+
+          <div class="summary-matrix-row net">
+            <div class="label">Net</div>
+            <div class="value current">{{asCurrency(netCurrent)}}</div>
+            <div class="value probation">{{asCurrency(netProbation)}}</div>
+            <div class="value confirmed">{{asCurrency(netConfirmed)}}</div>
+          </div>
+
+          <div class="variance-box" [ngClass]="varianceProbationMonthlyNet >= 0 ? 'pos' : 'neg'">
+            <div class="variance-head">
+              <div class="variance-left">
+                <span class="variance-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 17L17 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M10 7H17V14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </span>
+                <span class="variance-label">Net Variance (Probation)</span>
+              </div>
+              <span class="variance-pct">{{varianceProbationPercent | number:'1.1-1'}}%</span>
+            </div>
+            <span class="variance-val">{{varianceProbationMonthlyNet >= 0 ? '+' : '-'}}{{asCurrency(abs(varianceProbationMonthlyNet))}}</span>
+            <div class="variance-track">
+              <div class="variance-bar" [style.width.%]="pctWidth(varianceProbationPercent)"></div>
+            </div>
+          </div>
+
+          <div class="variance-box" [ngClass]="varianceConfirmedMonthlyNet >= 0 ? 'pos' : 'neg'">
+            <div class="variance-head">
+              <div class="variance-left">
+                <span class="variance-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 17L17 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <path d="M10 7H17V14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </span>
+                <span class="variance-label">Net Variance (Confirmed)</span>
+              </div>
+              <span class="variance-pct">{{varianceConfirmedPercent | number:'1.1-1'}}%</span>
+            </div>
+            <span class="variance-val">{{varianceConfirmedMonthlyNet >= 0 ? '+' : '-'}}{{asCurrency(abs(varianceConfirmedMonthlyNet))}}</span>
+            <div class="variance-track">
+              <div class="variance-bar" [style.width.%]="pctWidth(varianceConfirmedPercent)"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="summary-footer">
+          <div class="summary-mini-row">
+            <span class="mini-label">Annual Benefits (Monthly EQV)</span>
+            <span class="mini-value muted mini-col-probation">{{asCurrency(annualBenefitsCurrentTotal)}}</span>
+            <span class="mini-value mini-col-confirmed">{{asCurrency(annualBenefitsConfirmedTotal)}}</span>
+          </div>
+          <div class="summary-mini-row">
+            <span class="mini-label mini-label-contrib">Monthly Co. Contrib.</span>
+            <span class="mini-value muted mini-col-probation">{{asCurrency(companyContribProbationTotal)}}</span>
+            <span class="mini-value contrib mini-col-confirmed">{{asCurrency(companyContribConfirmedTotal)}}</span>
+          </div>
+          <div class="summary-annual-row">
+            <span class="annual-label">Annual Gross</span>
+            <span class="annual-value current">{{asCurrency(annualGrossCurrent)}}</span>
+            <span class="annual-value probation">{{asCurrency(annualGrossProbation)}}</span>
+            <span class="annual-value confirmed">{{asCurrency(annualGrossConfirmed)}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="offer-shell offer-container" *ngIf="loading">
+    <div class="offer-col-left">Loading...</div>
+  </div>
+
+  <div class="modal fade" id="myModalofferCTC" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header" style="display:flex; justify-content:space-between; align-items:center;">
+          <h4 class="modal-title"><strong>Offer Letter</strong></h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="expectedDateModalCTC" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="max-width: 500px; width: 100%;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" style="font-size:16px; font-weight:600;">
+            {{ selectedAction === 1 ? 'Accept Offer' : selectedAction === 2 ? 'Reject Offer' : 'Respond with Comments' }}
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeOfferModals()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div *ngIf="selectedAction === 1">
+            <label style="font-size:14px;">Expected Date of Joining</label>
+            <input type="date" class="form-control" [(ngModel)]="expectedJoiningDate" />
+            <div *ngIf="ExpectedDateMandatory" class="text-danger mt-2">Expected Date is required.</div>
+            <div *ngIf="PreviousDateMandatory" class="text-danger mt-2">Expected Date cannot be earlier than today.</div>
+          </div>
+
+          <div *ngIf="selectedAction === 2 || selectedAction === 3">
+            <label style="font-size:14px;">Remarks</label>
+            <textarea class="form-control" rows="4" [(ngModel)]="remarks" placeholder="Enter remarks..."></textarea>
+            <div *ngIf="isRejectOrRespond && !remarks" class="text-danger mt-2">Remarks are required.</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeOfferModals()">Close</button>
+          <button type="button" class="btn btn-primary" (click)="submitExpectedDate()">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="responseModalCTC" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Offer Response</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>{{ responseMessage }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</ng-container>
+
+<ng-template #legacyOfferLetterView>
+  <div class="offer-page legacy-offer-page">
+    <div class="offer-shell">
+      <div class="offer-header">
+        <div>
+          <h1>{{ pageTitle }}</h1>
+          <p>{{ pageSubtitle }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="offer-shell offer-container legacy-offer-container" *ngIf="!loading">
+      <div class="offer-col-left legacy-offer-content">
+        <div class="legacy-offer-document" [innerHTML]="docText || '<p>No offer letter template found.</p>'"></div>
+
+        <div class="legacy-offer-actions">
+          <button *ngIf="canRespond()" type="button" class="btn-accept" (click)="openDateModal(1)">Accept Offer</button>
+          <button *ngIf="canRespond()" type="button" class="btn-reject" (click)="openDateModal(2)">Reject</button>
+          <button *ngIf="canRespond()" type="button" class="btn-comment" (click)="openDateModal(3)">Respond with Comments</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="offer-shell offer-container" *ngIf="loading">
+      <div class="offer-col-left">Loading...</div>
+    </div>
+  </div>
+</ng-template>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+﻿import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Params, ActivatedRouteSnapshot } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { isNullOrUndefined } from 'util';
@@ -45,6 +45,9 @@ export class AccountActivationComponent implements OnInit {
     LinkMsg2: string = "";
     WrongUrl: boolean = true;
 
+    IsCTC: boolean = false;
+    ctcRedirectDone: boolean = false;
+
     registered: boolean = false;
     wrong: boolean = false;
     regenerateLink: boolean = false;
@@ -82,6 +85,7 @@ export class AccountActivationComponent implements OnInit {
     IsAssessmentScheduled: boolean = false;
 
     ActivateAccount() {
+        debugger;
         let RequestObject = {
 
             Guid: this.key,
@@ -124,6 +128,19 @@ export class AccountActivationComponent implements OnInit {
                 }
 
                 if (response.Message == "You already registered at" && response.IsAccountCreated == false) {
+                    debugger;
+
+
+                    // CTC case: only redirect when user is already active and URL has isctc=1
+                    if (this.IsCTC == true && this.ctcRedirectDone == false) {
+                        this.ctcRedirectDone = true;
+
+                        this.UserName = response.UserName;
+                        localStorage.setItem('UserName', response.UserName);
+
+                        this.PersonalInfoForCTC();
+                        return;
+                    }
 
                     this.registered = true;
                     this.Color();
@@ -266,7 +283,6 @@ export class AccountActivationComponent implements OnInit {
 
 
     login() {
-
         this.objRouter.navigate(['/login']);
     }
 
@@ -424,32 +440,117 @@ export class AccountActivationComponent implements OnInit {
 
         }
 
-
     ngOnInit() {
-
-      this.activatedRoute.queryParams.subscribe(params => {
         debugger;
-          this.key = params['g'];
-          if (params['rt'])
-          {
-            this.RegType = params['rt'];
-          }
+        console.log('AccountActivationComponent loaded');
 
-          if (params['jc']) {
-            this.JobCode = params['jc'];
-          }
+        this.activatedRoute.queryParams.subscribe(params => {
+            debugger;
+            this.key = params['g'];
 
-          console.log(this.RegType);
-          console.log(this.JobCode);
+            if (params['rt']) {
+                this.RegType = params['rt'];
+            }
 
-          //alert(this.Activationype);
-          this.getCompanyParameter();
+            if (params['jc']) {
+                this.JobCode = params['jc'];
+            }
 
-      });
+            this.IsCTC = params['isctc'] == '1';
+
+            console.log('Guid:', this.key);
+            console.log('IsCTC:', this.IsCTC);
+
+            this.getCompanyParameter();
+        });
+    }
+
+  //  ngOnInit() {
+  //      debugger;
+
+  //    this.activatedRoute.queryParams.subscribe(params => {
+  //      debugger;
+  //        this.key = params['g'];
+  //        if (params['rt'])
+  //        {
+  //          this.RegType = params['rt'];
+  //        }
+
+  //        if (params['jc']) {
+  //          this.JobCode = params['jc'];
+  //        }
+
+  //        // CTC link case
+  //        this.IsCTC = params['isctc'] == '1';
+
+
+  //        console.log(this.RegType);
+  //        console.log(this.JobCode);
+  //        console.log('IsCTC:', this.IsCTC);
+
+  //        //alert(this.Activationype);
+  //        this.getCompanyParameter();
+
+  //    });
 
       
-        //localStorage.getItem('UserName');
+  //      //localStorage.getItem('UserName');
 
-  }
+  //}
 
+
+    PersonalInfoForCTC() {
+        debugger;
+        let RequestObject = {
+            Guid: this.key,
+            CompanyId: this.CompanyIdService.CompanyId,
+        };
+
+        this.openSpinner();
+
+        let personalInfo = this._config.environment.baseUrl + Constants.PersonalInfo;
+
+        this.http.post(personalInfo, RequestObject, { headers: this.dataService.headers })
+            .subscribe((response: any) => {
+                this.personalInformation = response;
+                this.HideSpinner();
+
+                if (!isNullOrUndefined(response) && response.IsValid == true) {
+
+                    localStorage.setItem('Email', response.Email);
+                    localStorage.setItem('AppId', response.AppId);
+
+                    var str = this._config.environment.CompanyGroupID + "," +
+                        this.CompanyIdService.CompanyId + "," +
+                        "false" + "," +
+                        response.AppId + "," +
+                        response.Email + "," +
+                        this.UserName + ",";
+
+                    localStorage.setItem(this._config.environment.CompanyGroupID, JSON.stringify(str));
+
+                    localStorage.setItem(
+                        "LastLoginId",
+                        this.CompanyIdService.CompanyId + "," + this._config.environment.CompanyGroupID
+                    );
+
+                    // Redirect to MyProfile and tell dashboard to open CTC tab
+
+                    sessionStorage.setItem('OpenApplicantPackageTab', '1');
+
+                    this.objRouter.navigateByUrl('/MyProfile', { replaceUrl: true });
+                    //this.objRouter.navigate([
+                    //    "MyProfile",
+                    //    {
+                    //        showPersonalInfo: false,
+                    //        isctc: 1
+                    //    }
+                    //]);
+                }
+
+            }, (error: any) => {
+                console.log(error);
+                this.HideSpinner();
+            });
+    }
 }

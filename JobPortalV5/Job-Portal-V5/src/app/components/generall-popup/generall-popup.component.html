@@ -1,4 +1,4 @@
-<style>
+﻿<style>
   fieldset.scheduler-border {
     border: 1px groove #ddd !important;
     padding: 0 1.4em 1.4em 1.4em !important;
@@ -29,16 +29,28 @@
            item1?.Heading != 'Salary Remarks' && item1?.Heading != 'Job Summary' &&
            item1?.Heading != 'Accountabilities' && item1?.Heading != 'Responsibilities' &&
            item1?.Heading != 'Extra Ordinary Work Condition'">
-      <div class="col-sm-5">
-        <div class="form-group">
-          <label class="fntFmly fntWght3 " style="margin-left: 12px;">{{ item1.Heading }}</label>
-        </div>
+        <!--<div class="col-sm-5">
+      <div class="form-group">
+        <label class="fntFmly fntWght3 " style="margin-left: 12px;">{{ item1.Heading }}</label>
       </div>
-      <div class="col-sm-7">
-        <div class="form-group" [style.color]="[IsDefaultTheme ? DefaultFontColor : ThemeFontColor]" style="display: -webkit-box !important;">
-          <label class="fntWght2" id="generallPopupText" >{{ item1.Value }}</label>
-        </div>
+    </div>
+    <div class="col-sm-7">
+      <div class="form-group" [style.color]="[IsDefaultTheme ? DefaultFontColor : ThemeFontColor]" style="display: -webkit-box !important;">
+        <label class="fntWght2" id="generallPopupText" >{{ item1.Value }}</label>
       </div>
+    </div>
+    </div>-->
+
+        <div class="col-sm-5">
+          <div class="form-group">
+            <label class="fntFmly fntWght3 " [style.color]="headingThemeColor" style="margin-left: 12px;">{{ item1.Heading }}</label>
+          </div>
+        </div>
+        <div class="col-sm-7">
+          <div class="form-group" [style.color]="'#000000'" style="display: -webkit-box !important;">
+            <label class="fntWght2" id="generallPopupText">{{ item1.Value }}</label>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -51,14 +63,14 @@
   <div *ngFor="let item of arrHeadings" [style.borderTop]="[IsDefaultTheme ? DefaultBorderColor : BorderColor]">
 
     <fieldset class="scheduler-border" style="width:97%; height:143px; margin-left: 12px !important; margin-top: 10px !important; background: white;">
-      <legend class="scheduler-border" style="margin-bottom: 8px !important; background-color: white;">
+      <legend class="scheduler-border" [style.color]="headingThemeColor" style="margin-bottom: 8px !important; background-color: white;">
         {{ item.Heading }}
       </legend>
       <!--<div [innerHtml]="item.Value" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="height: 116px; width: 825px; background: white; border: none;" disabled>
 
       </div>-->
-      <textarea [style.color]="[IsDefaultTheme ? DefaultFontColor : ThemeFontColor]"
-                [style.-webkit-text-fill-color]="[IsDefaultTheme ? DefaultFontColor : ThemeFontColor]"                
+      <textarea [style.color]="'#000000'"
+                [style.-webkit-text-fill-color]="'#000000'"
                 style="height: 110px; margin-top: -11px; width: 102.5%;background: #f5f5f5;border-width: 0px;border-color: white;
 background: white;font-weight: normal;font-size: 8.5pt;font-family: Verdana;margin: 0px; margin-left: -13px; resize: none;-webkit-opacity:1"
                 disabled>{{item.Value}}</textarea>

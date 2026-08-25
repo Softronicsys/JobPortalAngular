@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter, Output, ViewChildren, QueryList, Input} from '@angular/core';
+﻿import { Component, OnInit, EventEmitter, Output, ViewChildren, QueryList, Input} from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { isNullOrUndefined } from 'util';
 import { Router } from '@angular/router';
@@ -1190,9 +1190,16 @@ export class ProfessionalInfoComponent implements OnInit {
           this.ApplicantData = response.Data;
 
           this.HideSpinner();
-          
-          this.ApprovalStatus = response.Data[0].ApprovalStatus;
-          this.SubmissionDate = response.Data[0].SubmissioDate;
+
+          const row = response && response.Data && response.Data.length > 0 ? response.Data[0] : null;
+          if (!row) {
+            this.ApprovalStatus = '';
+            this.SubmissionDate = '';
+            return;
+          }
+
+          this.ApprovalStatus = row.ApprovalStatus;
+          this.SubmissionDate = row.SubmissioDate;
 
           //console.log(this.SubmissionDate);
 
@@ -2077,6 +2084,7 @@ export class ProfessionalInfoComponent implements OnInit {
 
     Validate() {
       debugger;
+      const hasBankAccountValue = this.resolveHasBankAccountForValidation();
       let RequestObject = {
 
         ApplicantId: localStorage.getItem("AppId"),
@@ -2084,6 +2092,7 @@ export class ProfessionalInfoComponent implements OnInit {
         Culture: Constants.Culture,
         CompanyId: this.CompanyIdService.CompanyId,
         LoginCompanyId: this.CompanyIdService.CompanyId,
+        HasBankAccount: hasBankAccountValue,
 
       }
       this.openSpinner();
@@ -2115,7 +2124,7 @@ export class ProfessionalInfoComponent implements OnInit {
             this.ValidationErrorMsg = response.msg;
               $("#ErrorOccurinValidation").modal("show");
               this.HideSpinner();
-            }
+          }
 
           
         }, (error: any) => {
@@ -2124,19 +2133,50 @@ export class ProfessionalInfoComponent implements OnInit {
     }
 
 
-   
+
 
     formatValidationMsg(msg: string): string {
-      const fields = msg
-        .split('<br>')
-        .filter(item => item.trim() !== '')
-        .join(', '); // Join all fields with a comma and space
-
-      return `Missing mandatory Input(s) to apply against any Position:<br><br>${fields} are mandatory to submit the application.<br><br>Please provide information for the required field and try again!`;
+        // The API groups validation fields by section as HTML lists. Keep that
+        // structure intact instead of flattening it into a comma-separated sentence.
+        return (msg || 'Missing mandatory input(s). Please try again.')
+            .replace(/\r?\n/g, '<br>');
     }
 
+    // helper
+    private formatList(items: string[]): string {
+        if (items.length === 1) return items[0];
+        if (items.length === 2) return items.join(' and ');
+        return items.slice(0, -1).join(', ') + ', and ' + items[items.length - 1];
+    }
 
+    //formatValidationMsg(msg: string): string {
+    //  const fields = msg
+    //    .split('<br>')
+    //    .filter(item => item.trim() !== '')
+    //    .join(', '); // Join all fields with a comma and space
 
+    //  return `Missing mandatory Input(s) to apply against any Position:<br><br>${fields} are mandatory to submit the application.<br><br>Please provide information for the required field and try again!`;
+    //}
+
+//    formatValidationMsg(msg: string): string {
+//        const fields = msg
+//            .split('<br>')
+//            .filter(item => item.trim() !== '')
+//            .map(item => {
+//                // Move "in Section" inside brackets for grammar correctness
+//                return item
+//                    .replace('. in ', ' (')
+//                    .replace('Section', 'Section)');
+//            })
+//            .map(item => `• ${item}`)
+//            .join('<br>');
+
+//        return `
+//Missing mandatory Input(s) to apply against any Position:<br><br>
+//${fields}<br><br>
+//Please provide the required information and try again!
+//  `;
+//    }
 
 
    
@@ -2937,6 +2977,20 @@ export class ProfessionalInfoComponent implements OnInit {
             this.EnterGPA = false;
         }
 
+    }
+
+    private resolveHasBankAccountForValidation(): number | null {
+      if (this.isFF !== true) {
+        return null;
+      }
+      const storedValue = localStorage.getItem('FFHasBankAccount');
+      if (storedValue === '1') {
+        return 1;
+      }
+      if (storedValue === '0') {
+        return 0;
+      }
+      return null;
     }
 
 

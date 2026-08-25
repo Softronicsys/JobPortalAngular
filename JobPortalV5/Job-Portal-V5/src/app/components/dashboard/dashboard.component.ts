@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, Renderer } from '@angular/core';
+﻿import { Component, OnInit, ElementRef, ViewChild, Renderer } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { isNullOrUndefined } from 'util';
@@ -18,7 +18,7 @@ import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { Labels } from '@app/Service/DatabaseLbl.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { AssessmentService } from '@app/Service/UpdateProfile.service';
-import { NgxImageCompressService } from 'ngx-image-compress';
+import { ImageCompressService } from '@app/Service/image-compress.service';
 import { SharedDataService } from '@app/Shared/Services/shared-data.service';
 
 
@@ -49,6 +49,7 @@ export class DashboardComponent implements OnInit {
 
   activeAssessment: boolean = false;
   activePersonalInfo: boolean = false;
+  activeProfessionalInfo: boolean = false;
 
   isMyJobActive: boolean = true;
   isPersonalInfoActive: boolean = false;
@@ -61,6 +62,7 @@ export class DashboardComponent implements OnInit {
 
   activeApplicantPackage: boolean = false;
   isApplicantPackageActive: boolean = false;
+  showApplicantPackageTab: boolean = false;
 
 
   CurrentPassword: string = "";
@@ -105,13 +107,18 @@ export class DashboardComponent implements OnInit {
   constructor(private renderer: Renderer, public sanitizer: DomSanitizer, private Labels: Labels, private _config: AppConfigService,
     public assessService: AssessmentService, private http: HttpClient, public activatedRoute: ActivatedRoute,
     private spinner: NgxSpinnerService, private toastr: ToastrService, public updateProfService: UpdateProfileService,
-    public CompanyIdService: GetCompanyParameter, private imageCompress: NgxImageCompressService,
+    public CompanyIdService: GetCompanyParameter, private imageCompress: ImageCompressService,
     public ClrThemeChng: ThemeColorService, public _dataService: DataService, private sharedDataService: SharedDataService,
     public dataService: DataService
   ) {
 
 
-    this.showPopup = Boolean(activatedRoute.snapshot.paramMap.get('showPopup'));
+    const routePopupParam = activatedRoute.snapshot.paramMap.get('showPopup');
+    const queryPopupParam = activatedRoute.snapshot.queryParamMap.get('showPopup');
+    const storedPopupFlag = sessionStorage.getItem('AutoOpenOfferLetterPopup');
+    this.showPopup = routePopupParam === 'true' || routePopupParam === '1'
+      || queryPopupParam === 'true' || queryPopupParam === '1'
+      || storedPopupFlag === '1';
 
     if (!isNullOrUndefined(localStorage.getItem("IsValid")))
       this.IsValid = localStorage.getItem('IsValid');
@@ -164,36 +171,106 @@ export class DashboardComponent implements OnInit {
 
   isFF: boolean = false;
 
+
   ngOnInit() {
-    debugger;
+      debugger;
 
+      const routeParams = this.activatedRoute.snapshot.params;
+      const queryParams = this.activatedRoute.snapshot.queryParams;
 
+      const isCTC = this.hasCtcQueryParam(queryParams);
 
-    let hasQueryString: boolean = false;
+      sessionStorage.removeItem('OpenApplicantPackageTab');
+      this.setApplicantPackageVisibility(isCTC);
 
-    // Check if there are query parameters
-    this.activatedRoute.queryParams.subscribe(params => {
-      const currentUrl = this.activatedRoute.url;
-      //console.log(currentUrl);
-      hasQueryString = Object.keys(params).length > 0;
-      //console.log('Has query string:', hasQueryString);
-    });
+      this.isFF = queryParams['isFF'] == '1' || queryParams['isff'] == '1';
 
-    this.isFF = hasQueryString;
+      console.log('Dashboard routeParams:', routeParams);
+      console.log('Dashboard queryParams:', queryParams);
+      console.log('Dashboard isCTC:', isCTC);
+      console.log('Dashboard isFF:', this.isFF);
 
-    //console.log(this.isFF);
-    this.updateTabWidth();
+      this.updateTabWidth();
 
-    // Your existing conditional logic based on isFF
-    if (this.isFF) {
-      // If there are query parameters, do this
-      this.selectPersonalInfoTab();
-      this.activePersonalInfo = true;
-    } else {
-      // If there are no query parameters, do this
-      this.activeAssessment = false;
-      this.selectisMyJobActive();
-    }
+      if (isCTC) {
+          this.openApplicantPackageTab();
+      }
+      else if (this.isFF) {
+          this.selectPersonalInfoTab();
+          this.activePersonalInfo = true;
+      }
+      else {
+          this.activeAssessment = false;
+          this.selectisMyJobActive();
+      }
+  
+  //ngOnInit() {
+  //  debugger;
+
+  //  const routeParams = this.activatedRoute.snapshot.params;
+  //  const queryParams = this.activatedRoute.snapshot.queryParams;
+
+  //  const isCTC =
+  //      routeParams['isctc'] == '1' ||
+  //      routeParams['isctc'] == 1 ||
+  //      queryParams['isctc'] == '1' ||
+  //      queryParams['isctc'] == 1;
+
+  //  // FF only when actual isFF exists
+  //  this.isFF = queryParams['isFF'] == '1' || queryParams['isff'] == '1';
+
+  //  console.log('Dashboard routeParams:', routeParams);
+  //  console.log('Dashboard queryParams:', queryParams);
+  //  console.log('Dashboard isCTC:', isCTC);
+  //  console.log('Dashboard isFF:', this.isFF);
+
+  //  this.updateTabWidth();
+
+  //  if (isCTC) {
+  //      this.openApplicantPackageTab();
+  //  }
+  //  else if (this.isFF) {
+  //      this.selectPersonalInfoTab();
+  //      this.activePersonalInfo = true;
+  //  }
+  //  else {
+  //      this.activeAssessment = false;
+  //      this.selectisMyJobActive();
+  //  }
+
+    //let hasQueryString: boolean = false;
+
+    //// Check if there are query parameters
+    //this.activatedRoute.queryParams.subscribe(params => {
+
+    // if (params['isctc'] == '1' || params['isctc'] == 1) {
+    //        setTimeout(() => {
+    //            this.onTab_Click('isApplicantPackageActive');
+    //            $('#ApplicantPackage a').tab('show');
+    //        }, 500);
+    //  }
+
+    //  const currentUrl = this.activatedRoute.url;
+    //  //console.log(currentUrl);
+    //  hasQueryString = Object.keys(params).length > 0;
+    //  //console.log('Has query string:', hasQueryString);
+    //});
+
+    //this.isFF = hasQueryString;
+
+    ////console.log(this.isFF);
+    //this.updateTabWidth();
+
+    //// Your existing conditional logic based on isFF
+    //if (this.isFF) {
+    //  // If there are query parameters, do this
+    //  this.selectPersonalInfoTab();
+    //  this.activePersonalInfo = true;
+    //} else {
+    //  // If there are no query parameters, do this
+    //  this.activeAssessment = false;
+    //  this.selectisMyJobActive();
+    //}
 
 
     //if (someCondition) {
@@ -254,7 +331,35 @@ export class DashboardComponent implements OnInit {
     this.userName = localStorage.getItem('UserName');
     this.email = localStorage.getItem('Email');
 
-    this.getApplicantData();
+      this.getApplicantData();
+  }
+
+  private hasCtcQueryParam(queryParams: any): boolean {
+      const routeValue = queryParams['isCTC'] || queryParams['isctc'];
+      let urlValue: string = null;
+
+      if (typeof window !== 'undefined' && window.location && window.location.search) {
+          const urlParams = new URLSearchParams(window.location.search);
+          urlValue = urlParams.get('isCTC') || urlParams.get('isctc');
+      }
+
+      return routeValue == '1' || routeValue == 1 || urlValue == '1';
+  }
+
+  private setApplicantPackageVisibility(isVisible: boolean) {
+      this.showApplicantPackageTab = isVisible === true;
+
+      if (!this.showApplicantPackageTab) {
+          this.activeApplicantPackage = false;
+          this.isApplicantPackageActive = false;
+          this.isPackageEnable = false;
+
+          setTimeout(() => {
+              $('#ApplicantPackage').hide().removeClass('active');
+              $('#applicantPackage').hide().removeClass('active');
+              $('a[href="#applicantPackage"]').closest('li').hide().removeClass('active');
+          }, 0);
+      }
   }
 
   selectPersonalInfoTab() {
@@ -268,6 +373,29 @@ export class DashboardComponent implements OnInit {
     this.isMyJobActive = true;
 
 
+  }
+
+  openApplicantPackageTab() {
+      debugger;
+
+      this.isPackageEnable = true;
+
+      this.activeAssessment = false;
+      this.activePersonalInfo = false;
+      this.activeProfessionalInfo = false;
+      this.activeApplicantPackage = true;
+
+      this.isMyJobActive = false;
+      this.isPersonalInfoActive = false;
+      this.isProfessionalInfoActive = false;
+      this.isActiveAssessment = false;
+      this.isPersonalInfoNonCorporateActive = false;
+      this.isProfessionalInfoNonCorporateActive = false;
+      this.isApplicantPackageActive = true;
+
+      setTimeout(() => {
+          $('#ApplicantPackage a').tab('show');
+      }, 500);
   }
 
 
@@ -592,8 +720,29 @@ export class DashboardComponent implements OnInit {
     this.isProfessionalInfoNonCorporateActive = false;
     this.isApplicantPackageActive = false;
 
+    this.activeAssessment = false;
+    this.activePersonalInfo = false;
+    this.activeProfessionalInfo = false;
+    this.activeApplicantPackage = false;
+
 
     this[tab] = true;
+
+    if (tab == "isPersonalInfoActive") {
+        this.activePersonalInfo = true;
+    }
+
+    if (tab == "isProfessionalInfoActive") {
+        this.activeProfessionalInfo = true;
+    }
+
+    if (tab == "isActiveAssessment") {
+        this.activeAssessment = true;
+    }
+
+    if (tab == "isApplicantPackageActive") {
+        this.activeApplicantPackage = true;
+    }
 
     if (tab == "isMyJobActive") {
       $("#PersonalInfo").removeClass("active");
@@ -829,13 +978,14 @@ export class DashboardComponent implements OnInit {
   updateTabWidth() {
     const showAssessment = this.IsAssessmentActive == true || this.IsAssessmentActive == null;
     const showMyJobs = !this.isFF;
+    const showApplicantPackage = this.showApplicantPackageTab;
     let tabCount = 0;
 
     if (showMyJobs) {
       tabCount += 1;
     }
 
-    tabCount += 3; // Personal, Professional, Applicant Package
+    tabCount += showApplicantPackage ? 3 : 2; // Personal, Professional, Applicant Package (non-FF only)
 
     if (showAssessment) {
       tabCount += 1;
@@ -1202,7 +1352,33 @@ export class DashboardComponent implements OnInit {
         }
     }
    
-    b64toBlob(b64Data, contentType) {                contentType = contentType || '';        var sliceSize = sliceSize || 512;        var byteCharacters = atob(b64Data);        var byteArrays = [];        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {            var slice = byteCharacters.slice(offset, offset + sliceSize);            var byteNumbers = new Array(slice.length);            for (var i = 0; i < slice.length; i++) {                byteNumbers[i] = slice.charCodeAt(i);            }            var byteArray = new Uint8Array(byteNumbers);            byteArrays.push(byteArray);        }        var blob = new Blob(byteArrays, { type: contentType });        var files = new File(byteArrays, "Files")  //      console.log('Before Compress', blob)        return blob;    }
+    b64toBlob(b64Data, contentType) {
+        
+        contentType = contentType || '';
+        var sliceSize = sliceSize || 512;
+
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i);
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+        var blob = new Blob(byteArrays, { type: contentType });
+        var files = new File(byteArrays, "Files")
+
+  //      console.log('Before Compress', blob)
+        return blob;
+    }
    
     compress(e) {
         
@@ -1282,7 +1458,13 @@ export class DashboardComponent implements OnInit {
       }
       this.openSpinner();
       //this.jpImgObj = ({ name: this.uniqueImgName, blob: this.blob })
-      var block = this.url.split(";");      // Get the content type of the image      var contentType = block[0].split(":")[1];      var extension = contentType.split("/")[1];      // get the real base64 content of the file      var realData = block[1].split(",")[1];      //this.blob = this.b64toBlob(realData, contentType);
+      var block = this.url.split(";");
+      // Get the content type of the image
+      var contentType = block[0].split(":")[1];
+      var extension = contentType.split("/")[1];
+      // get the real base64 content of the file
+      var realData = block[1].split(",")[1];
+      //this.blob = this.b64toBlob(realData, contentType);
   
       this.uniqueImgName1 = 'img1-' + new Date().getTime() + "." + extension;
       this.uniqueImgName = 'img-' + new Date().getTime() + "." + extension;
@@ -1583,7 +1765,13 @@ export class DashboardComponent implements OnInit {
    //     }
    //     //this.jpImgObj = ({ name: this.uniqueImgName, blob: this.blob })
    //     this.ApplyJobMsg = '';
-   //     var block = this.url1.split(";");   //     // Get the content type of the image   //     var contentType = block[0].split(":")[1];   //     var extension = contentType.split("/")[1];   //     // get the real base64 content of the file   //     var realData = block[1].split(",")[1];   //     this.blob = this.b64toBlob(realData, contentType);
+   //     var block = this.url1.split(";");
+   //     // Get the content type of the image
+   //     var contentType = block[0].split(":")[1];
+   //     var extension = contentType.split("/")[1];
+   //     // get the real base64 content of the file
+   //     var realData = block[1].split(",")[1];
+   //     this.blob = this.b64toBlob(realData, contentType);
    //     this.uniqueImgName = 'vid-' + new Date().getTime() + "." + extension;
    //     //alert(this.uniqueImgName )
    //     const fd = new FormData;
@@ -1693,7 +1881,33 @@ export class DashboardComponent implements OnInit {
     //    }
     //}
 
-    //b64toBlob(b64Data, contentType) {    //    contentType = contentType || '';    //    var sliceSize = sliceSize || 512;    //    var byteCharacters = atob(b64Data);    //    var byteArrays = [];    //    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {    //        var slice = byteCharacters.slice(offset, offset + sliceSize);    //        var byteNumbers = new Array(slice.length);    //        for (var i = 0; i < slice.length; i++) {    //            byteNumbers[i] = slice.charCodeAt(i);    //        }    //        var byteArray = new Uint8Array(byteNumbers);    //        byteArrays.push(byteArray);    //    }    //    var blob = new Blob(byteArrays, { type: contentType });    //    var files = new File(byteArrays, "Files")    //    //console.log(files)    //    return blob;    //}
+    //b64toBlob(b64Data, contentType) {
+    //    contentType = contentType || '';
+    //    var sliceSize = sliceSize || 512;
+
+    //    var byteCharacters = atob(b64Data);
+    //    var byteArrays = [];
+
+    //    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    //        var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+    //        var byteNumbers = new Array(slice.length);
+    //        for (var i = 0; i < slice.length; i++) {
+    //            byteNumbers[i] = slice.charCodeAt(i);
+    //        }
+
+    //        var byteArray = new Uint8Array(byteNumbers);
+
+    //        byteArrays.push(byteArray);
+    //    }
+
+    //    var blob = new Blob(byteArrays, { type: contentType });
+    //    var files = new File(byteArrays, "Files")
+
+    //    //console.log(files)
+    //    return blob;
+
+    //}
 
     isSaveBtnShow;
 

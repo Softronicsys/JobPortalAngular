@@ -74,7 +74,7 @@
                    class="btnClass popupStyle clrhover uppercase"
                    [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]"
                    [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
-                   *ngIf="!isBtnHide25 && (ApprovalStatus == 'R' || ApprovalStatus == null)"
+                   *ngIf="!isBtnHide25 && (canModifyPackage())"
                    (click)="LblchangeToTextBoxInfo25_Click()">
                   <span class="glyphicon glyphicon-edit"></span> {{Edit}}
                 </a>
@@ -170,7 +170,7 @@
         </form>
       </div>
 
-      <div class="col-xs-12 col-lg-4">
+      <div class="col-xs-12 col-lg-4 summary-floating-col">
         <div class="app-package-summary" >
           <div class="form-group" >
 
@@ -183,19 +183,23 @@
             </tr>
             <tr>
               <td>Gross Monthly</td>
-              <td><strong>Rs {{grossMonthly | number}}</strong></td>
+              <td><strong>Rs {{grossMonthly | number:'1.2-2'}}</strong></td>
             </tr>
             <tr>
               <td>Less: Est. Tax</td>
-              <td class="tax-deduction">(Rs {{estimatedTax | number}})</td>
+              <td class="tax-deduction">(Rs {{estimatedTax | number:'1.2-2'}})</td>
+            </tr>
+            <tr>
+              <td>Less: Emp. Deductions</td>
+              <td class="tax-deduction">(Rs {{currentEmployeeDeductions | number:'1.2-2'}})</td>
             </tr>
             <tr>
               <td><strong>Net Monthly</strong></td>
-              <td><strong>Rs {{netMonthly | number}}</strong></td>
+              <td><strong>Rs {{netMonthly | number:'1.2-2'}}</strong></td>
             </tr>
             <tr>
               <td><strong>Current Annual Gross</strong></td>
-              <td><strong>Rs {{currentAnnualGross | number}}</strong></td>
+              <td><strong>Rs {{currentAnnualGross | number:'1.2-2'}}</strong></td>
             </tr>
           </table>
         </div>
@@ -222,7 +226,7 @@
 
       <div class="col-sm-2 padding-unset">
         <div class="form-group">
-          <a data-toggle="modal" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+          <a data-toggle="modal" *ngIf="canModifyPackage()"
              (click)="btnAdd_Click('Benefit');"
              [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]"
              [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
@@ -269,9 +273,31 @@
                         <label for="benefitName" class="fntWght fontSize12">
                           <span style="color:red;" class="mandatoryStar">*</span> {{lblBenefitName}}
                         </label>
-                        <input type="text" maxlength="100" [(ngModel)]="BenefitName"
-                               [ngClass]="{'BorderColor':isMandatoryfields && !BenefitName}"
-                               class="form-control fontSize12" id="txtBenefitName" name="txtBenefitName" style="border-radius:0px;">
+                        <select [(ngModel)]="BenefitName"
+                                (ngModelChange)="onMonthlyBenefitChange()"
+                                [ngClass]="{'BorderColor':isMandatoryfields && !BenefitName}"
+                                class="form-control fontSize12" id="txtBenefitName" name="txtBenefitName" style="border-radius:0px;">
+                          <option [ngValue]="null">Select Benefit</option>
+                          <option *ngFor="let option of benefitOptions" [ngValue]="option.value">
+                            {{option.label}}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4" *ngIf="isMonthlyOtherSelected()">
+                      <div class="form-group">
+                        <label for="txtOtherBenefitName" class="fntWght fontSize12">
+                          <span style="color:red;" class="mandatoryStar">*</span> Other Benefit Name
+                        </label>
+                        <input type="text"
+                               [(ngModel)]="OtherBenefitName"
+                               [ngClass]="{'BorderColor':isMandatoryfields && !OtherBenefitName}"
+                               class="form-control fontSize12"
+                               id="txtOtherBenefitName"
+                               name="txtOtherBenefitName"
+                               placeholder="Enter Benefit Name"
+                               style="border-radius:0px;">
                       </div>
                     </div>
 
@@ -285,7 +311,14 @@
                     <div class="col-sm-4">
                       <div class="form-group">
                         <label for="" class="fntWght fontSize12">{{lblTaxable}}</label>
-                        <input type="text" maxlength="100" [(ngModel)]="BenefitProvider" class="form-control fontSize12" id="txtBenefitProvider" name="txtBenefitProvider" placeholder="Enter Provider" style="border-radius:0px;">
+                        <select [(ngModel)]="BenefitTaxable"
+                                id="chkBenefitTaxable"
+                                name="chkBenefitTaxable"
+                                class="form-control fontSize12"
+                                style="border-radius:0px;">
+                          <option [ngValue]="true">Yes</option>
+                          <option [ngValue]="false">No</option>
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -332,7 +365,7 @@
             <div class="otherDetailsNormalView aligned-row"><b>{{lblAmount}}: &nbsp;&nbsp;</b>{{item?.Amount || 'N/A'}}</div>
             <div class="otherDetailsNormalView aligned-row"><b>{{lblTaxable}}: &nbsp;&nbsp;</b>{{item?.Taxable || 'N/A'}}</div>
             <div class="click-to-top">
-              <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+              <a style="cursor:pointer;" *ngIf="canModifyPackage()"
                  class="glyphicon glyphicon-edit"
                  (click)="handleBenefitsEdit(item)">
                 <span class="forEditTooltip" style=" bottom: 1px !important;">Edit</span>
@@ -340,7 +373,7 @@
             </div>
             &nbsp;&nbsp;
             <div class="click-to-top">
-              <a onclick="return false" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+              <a onclick="return false" *ngIf="canModifyPackage()"
                  class="fa fa-times"
                  style="color: #C77874; vertical-align: middle; cursor:pointer;"
                  (click)="handleBenefitsDeleteClick(item)">
@@ -374,7 +407,7 @@
               <tr *ngFor="let item of BenefitsDetail">
                 <td style="width:84px !important;">
                   <div class="click-to-top">
-                    <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                    <a style="cursor:pointer;" *ngIf="canModifyPackage()"
                        class="glyphicon glyphicon-edit"
                        (click)="handleBenefitsEdit(item)">
                       <span class="forEditTooltip">Edit</span>
@@ -382,7 +415,7 @@
                   </div>
                   &nbsp;&nbsp;
                   <div class="click-to-top">
-                    <a onclick="return false" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                    <a onclick="return false" *ngIf="canModifyPackage()"
                        class="fa fa-times"
                        style="color: #C77874; vertical-align: middle; cursor:pointer;"
                        (click)="handleBenefitsDeleteClick(item)">
@@ -408,6 +441,61 @@
 
   <hr />
 
+  <div class="modal fade" id="myModalDeleteConfirm" role="dialog">
+    <div class="modal-dialog modal-sm fade1" style=" transform: translate(0%, 200%);">
+      <div class="modal-content" style="width: 345px; height: 105px;">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4"></div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4"></div>
+            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4"></div>
+          </div>
+
+          <div class="row" style=" margin-top: 5px !important;">
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10">
+              <p style="text-align: center;">Are you sure you want to delete?</p>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+          </div>
+
+          <div class="row" style=" margin-top: 5px !important;">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+              <div class="form-group" style="text-align: center;">
+                <a class="btn btn-lg btnTextColor greenBackgroundClr SaveBtn1 clrhover" data-dismiss="modal"
+                   [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                   style="margin-left: 5px; color: white;" (click)="confirmDeleteYes()"><span class="fa fa-check"></span>&nbsp;Yes</a> &nbsp;
+                <a class="btn btn-lg btnTextColor greenBackgroundClr SaveBtn1 clrhover"
+                   data-dismiss="modal" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                   style="color: white;" (click)="confirmDeleteNo()"><span class="fa fa-times"></span>&nbsp; No</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="applicantPackageSavePopup" role="dialog">
+    <div class="modal-dialog modal-sm fade1" style=" transform: translate(-1.5%, 80%);">
+      <div class="modal-content" style="width: 350px;">
+        <div class="modal-body">
+          <div class="row" style="text-align:center" *ngIf="isTick">
+            <div class="col-lg-12 ">
+              <img class="popupThankLogo" [src]="tickImage" />
+            </div>
+          </div>
+          <div class="row" style=" margin-top: 5px !important;">
+            <div class="col-lg-12">
+              <p style="text-align: center;"
+                 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">{{ ApplyJobMsg }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- annual-benefits-->
 
   <form action="/action_page.php" style="font-size:12px;" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
@@ -428,7 +516,7 @@
 
       <div class="col-sm-2 padding-unset">
         <div class="form-group">
-          <a data-toggle="modal" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+          <a data-toggle="modal" *ngIf="canModifyPackage()"
              (click)="btnAdd_Click('AnnualBenefit');"
              [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]"
              [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
@@ -479,9 +567,31 @@
                         <label class="fntWght fontSize12">
                           <span style="color:red;" *ngIf="MndAnnualBenefits">*</span> Benefit Name
                         </label>
-                        <input type="text" maxlength="100" [(ngModel)]="annualBenefitName" id="annualBenefitName" name="annualBenefitName"
-                               [ngClass]="{'BorderColor':isMandatoryFields && !annualBenefitName}"
-                               class="form-control fontSize12" style="border-radius:0px;">
+                        <select [(ngModel)]="annualBenefitName"
+                                (ngModelChange)="onAnnualBenefitChange()"
+                                [ngClass]="{'BorderColor':isMandatoryFields && !annualBenefitName}"
+                                class="form-control fontSize12" id="annualBenefitName" name="annualBenefitName" style="border-radius:0px;">
+                          <option [ngValue]="null">Select Benefit</option>
+                          <option *ngFor="let option of annualBenefitOptions" [ngValue]="option.value">
+                            {{option.label}}
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="col-sm-4" *ngIf="isAnnualOtherSelected()">
+                      <div class="form-group">
+                        <label class="fntWght fontSize12">
+                          <span style="color:red;" class="mandatoryStar">*</span> Other Benefit Name
+                        </label>
+                        <input type="text"
+                               [(ngModel)]="OtherAnnualBenefitName"
+                               [ngClass]="{'BorderColor':isMandatoryFields && !OtherAnnualBenefitName}"
+                               class="form-control fontSize12"
+                               id="otherAnnualBenefitName"
+                               name="otherAnnualBenefitName"
+                               placeholder="Enter Benefit Name"
+                               style="border-radius:0px;">
                       </div>
                     </div>
 
@@ -489,6 +599,7 @@
                       <div class="form-group">
                         <label class="fntWght fontSize12">Amount</label>
                         <input type="number" appBlockCopyPaste NumericInput [(ngModel)]="annualBenefitAmount" id="annualBenefitAmount" name="annualBenefitAmount"
+                               [ngClass]="{'BorderColor': isAmountInvalid}"
                                class="form-control fontSize12" placeholder="Enter Amount" style="border-radius:0px;">
                       </div>
                     </div>
@@ -496,8 +607,14 @@
                     <div class="col-sm-4">
                       <div class="form-group">
                         <label class="fntWght fontSize12">{{lblTaxable}}</label>
-                        <input type="text" maxlength="100" [(ngModel)]="annualBenefitProvider" id="annualBenefitProvider" name="annualBenefitProvider"
-                               class="form-control fontSize12" placeholder="Enter Provider" style="border-radius:0px;">
+                        <select [(ngModel)]="annualBenefitTaxable"
+                                id="chkAnnualBenefitTaxable"
+                                name="chkAnnualBenefitTaxable"
+                                class="form-control fontSize12"
+                                style="border-radius:0px;">
+                          <option [ngValue]="true">Yes</option>
+                          <option [ngValue]="false">No</option>
+                        </select>
                       </div>
                     </div>
                   </div>
@@ -547,7 +664,7 @@
             <div class="otherDetailsNormalView aligned-row"><b>{{lblAmount}}: &nbsp;&nbsp;</b>{{item?.Amount || 'N/A'}}</div>
             <div class="otherDetailsNormalView aligned-row"><b>{{lblTaxable}}: &nbsp;&nbsp;</b>{{item?.Taxable || 'N/A'}}</div>
             <div class="click-to-top">
-              <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+              <a style="cursor:pointer;" *ngIf="canModifyPackage()"
                  class="glyphicon glyphicon-edit"
                  (click)="handleAnnualBenefitEdit(item)">
                 <span class="forEditTooltip" style=" bottom: 1px !important;">Edit</span>
@@ -555,7 +672,7 @@
             </div>
             &nbsp;&nbsp;
             <div class="click-to-top">
-              <a onclick="return false" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+              <a onclick="return false" *ngIf="canModifyPackage()"
                  class="fa fa-times"
                  style="color: #C77874; vertical-align: middle; cursor:pointer;"
                  (click)="handleAnnualBenefitDelete(item)">
@@ -590,7 +707,7 @@
               <tr *ngFor="let item of AnnualBenefitsList">
                 <td style="width:84px !important;">
                   <div class="click-to-top">
-                    <a style="cursor:pointer;" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                    <a style="cursor:pointer;" *ngIf="canModifyPackage()"
                        class="glyphicon glyphicon-edit"
                        (click)="handleAnnualBenefitEdit(item)">
                       <span class="forEditTooltip">Edit</span>
@@ -598,7 +715,7 @@
                   </div>
                   &nbsp;&nbsp;
                   <div class="click-to-top">
-                    <a onclick="return false" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                    <a onclick="return false" *ngIf="canModifyPackage()"
                        class="fa fa-times"
                        style="color: #C77874; vertical-align: middle; cursor:pointer;"
                        (click)="handleAnnualBenefitDelete(item)">
@@ -620,7 +737,269 @@
     <br />
   </form>
 
+  <!-- monthly-contributions-by-company -->
+  <form action="/action_page.php" style="font-size:12px;" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+    <br />
+    <div class="row" style="display:flex;">
+      <div class="col-xs-12 col-sm-12" style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="form-group">
+          <p [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]" style="font-size:20px;">
+            Monthly Contributions by Company (Current)
+          </p>
+        </div>
+      </div>
+      <div class="col-sm-7"><div class="form-group"></div></div>
+      <div class="col-sm-2 padding-unset">
+        <div class="form-group">
+          <a data-toggle="modal" *ngIf="canModifyPackage()"
+             (click)="btnAdd_Click('CompanyContribution');"
+             [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]"
+             [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+             style="margin-top: 4px;"
+             data-target="#myModalCompanyContribution"
+             class="btnClass popupStyle clrhover uppercase"
+             data-backdrop="static" data-keyboard="false">
+            <span class="glyphicon glyphicon-plus"></span> {{Add}}
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="word-break: break-all !important;">
+      <div class="col-sm-12" style="margin-bottom:10px;">
+        <div class="ex2" *ngIf="updateProfService.IsGridStyle">
+          <table class="table fixed_header">
+            <thead class="tableHeaderBackground tablePanelHeading" style="font-size:12px;">
+              <tr>
+                <th class="fntFmly tblHeaderFnt" style="width:84px;"></th>
+                <th class="fntFmly tblHeaderFnt" style="width:237px;text-align:center;"><strong style="color: #524d4d !important;">Contribution Name</strong></th>
+                <th class="fntFmly tblHeaderFnt" style="width:206px;text-align:center;"><strong style="color: #524d4d !important;">Amount</strong></th>
+                <th class="fntFmly tblHeaderFnt" style="width:295px;text-align:center;"><strong style="color: #524d4d !important;">{{lblTaxable}}</strong></th>
+              </tr>
+            </thead>
+            <tbody class="tblbodyclr member">
+              <tr *ngIf="!CompanyContributionsList || CompanyContributionsList.length <= 0" style="font-size:12px;">
+                <td colspan="5" style="text-align:center;"><span class="fntFmly">{{Nodata}}</span></td>
+              </tr>
+              <tr *ngFor="let item of CompanyContributionsList">
+                <td style="width:84px !important;">
+                  <div class="click-to-top">
+                    <a style="cursor:pointer;" *ngIf="canModifyPackage()"
+                       class="glyphicon glyphicon-edit"
+                       (click)="handleCompanyContributionEdit(item)">
+                      <span class="forEditTooltip">Edit</span>
+                    </a>
+                  </div>
+                  &nbsp;&nbsp;
+                  <div class="click-to-top">
+                    <a onclick="return false" *ngIf="canModifyPackage()"
+                       class="fa fa-times"
+                       style="color: #C77874; vertical-align: middle; cursor:pointer;"
+                       (click)="handleCompanyContributionDelete(item)">
+                      <span class="forDeleteTooltip">Delete</span>
+                    </a>
+                  </div>
+                </td>
+                <td style="text-align:center; word-wrap: break-word;">{{ item.BenefitName }}</td>
+                <td style="text-align:center; word-wrap: break-word;">{{ item.Amount }}</td>
+                <td style="text-align:center; word-wrap: break-word;">{{ item.Taxable }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <br />
+  </form>
 
+  <!-- employee-contributions-deductions -->
+  <form action="/action_page.php" style="font-size:12px;" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+    <br />
+    <div class="row" style="display:flex;">
+      <div class="col-xs-12 col-sm-12" style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="form-group">
+          <p [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]" style="font-size:20px;">
+            Monthly Contributions and Deductions by Employee
+          </p>
+        </div>
+      </div>
+      <div class="col-sm-7"><div class="form-group"></div></div>
+      <div class="col-sm-2 padding-unset">
+        <div class="form-group">
+          <a data-toggle="modal" *ngIf="canModifyPackage()"
+             (click)="btnAdd_Click('EmployeeContribution');"
+             [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]"
+             [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+             style="margin-top: 4px;"
+             data-target="#myModalEmployeeContribution"
+             class="btnClass popupStyle clrhover uppercase"
+             data-backdrop="static" data-keyboard="false">
+            <span class="glyphicon glyphicon-plus"></span> {{Add}}
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="row" style="word-break: break-all !important;">
+      <div class="col-sm-12" style="margin-bottom:10px;">
+        <div class="ex2" *ngIf="updateProfService.IsGridStyle">
+          <table class="table fixed_header">
+            <thead class="tableHeaderBackground tablePanelHeading" style="font-size:12px;">
+              <tr>
+                <th class="fntFmly tblHeaderFnt" style="width:84px;"></th>
+                <th class="fntFmly tblHeaderFnt" style="width:237px;text-align:center;"><strong style="color: #524d4d !important;">Deduction Name</strong></th>
+                <th class="fntFmly tblHeaderFnt" style="width:206px;text-align:center;"><strong style="color: #524d4d !important;">Amount</strong></th>
+                <th class="fntFmly tblHeaderFnt" style="width:295px;text-align:center;"><strong style="color: #524d4d !important;">{{lblTaxable}}</strong></th>
+              </tr>
+            </thead>
+            <tbody class="tblbodyclr member">
+              <tr *ngIf="!EmployeeContributionsList || EmployeeContributionsList.length <= 0" style="font-size:12px;">
+                <td colspan="5" style="text-align:center;"><span class="fntFmly">{{Nodata}}</span></td>
+              </tr>
+              <tr *ngFor="let item of EmployeeContributionsList">
+                <td style="width:84px !important;">
+                  <div class="click-to-top">
+                    <a style="cursor:pointer;" *ngIf="canModifyPackage()"
+                       class="glyphicon glyphicon-edit"
+                       (click)="handleEmployeeContributionEdit(item)">
+                      <span class="forEditTooltip">Edit</span>
+                    </a>
+                  </div>
+                  &nbsp;&nbsp;
+                  <div class="click-to-top">
+                    <a onclick="return false" *ngIf="canModifyPackage()"
+                       class="fa fa-times"
+                       style="color: #C77874; vertical-align: middle; cursor:pointer;"
+                       (click)="handleEmployeeContributionDelete(item)">
+                      <span class="forDeleteTooltip">Delete</span>
+                    </a>
+                  </div>
+                </td>
+                <td style="text-align:center; word-wrap: break-word;">{{ item.BenefitName }}</td>
+                <td style="text-align:center; word-wrap: break-word;">{{ item.Amount }}</td>
+                <td style="text-align:center; word-wrap: break-word;">{{ item.Taxable }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <br />
+  </form>
+
+  <div class="modal fade" id="myModalCompanyContribution" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header" style="border-bottom: 0px solid #e5e5e5;">
+          <button type="button" class="close textColor" data-dismiss="modal"><img src="assets/images/lookupclose.png"></button>
+          <h4 class="modal-title PopupLeftRightPdngHeading" [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]">Add Company Contribution</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row PopupLeftRightPdngBox">
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="fntWght fontSize12"><span style="color:red;" class="mandatoryStar">*</span> Contribution Name</label>
+                <select [(ngModel)]="companyContributionName" (ngModelChange)="onCompanyContributionChange()" class="form-control fontSize12" id="companyContributionName" name="companyContributionName" style="border-radius:0px;">
+                  <option [ngValue]="null">Select Contribution</option>
+                  <option *ngFor="let option of companyContributionOptions" [ngValue]="option.value">{{option.label}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-4" *ngIf="isCompanyContributionOtherSelected()">
+              <div class="form-group">
+                <label class="fntWght fontSize12"><span style="color:red;" class="mandatoryStar">*</span> Other Contribution Name</label>
+                <input type="text" [(ngModel)]="OtherCompanyContributionName" class="form-control fontSize12" id="otherCompanyContributionName" name="otherCompanyContributionName" placeholder="Enter Contribution Name" style="border-radius:0px;">
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="fntWght fontSize12">Amount</label>
+                <input type="number" appBlockCopyPaste NumericInput [(ngModel)]="companyContributionAmount" id="companyContributionAmount" name="companyContributionAmount" class="form-control fontSize12" placeholder="Enter Amount" style="border-radius:0px;">
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="fntWght fontSize12">{{lblTaxable}}</label>
+                <select [(ngModel)]="companyContributionTaxable"
+                        id="chkCompanyContributionTaxable"
+                        name="chkCompanyContributionTaxable"
+                        class="form-control fontSize12"
+                        style="border-radius:0px;">
+                  <option [ngValue]="true">Yes</option>
+                  <option [ngValue]="false">No</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4" align="center">
+              <a class="btn btnTextColor greenBackgroundClr btn-lg SaveBtn1 ltrSpc clrhover" (click)="saveCompanyContribution()">
+                <img src="assets/images/btnSave.png" style="height:12px; margin-bottom:5px;"> &nbsp; Save
+              </a>
+            </div>
+            <div class="col-sm-4"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="myModalEmployeeContribution" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header" style="border-bottom: 0px solid #e5e5e5;">
+          <button type="button" class="close textColor" data-dismiss="modal"><img src="assets/images/lookupclose.png"></button>
+          <h4 class="modal-title PopupLeftRightPdngHeading" [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]">Add Employee Deduction</h4>
+        </div>
+        <div class="modal-body">
+          <div class="row PopupLeftRightPdngBox">
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="fntWght fontSize12"><span style="color:red;" class="mandatoryStar">*</span> Deduction Name</label>
+                <select [(ngModel)]="employeeContributionName" (ngModelChange)="onEmployeeContributionChange()" class="form-control fontSize12" id="employeeContributionName" name="employeeContributionName" style="border-radius:0px;">
+                  <option [ngValue]="null">Select Deduction</option>
+                  <option *ngFor="let option of employeeContributionOptions" [ngValue]="option.value">{{option.label}}</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-4" *ngIf="isEmployeeContributionOtherSelected()">
+              <div class="form-group">
+                <label class="fntWght fontSize12"><span style="color:red;" class="mandatoryStar">*</span> Other Deduction Name</label>
+                <input type="text" [(ngModel)]="OtherEmployeeContributionName" class="form-control fontSize12" id="otherEmployeeContributionName" name="otherEmployeeContributionName" placeholder="Enter Deduction Name" style="border-radius:0px;">
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="fntWght fontSize12">Amount</label>
+                <input type="number" appBlockCopyPaste NumericInput [(ngModel)]="employeeContributionAmount" id="employeeContributionAmount" name="employeeContributionAmount" class="form-control fontSize12" placeholder="Enter Amount" style="border-radius:0px;">
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="fntWght fontSize12">{{lblTaxable}}</label>
+                <select [(ngModel)]="employeeContributionTaxable"
+                        id="chkEmployeeContributionTaxable"
+                        name="chkEmployeeContributionTaxable"
+                        class="form-control fontSize12"
+                        style="border-radius:0px;">
+                  <option [ngValue]="true">Yes</option>
+                  <option [ngValue]="false">No</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4" align="center">
+              <a class="btn btnTextColor greenBackgroundClr btn-lg SaveBtn1 ltrSpc clrhover" (click)="saveEmployeeContribution()">
+                <img src="assets/images/btnSave.png" style="height:12px; margin-bottom:5px;"> &nbsp; Save
+              </a>
+            </div>
+            <div class="col-sm-4"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <form action="/action_page.php" style="font-size:12px;" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
     <br />
@@ -630,6 +1009,13 @@
           <p [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]" style="font-size:20px;">
             Employee Loan Facility
           </p>
+        </div>
+        <div class="form-group" *ngIf="canModifyPackage()">
+          <a class="btn btn-lg btnTextColor greenBackgroundClr clrhover uppercase"
+             (click)="saveEmployeeLoanFacility()"
+             style="border-radius:50px; height:23px; width:72px; font-size:10px; text-justify:auto; padding:3px;">
+            <img src="assets/images/btnSave.png" style="height:12px; margin-bottom:5px;">&nbsp; Save
+          </a>
         </div>
       </div>
     </div>
@@ -656,6 +1042,13 @@
           <p [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]" style="font-size:20px;">
             Applicant's Other Benefits
           </p>
+        </div>
+        <div class="form-group" *ngIf="canModifyPackage()">
+          <a class="btn btn-lg btnTextColor greenBackgroundClr clrhover uppercase"
+             (click)="saveApplicantOtherBenefits()"
+             style="border-radius:50px; height:23px; width:72px; font-size:10px; text-justify:auto; padding:3px;">
+            <img src="assets/images/btnSave.png" style="height:12px; margin-bottom:5px;">&nbsp; Save
+          </a>
         </div>
       </div>
     </div>
@@ -690,7 +1083,7 @@
       <div class="col-sm-7"></div>
 
       <div class="col-sm-2 padding-unset">
-        <a *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+        <a *ngIf="canModifyPackage()"
            class="btnClass popupStyle clrhover uppercase"
            [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]"
            [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
@@ -738,7 +1131,7 @@
               </div>
               &nbsp;&nbsp;
               <div class="click-to-top">
-                <a *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                <a *ngIf="canModifyPackage()"
                    class="fa fa-times"
                    style="color:#C77874; cursor:pointer;"
                    (click)="deleteAttachment(item)">
@@ -782,7 +1175,7 @@
                   &nbsp;&nbsp;
 
                   <!-- Delete -->
-                  <a *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null"
+                  <a *ngIf="canModifyPackage()"
                      class="fa fa-times"
                      style="color:#C77874; cursor:pointer;"
                      (click)="deleteAttachment(item)">
@@ -802,6 +1195,40 @@
 
     <br />
   </form>
+
+  <form style="font-size:12px; margin-top: 12px;">
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="form-group" style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <input type="checkbox"
+                 id="chkPackageSubmitConsent"
+                 name="chkPackageSubmitConsent"
+                 [disabled]="isCtcSubmitted"
+                 [(ngModel)]="packageSubmitConsent">
+          <label for="chkPackageSubmitConsent" class="fontSize12" style="margin:0;">
+            {{packageSubmitConsentText}}
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12" style="text-align:center;">
+        <a class="btn btn-lg btnTextColor greenBackgroundClr clrhover uppercase"
+           [style.borderRadius]="'50px'"
+           [style.height]="'23px'"
+           [style.width]="'130px'"
+           [style.fontSize]="'10px'"
+           [style.padding]="'3px'"
+           [style.pointerEvents]="(!packageSubmitConsent || isSubmittingPackageEmail || isCtcSubmitted) ? 'none' : 'auto'"
+           [style.opacity]="(!packageSubmitConsent || isSubmittingPackageEmail || isCtcSubmitted) ? '0.6' : '1'"
+           (click)="submitApplicantPackageToEmployeeEmail()">
+          <img src="assets/images/btnSave.png" style="height:12px; margin-bottom:5px;">&nbsp;
+          {{ isSubmittingPackageEmail ? 'SENDING...' : 'SUBMIT' }}
+        </a>
+      </div>
+    </div>
+  </form>
   </div>
 </div>
 
@@ -810,4 +1237,5 @@
     <button class="btn btn-secondary" (click)="resetForm()">Reset</button>
     <button class="btn btn-primary" (click)="saveDetails()">Save Details</button>
   </div>-->
+
 

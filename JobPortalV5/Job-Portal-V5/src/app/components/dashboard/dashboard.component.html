@@ -1,4 +1,4 @@
-<style>
+﻿<style>
   .address {
     width: 220px;
     color: #0079c1;
@@ -1240,7 +1240,13 @@ text-align: left !important;" [innerHTML]="tooltipName"></span>
     <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12 plr-0" [style.borderLeft]="[BorderColor ? BorderColor : DefaultBorderColor]">
       <nav>
         <ul class="nav nav-tabs nav-tabs1 responsive-tabs" role="tablist" style="padding-right: 10px;">
-          <li id="MyJobs" *ngIf="!isFF" tabindex="1" role="presentation" [style.width]="PannelWidth" [ngClass]="[activeAssessment == true || activePersonalInfo == true ? 'cs-tab tblHeaderFnt' : 'cs-tab active tblHeaderFnt']">
+          <li id="MyJobs"
+              *ngIf="!isFF"
+              tabindex="1"
+              role="presentation"
+              [style.width]="PannelWidth"
+              [ngClass]="[activeAssessment == true || activePersonalInfo == true || activeApplicantPackage == true ? 'cs-tab tblHeaderFnt' : 'cs-tab active tblHeaderFnt']">
+            <!--<li id="MyJobs" *ngIf="!isFF" tabindex="1" role="presentation" [style.width]="PannelWidth" [ngClass]="[activeAssessment == true || activePersonalInfo == true ? 'cs-tab tblHeaderFnt' : 'cs-tab active tblHeaderFnt']">-->
             <a (click)="onTab_Click('isMyJobActive')" [style.fontWeight]="[isMyJobActive ? fontWeight : defaultFontWeight]" [style.borderBottom]="[isMyJobActive ? BorderColorMenu : DefaultBorderColorMenu]" [style.color]="[isMyJobActive ? ThemeFontColor  : DefaultFontColor]" href="#myJobs" aria-controls="myJobs" role="tab" data-toggle="tab" class="MenuTxtClr" style="font-size:14px !important;  border-radius: 0px !important;  margin-right: 0px !important;">
               <img [src]="isMyJobActive == true ? myJobs : 'assets/images/MyJobs.png'" id="IsmyJobs"> <span class="badge" *ngIf="OPenVacanciesCount !== 0" id="badgeCountermyJobs"> {{OPenVacanciesCount}} </span> &nbsp;  <!--My Jobs-->{{lblMyJobs}}
             </a>
@@ -1258,10 +1264,12 @@ text-align: left !important;" [innerHTML]="tooltipName"></span>
 
 
           <li id="ApplicantPackage"
+              *ngIf="showApplicantPackageTab"
+              [style.display]="showApplicantPackageTab ? '' : 'none'"
               tabindex="4"
               role="presentation"
               [style.width]="PannelWidth"
-              [ngClass]="[activeApplicantPackage ? 'cs-tab active tblHeaderFnt' : 'cs-tab tblHeaderFnt']" *ngIf="isPackageEnable">
+              [ngClass]="[activeApplicantPackage ? 'cs-tab active tblHeaderFnt' : 'cs-tab tblHeaderFnt']">
 
             <a (click)="onTab_Click('isApplicantPackageActive')"
                [style.fontWeight]="[isApplicantPackageActive ? fontWeight : defaultFontWeight]"
@@ -1313,13 +1321,18 @@ text-align: left !important;" [innerHTML]="tooltipName"></span>
         </ul>
       </nav>
       <div class="tab-content" style="margin-left:30px;">
-        <div role="tabpanel" [ngClass]="[activeAssessment == true || activePersonalInfo == true ? 'tab-pane' : 'tab-pane active']" id="myJobs">
+        <div role="tabpanel"
+             [ngClass]="[activeAssessment == true || activePersonalInfo == true || activeProfessionalInfo == true || activeApplicantPackage == true ? 'tab-pane' : 'tab-pane active']"
+             id="myJobs">
           <app-my-jobs [AppliedJobCode]="JobCode" [isFF]="!isFF" (getCounter)="getCounter($event)"></app-my-jobs>
         </div>
+        <!--<div role="tabpanel" [ngClass]="[activeAssessment == true || activePersonalInfo == true ? 'tab-pane' : 'tab-pane active']" id="myJobs">
+          <app-my-jobs [AppliedJobCode]="JobCode" [isFF]="!isFF" [showOfferLetterPopupOnLoad]="showPopup" (getCounter)="getCounter($event)"></app-my-jobs>
+        </div>-->
         <div role="tabpanel" class="tab-pane" [ngClass]="[activePersonalInfo == true ? 'tab-pane active' : 'tab-pane']" id="personalInfo">
           <app-personal-info [isFF]="isFF" (getApplicantInfo)="onApplicantInfo($event)"></app-personal-info>
         </div>
-        <div role="tabpanel" class="tab-pane" id="professionalInfo">
+        <div role="tabpanel" class="tab-pane" [ngClass]="[activeProfessionalInfo == true ? 'tab-pane active' : 'tab-pane']" id="professionalInfo">
           <app-professional-info [isFF]="isFF" (getApplicantInfo)="getCounter1($event)"></app-professional-info>
         </div>
 
@@ -1327,6 +1340,8 @@ text-align: left !important;" [innerHTML]="tooltipName"></span>
         <div role="tabpanel"
              class="tab-pane"
              [ngClass]="[activeApplicantPackage ? 'tab-pane active' : 'tab-pane']"
+             *ngIf="showApplicantPackageTab"
+             [style.display]="showApplicantPackageTab ? '' : 'none'"
              id="applicantPackage">
 
           <app-applicant-package  (getApplicantInfo)="onApplicantInfo($event)"></app-applicant-package>

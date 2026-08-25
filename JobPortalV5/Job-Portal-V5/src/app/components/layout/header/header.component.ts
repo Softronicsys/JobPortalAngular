@@ -58,6 +58,9 @@ export class HeaderComponent implements OnInit {
     }
 
     public getSantizeUrl(url: string) {
+        if (isNullOrUndefined(url) || url === '') {
+            return null;
+        }
         return this.sanitizer.bypassSecurityTrustUrl(url);
     }
 
@@ -177,7 +180,7 @@ export class HeaderComponent implements OnInit {
             this.CompanyIdService.CompanyId = response.CompanyId;
             this.CompanyIdService.CompanyName = response.CompanyName;
             this.CompanyIdService.RedirectPath = response.RedirectPath;
-            this.CompanyIdService.CompanyLogoBase64 = response.CompanyLogoBase64;
+            this.CompanyIdService.CompanyLogoBase64 = response.CompanyLogoBase64 || '';
             this.islogo = response.CompanyLogoBase64;
 
             this.getJobPortalConfiguration();

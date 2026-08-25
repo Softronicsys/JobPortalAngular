@@ -1,4 +1,4 @@
-<style>
+﻿<style>
 
   .fixed_header {
     max-width: 1060px;
@@ -296,12 +296,12 @@
           <div *ngIf="!offerLetter" class="fntFmly fntWght fntFmly">Pending for Acceptance</div>-->
 
           <div class="otherDetailsNormalView aligned-row" *ngIf="HasApplicantOfferletterData == true ">
-            <b>{{OfferLetter}}: &nbsp;&nbsp;</b>
-            <a style="cursor:pointer;" *ngIf="item.Offerletterissued == true" (click)="viewOfferLetter(item.DocText, item)">&nbsp;&nbsp;View</a>
+            <b>{{OfferLetterLegacy}}: &nbsp;&nbsp;</b>
+            <a style="cursor:pointer;" *ngIf="item.Offerletterissued == true" (click)="viewLegacyOfferLetter(item, $event)">&nbsp;&nbsp;View</a>
           </div>
           <div class="otherDetailsNormalView aligned-row" *ngIf="HasApplicantOfferRescind == true ">
             <b>{{OfferRescind}}: &nbsp;&nbsp;</b>
-            <a style="cursor:pointer;" *ngIf="item.IsOfferRescinded == true" (click)="viewOfferLetter(item.DocText, 4)">&nbsp;&nbsp;View</a>
+            <a style="cursor:pointer;" *ngIf="item.IsOfferRescinded == true" (click)="viewOfferLetter(item.DocText, 4, $event)">&nbsp;&nbsp;View</a>
           </div>
           <div *ngIf="HasApplicantOfferletterData == true" class="aligned-row otherDetailsNormalView">
             <b>{{lblOfferLetterStatus}}: &nbsp;&nbsp;</b>
@@ -333,7 +333,7 @@
               <th class="fntFmly tblHeaderFnt fntWght2" style="color: #524d4d !important;"><strong>{{JobTitle}}</strong></th>
               <th *ngIf="ShowAppStatusAtjobportal && HasJobStatusData" class="fntFmly tblHeaderFnt fntWght2" style="color: #524d4d !important;"><strong>{{lblJobStatus}}</strong></th>
               <th *ngIf="ShowAppStatusAtjobportal && HasApplicantStatusData" class="fntFmly tblHeaderFnt fntWght2" style="color: #524d4d !important;"><strong>{{ApplicantStatus}}</strong></th>
-              <th *ngIf="HasApplicantOfferletterData == true" class="fntFmly tblHeaderFnt fntWght2" style="color: #524d4d !important; text-align: center"><strong>{{OfferLetter}}</strong></th>
+              <th *ngIf="HasApplicantOfferletterData == true" class="fntFmly tblHeaderFnt fntWght2" style="color: #524d4d !important; text-align: center"><strong>{{OfferLetterLegacy}}</strong></th>
               <th *ngIf="HasApplicantOfferRescind == true" class="fntFmly tblHeaderFnt fntWght2" style="color: #524d4d !important; text-align: center"><strong>{{OfferRescind}}</strong></th>
 
               <th *ngIf="HasApplicantOfferletterData == true" class="fntFmly tblHeaderFnt fntWght2" style="color: #524d4d !important;"><strong>{{lblOfferLetterStatus}}</strong></th>
@@ -344,7 +344,7 @@
           </thead>
           <tbody class="tblbodyclr member" style="max-height: 250px !important;">
             <tr *ngIf="!appliedJobs || appliedJobs.length <= 0" style="font-size: 12px;">
-              <td colspan="8" style="text-align: center; max-width: 2330px !important;">
+              <td colspan="9" style="text-align: center; max-width: 2330px !important;">
                 <span class="fntFmly">{{Nodata}}</span>
               </td>
             </tr>
@@ -385,11 +385,11 @@
 
 
               <td *ngIf="HasApplicantOfferletterData == true " class="fntFmly fntWght fntFmly" style="cursor:pointer; text-align: center">
-                <a *ngIf="item.Offerletterissued == true" (click)="viewOfferLetter(item.DocText, item)">&nbsp;&nbsp;View</a>
+                <a *ngIf="item.Offerletterissued == true" (click)="viewLegacyOfferLetter(item, $event)">&nbsp;&nbsp;View</a>
               </td>
 
               <td *ngIf="HasApplicantOfferRescind == true " class="fntFmly fntWght fntFmly" style="cursor:pointer; text-align: center">
-                <a *ngIf="item.IsOfferRescinded  == true" (click)="viewOfferLetter(item.DocText, 4)">&nbsp;&nbsp;View</a>
+                <a *ngIf="item.IsOfferRescinded  == true" (click)="viewOfferLetter(item.DocText, 4, $event)">&nbsp;&nbsp;View</a>
               </td>
 
               <td *ngIf="HasApplicantOfferletterData == true" data-keyboard="false" class="fntFmly fntWght fntFmly">
@@ -676,7 +676,9 @@
 
           <div class="modal-body " style="font-size: 11px;">
 
-            <app-generall-popup [MPRDETAIL]="MPRDETAIL" [arrHeadings]="arrHeadings" [forGridData]="forGridData" [Object]="Object"></app-generall-popup>
+            <!--<app-generall-popup [MPRDETAIL]="MPRDETAIL" [arrHeadings]="arrHeadings" [forGridData]="forGridData" [Object]="Object"></app-generall-popup>-->
+            <app-generall-popup [MPRDETAIL]="MPRDETAIL" [arrHeadings]="arrHeadings" [forGridData]="forGridData" [Object]="Object" [ThemeFontColor]="ThemeFontColor" [DefaultFontColor]="DefaultFontColor"></app-generall-popup>
+
 
           </div>
 

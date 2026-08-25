@@ -470,7 +470,7 @@ export class LoginComponent implements OnInit {
                     await this.ApplyJob();
                     
                     if (this.showMessage == true) {
-                        this.objRouter.navigate(['/MyProfile', { showPopup: true }]);
+                        this.objRouter.navigate(['/MyProfile']);
                     //    for Create Array in localStorage
                         var str = this._config.environment.CompanyGroupID + "," + this.CompanyIdService.CompanyId + "," + this.staySigned + "," + response.AppId +
                             "," + response.Email + "," + response.UserName + ",";

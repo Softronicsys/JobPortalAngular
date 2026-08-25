@@ -4,7 +4,7 @@ import { HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { HttpModule, Http } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ImageCropperModule } from 'ngx-image-cropper';
@@ -54,7 +54,7 @@ import { AssessmentService } from '@app/Service/UpdateProfile.service';
 import { ErrorHandler } from '@angular/core';
 import { AppErrorHandler } from '@app/Service/appErrorHandler.service';
 import { appErrorPopup } from '@app/Shared/appErrorPopup/appErrorPopup.component.ts';
-import { NgxImageCompressService } from 'ngx-image-compress';
+import { ImageCompressService } from './Service/image-compress.service';
 import { LinkedinLoginResponseComponent } from './components/linkedin-login-response/linkedin-login-response.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { PersonalInformationNonCorporateComponent } from './components/dashboard/tabs/personal-information-non-corporate/personal-information-non-corporate.component';
@@ -63,6 +63,7 @@ import { QuickSignupComponent } from './components/quick-signup/quick-signup.com
 import { AccountActivationFFComponent } from './components/account-activation-ff/account-activation-ff.component';
 import { ChatboxComponent } from './components/chatbox/chatbox.component';
 import { ApplicantPackageComponent } from './components/dashboard/tabs/applicant-package/applicant-package.component';
+import { CtcOfferLetterViewComponent } from './components/dashboard/tabs/ctc-offer-letter-view/ctc-offer-letter-view.component';
 
 
 // import { SanitizeHtmlPipe } from '@app/Service/Sanitizer';
@@ -109,6 +110,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     AccountActivationFFComponent,
     ChatboxComponent,
     ApplicantPackageComponent,
+    CtcOfferLetterViewComponent,
     
   ],
   imports: [
@@ -117,7 +119,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     HttpClientModule,
     FormsModule,
     CommonModule,
-    BrowserAnimationsModule, // required animations module
+    NoopAnimationsModule,
     ToastrModule.forRoot(), // ToastrModule added
     SharedModule,
     NgxSpinnerModule,
@@ -128,7 +130,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     SanitizeHtmlPipe
   ],
   providers: [Security, UpdateProfileService, GetCompanyParameter, Labels,
-    ThemeColorService, AppConfigService, AssessmentService, NgxImageCompressService,
+    ThemeColorService, AppConfigService, AssessmentService, ImageCompressService,
     {
       provide: APP_INITIALIZER,
       useFactory: appInitializerFn,

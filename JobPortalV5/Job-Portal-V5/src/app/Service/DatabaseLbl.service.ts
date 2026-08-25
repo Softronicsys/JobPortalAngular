@@ -1002,6 +1002,8 @@ export class Labels {
                     this.lblLocation = value.LabelDescription;    
 
             }
+        }, () => {
+            this.dashLabels = false;
         });
     }
 

@@ -1147,24 +1147,18 @@
 
     <!--Bank Information-->
 
-    <div class="row " *ngIf="isMndBankInfo ||  MndBnkInfo || DisconnectInternet">
-      <div class="col-sm-4">
-        <div class="form-group ">
 
+      <div class="row " *ngIf="isMndBankInfo ||  MndBnkInfo || DisconnectInternet">
+        <div class="col-sm-12">
+          <div class="form-group ">
+            <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isMndBankInfo == true"><span style="color:red;font-size:14px !important" class="forValidation">*</span>Please enter mandatory fields.</label>
+            <label style="color:red;float: right; margin-right: 25px;" class="forValidation" *ngIf="DisconnectInternet1 == true"> <span style="color:red;font-size:14px !important" class="forValidation">*</span>Please check your internet connection and try again.</label>
+          </div>
         </div>
       </div>
-      <div class="col-sm-4">
-        <div class="form-group ">
+     
 
-        </div>
-      </div>
-      <div class="col-sm-4">
-        <div class="form-group ">
-          <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isMndBankInfo"><span style="color:red;font-size:14px !important" class="forValidation">*</span>Please enter mandatory fields.</label>
-          <label style="color:red;float: right; margin-right: 25px;" class="forValidation" *ngIf="DisconnectInternet == true"> <span style="color:red;font-size:14px !important" class="forValidation">*</span>Please check your internet connection and try again.</label>
-        </div>
-      </div>
-    </div>
+   
 
     <form action="/action_page.php" *ngIf="VisBnkInfo == true " style="font-size:12px;" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
       <br />
@@ -1199,10 +1193,27 @@
           </div>
         </div>
       </div>
-      <div class="row lineHeight">
+      <div class="row lineHeight" *ngIf="isFF && isBasicInformation22 && showFFBankAccountQuestion">
+        <div class="col-lg-11" style="padding-left: 0px !important;">
+          <div class="col-lg-12">
+            <div class="form-group">
+              <p class="BlackTxtClr">Do you have a bank account?</p>
+              <label style="margin-right:20px;">
+                <input type="radio" name="ffBankAccountChoice" [value]="'Yes'" [(ngModel)]="ffBankAccountChoice" (change)="onFFBankAccountChoiceChange('Yes')"> Yes
+              </label>
+              <label>
+                <input type="radio" name="ffBankAccountChoice" [value]="'No'" [(ngModel)]="ffBankAccountChoice" (change)="onFFBankAccountChoiceChange('No')"> No
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-1"></div>
+      </div>
+
+      <div class="row lineHeight" *ngIf="canShowFFBankFields()">
         <div class="col-lg-11" style="padding-left: 0px !important;">
 
-          <div class="col-lg-4">
+          <div [ngClass]="{'col-lg-3': isFF && !isBasicInformation22, 'col-lg-4': !(isFF && !isBasicInformation22)}">
             <div class="form-group">
               <p class="BlackTxtClr"><span *ngIf="isBasicInformation22 == true " style="color:red; font-size:13px; margin-left: -5px !important; ">*</span>{{ BankName }}</p>
               <div *ngIf="!isBasicInformation22">
@@ -1235,7 +1246,7 @@
           </div>
         </div>-->
 
-          <div class="col-lg-4">
+          <div [ngClass]="{'col-lg-3': isFF && !isBasicInformation22, 'col-lg-4': !(isFF && !isBasicInformation22)}">
             <div class="form-group ">
               <p class="BlackTxtClr"><span *ngIf="isBasicInformation22 == true " style="color:red; font-size:13px; margin-left: -5px !important; ">*</span>{{AccountNoIBANNo}}</p>
               <div *ngIf="isBasicInformation22 == false">
@@ -1266,7 +1277,7 @@
           </div>
 
 
-          <div class="col-lg-4">
+          <div [ngClass]="{'col-lg-3': isFF && !isBasicInformation22, 'col-lg-4': !(isFF && !isBasicInformation22)}">
             <div class="form-group">
               <p class="BlackTxtClr"><span *ngIf="isBasicInformation22 == true " style="color:red; font-size:13px; margin-left: -5px !important; ">*</span>{{AccountTitle1}}</p>
 
@@ -1280,6 +1291,61 @@
             </div>
           </div>
 
+          <div class="col-lg-3" *ngIf="isFF && !isBasicInformation22">
+            <div class="form-group">
+              <p class="BlackTxtClr">{{accountEvidenceLabel}}</p>
+              <label class="mar" *ngIf="accountEvidenceExistingDocId <= 0" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">N/A</label>
+              <a class="mar"
+                 *ngIf="accountEvidenceExistingDocId > 0"
+                 [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"
+                 style="cursor:pointer; vertical-align:middle;"
+                 (click)="ViewCV(2, accountEvidenceExistingDocId)">
+                View File
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-8" *ngIf="isFF && isBasicInformation22 && ffBankAccountChoice === 'Yes'">
+            <div class="form-group">
+              <p class="BlackTxtClr">
+                <span style="color:red; font-size:13px; margin-left: -5px !important; ">*</span>{{accountEvidenceLabel}}
+              </p>
+
+              <label class="btn btnTextColor clrhover"
+                     [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]"
+                     style="border-radius:50px; font-size: 9px !important; color:#fff;">
+                <input [attr.accept]="accountEvidenceAllowedTypes"
+                       (change)="onSelectAccountEvidenceFile($event)"
+                       type="file"
+                       style="display:none; border-radius:0px;">
+                CHOOSE FILE
+              </label>
+
+              <span class="mar" style="font-size: 12px; word-break: break-all; margin-left: 5%;">
+                {{ accountEvidenceSelectedFileName || accountEvidenceExistingDocName || 'No file selected' }}
+              </span>
+            </div>
+            <div class="form-group">
+              <span>
+                Formats: <b>{{accountEvidenceAllowedTypes}}</b>
+              </span>
+            </div>
+            <div class="form-group">
+              <span>
+                Max Attachment Size: <b>2 MB</b>
+              </span>
+              <span *ngIf="accountEvidenceExistingDocId > 0">
+                &nbsp;&nbsp;
+                <a style="color:blue; cursor:pointer; vertical-align:middle;font-size: 13px;"
+                   (click)="ViewCV(2, accountEvidenceExistingDocId)">
+                  View
+                </a>
+              </span>
+            </div>
+            <div class="form-group" style="color:red; font-size:14px;" *ngIf="accountEvidenceValidationMsg">
+              <label>{{accountEvidenceValidationMsg}}</label>
+            </div>
+          </div>
 
         </div>
       </div>
@@ -1298,17 +1364,8 @@
     <!--Father's Information-->
 
     <div class="row " *ngIf="isMndFatherInfo || MndFathersInfo || DisconnectInternet">
-      <div class="col-sm-4">
-        <div class="form-group ">
-
-        </div>
-      </div>
-      <div class="col-sm-4">
-        <div class="form-group ">
-
-        </div>
-      </div>
-      <div class="col-sm-4">
+     
+      <div class="col-sm-12">
         <div class="form-group ">
           <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isMndFatherInfo "><span style="color:red;font-size:14px !important" class="forValidation">*</span>Please enter mandatory fields.</label>
           <label style="color:red;float: right; margin-right: 25px;" class="forValidation" *ngIf="DisconnectInternet == true"> <span style="color:red;font-size:14px !important" class="forValidation">*</span>Please check your internet connection and try again.</label>
@@ -1453,26 +1510,19 @@
     <!--Emergency Contact Information -->
 
     <div class="row " *ngIf="isEmergencyContactInfo || MndEmergencyContctInfo || DisconnectInternet">
-      <div class="col-sm-4">
-        <div class="form-group ">
-
-        </div>
-      </div>
-      <div class="col-sm-4">
-        <div class="form-group ">
-
-        </div>
-      </div>
-      <div class="col-sm-4">
+      
+      <div class="col-sm-12">
         <div class="form-group ">
           <label style="color:red; float: right; margin-right: 25px;" class="forValidation" *ngIf="isEmergencyContactInfo "><span style="color:red;font-size:14px !important" class="forValidation">*</span>Please enter mandatory fields.</label>
           <label style="color:red;float: right; margin-right: 25px;" class="forValidation" *ngIf="DisconnectInternet == true"> <span style="color:red;font-size:14px !important" class="forValidation">*</span>Please check your internet connection and try again.</label>
         </div>
+        <br />
       </div>
     </div>
 
 
     <form action="/action_page.php" *ngIf="VisEmergencyContactInfo == true" style="font-size:12px;" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+    
       <div class="row" style="display:flex;">
         <div class="col-sm-3">
           <div class="form-group">
@@ -1574,6 +1624,8 @@
 
     </form>
 
+
+   
     <!--Conveyance information -->
 
 

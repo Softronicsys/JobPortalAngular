@@ -21,6 +21,7 @@ import { JobDetailComponent } from './components/job-detail/job-detail.component
 import { LinkedinLoginResponseComponent } from './components/linkedin-login-response/linkedin-login-response.component';
 import { QuickSignupComponent } from './components/quick-signup/quick-signup.component';
 import { AccountActivationFFComponent } from './components/account-activation-ff/account-activation-ff.component';
+import { CtcOfferLetterViewComponent } from './components/dashboard/tabs/ctc-offer-letter-view/ctc-offer-letter-view.component';
 
 
 const appRoutes: Routes = [
@@ -82,6 +83,14 @@ const appRoutes: Routes = [
             hideHeader: true,
         }
      
+    },
+    {
+        path: 'ctc-offer-letter',
+        component: CtcOfferLetterViewComponent,
+        canActivate: [Security],
+        data: {
+            hideHeader: true,
+        }
     },
 
     {

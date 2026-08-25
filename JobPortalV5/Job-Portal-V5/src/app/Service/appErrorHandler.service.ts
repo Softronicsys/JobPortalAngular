@@ -29,6 +29,21 @@ export class AppErrorHandler implements ErrorHandler {
     UserID: localStorage.getItem("Email") ? localStorage.getItem("Email") : ""
   };
 
+  private showConfirmModalSafely(): void {
+    try {
+      const modalElement = document.getElementById('ConfirmBox');
+      if (!modalElement || typeof $ !== 'function') {
+        return;
+      }
+      const modalRef = $('#ConfirmBox');
+      if (modalRef && typeof modalRef.modal === 'function') {
+        modalRef.modal('show');
+      }
+    } catch (e) {
+      console.warn('Unable to show ConfirmBox modal', e);
+    }
+  }
+
   handleError(error) {
     this.Errors.CompanyName = this.CompanyIdService.CompanyName;
     this.Errors.UserID = localStorage.getItem("Email") ? localStorage.getItem("Email") : "";
@@ -84,7 +99,7 @@ export class AppErrorHandler implements ErrorHandler {
     }
     else {
       console.log("Eroor: ", error);
-      $('#ConfirmBox').modal('show');
+      this.showConfirmModalSafely();
     }
   }
 }
