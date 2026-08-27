@@ -1248,7 +1248,10 @@ export class MyJobsComponent implements OnInit {
         //this.selectedRow;  
         let RequestObject = {
             Culture: Constants.Culture,
-            MPRCode: JobCode//Vac.JobCode,//this.selectedRow.JobCode
+            MPRCode: JobCode,
+            ApplicantId: Number(localStorage.getItem("AppId")),
+            CompanyId: CompanyId,
+            Email: localStorage.getItem("Email")
         }
         this.myJobCounter();
         this.openSpinner();

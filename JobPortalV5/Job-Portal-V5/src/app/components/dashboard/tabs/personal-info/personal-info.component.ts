@@ -3412,7 +3412,9 @@ export class PersonalInfoComponent implements OnInit {
                 this.MndSocialMediaConnections = response.MndSocialMediaConnections;
                 this.MndWhenCanYouJoin = response.MndWhenCanYouJoin;
                 this.MndermanentAddress = response.MndermanentAddress;
-                this.CVFileTypeAllowed = response.CVFileTypeAllowed;
+                if (response.CVFileTypeAllowed) {
+                    this.CVFileTypeAllowed = response.CVFileTypeAllowed;
+                }
 
 
                 this.Color();
@@ -4018,7 +4020,7 @@ export class PersonalInfoComponent implements OnInit {
                 this.LabelConveyancemakeRegNo = row.ConveyRegNo;
 
                 this.Company_Name = row.CompanyShortName;
-                this.ApprovalStatus = row.ApprovalStatus;
+                this.ApprovalStatus = row.ApprovalStatus || null;
 
                 //console.log(this.ApprovalStatus);
 
@@ -4781,9 +4783,8 @@ export class PersonalInfoComponent implements OnInit {
     }
 
     getFormattedDate(dateString: string | null): string {
-      // Return an empty string if the input dateString is null
-      if (dateString === null || dateString.trim() === '') {
-        return ''; // Or return null if you prefer
+      if (dateString == null || String(dateString).trim() === '') {
+        return '';
       }
 
       // Convert the input string to a Date object
@@ -4808,9 +4809,8 @@ export class PersonalInfoComponent implements OnInit {
     }
 
     getFormattedDateString(dateString: string | null): string {
-      // Return an empty string if the input dateString is null
-      if (dateString === null || dateString.trim() === '') {
-        return ''; // Or return null if you prefer
+      if (dateString == null || String(dateString).trim() === '') {
+        return '';
       }
 
       // Convert the input string to a Date object
@@ -6818,7 +6818,7 @@ export class PersonalInfoComponent implements OnInit {
   
         this.openSpinner();
 
-        this.http.post(SaveEducationalDetailUrl, fd, { headers: this.dataService.headers }).subscribe(
+        this.http.post(SaveEducationalDetailUrl, fd, { headers: this.dataService.multipartHeaders() }).subscribe(
           (response: any) => {
             this.HideSpinner();
 
@@ -6829,8 +6829,6 @@ export class PersonalInfoComponent implements OnInit {
               $("#videoPopup1").modal('show');
               this.ApplyJobMsg = response.Msg;
               this.getLastProfileUpdateValue();
-              //console.log('Entered else block.');
-              //console.log('Validation Message');
               this.isTick = true;
               this.popuphide();
             } else {
@@ -6838,11 +6836,8 @@ export class PersonalInfoComponent implements OnInit {
               debugger;
               this.HideSpinner();
               this.lblEducationalDocValidation = response.Msg;
-              //console.log(this.lblEducationalDocValidation);
-
               this.ShowValidation = true;
 
-                //console.log('Showing modal:', "#myModal222" + i);
                 setTimeout(() => {
                   $("#myModal222" + i).modal('show');
               
@@ -6857,7 +6852,12 @@ export class PersonalInfoComponent implements OnInit {
            
           },
           (error) => {
-            
+            this.HideSpinner();
+            this.ShowValidation = true;
+            this.lblEducationalDocValidation = (error && error.error) ? (error.error.Msg || error.error || 'Failed to save document.') : 'Failed to save document.';
+            setTimeout(() => {
+              $("#myModal222" + i).modal('show');
+            }, 800);
           }
         );
 
@@ -7229,8 +7229,11 @@ export class PersonalInfoComponent implements OnInit {
         };
 
         var SaveOtherDocDetail = this._config.environment.baseUrl + Constants.SaveOtherDocDetail;
-        //console.log('Sending request to:', SaveOtherDocDetail); // Log the URL
         request.open("POST", SaveOtherDocDetail, true);
+        var accessToken = localStorage.getItem("AccessToken");
+        if (accessToken) {
+          request.setRequestHeader("Authorization", "Bearer " + accessToken);
+        }
         request.send(fd);
         this.openSpinner();
         $("#myModal223").modal('hide');
@@ -7391,10 +7394,11 @@ export class PersonalInfoComponent implements OnInit {
         const fileExtension = fileName.substring(fileName.lastIndexOf('.')).toLowerCase();
 
         // Convert CVFileTypeAllowed to an array of allowed extensions
-        const allowedExtensions = this.CVFileTypeAllowed.split(',').map(ext => ext.trim().toLowerCase());
+        const allowedSource = this.CVFileTypeAllowed ? this.CVFileTypeAllowed : ".png, .jpg, .jpeg, .doc, .docx, .pdf";
+        const allowedExtensions = allowedSource.split(',').map(function (ext) { return ext.trim().toLowerCase(); });
 
         // Check if the file extension is in the allowed extensions
-        if (allowedExtensions.includes(fileExtension)) {
+        if (allowedExtensions.indexOf(fileExtension) >= 0) {
           this.isCVFileName = fileName;
           this.Filesize = file.size;
 
@@ -7411,7 +7415,7 @@ export class PersonalInfoComponent implements OnInit {
         } else {
           // Handle the case where the file is not allowed
           this.isCVUpload = false;
-          alert('Please select a file with the following extensions:\n' + this.CVFileTypeAllowed);
+          alert('Please select a file with the following extensions:\n' + allowedSource);
         }
       }
     }
@@ -7433,6 +7437,9 @@ export class PersonalInfoComponent implements OnInit {
         // Get the content type of the image
         var contentType = block[0].split(":")[1];
         var extension = contentType.split("/")[1];
+        if (this.isCVFileName && this.isCVFileName.lastIndexOf('.') >= 0) {
+          extension = this.isCVFileName.substring(this.isCVFileName.lastIndexOf('.') + 1).toLowerCase();
+        }
         // get the real base64 content of the file
         var realData = block[1].split(",")[1];
         this.blob = this.b64toBlobDoc(realData, contentType);

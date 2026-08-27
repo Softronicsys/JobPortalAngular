@@ -1004,7 +1004,7 @@ export class ProfessionalInformationNonCorporateComponent implements OnInit {
 
     }
 
-    let getDegree = this._config.environment.baseUrl + Constants.GetDegree + "?Culture=" + Constants.Culture;
+    let getDegree = this._config.environment.baseUrl + Constants.GetDegree;
     this.http.post(getDegree, RequestObject, { headers: this.dataService.headers })
       //  this.http.get("https://jobportalapi.azurewebsites.net/GetDegree?Culture=en-GB")
       .subscribe((response: any) => {
@@ -1040,7 +1040,7 @@ export class ProfessionalInformationNonCorporateComponent implements OnInit {
       CompanyId: this.CompanyIdService.CompanyId,
 
     }
-    let getInstitute = this._config.environment.baseUrl + Constants.GetInstitute + "?Culture=" + Constants.Culture;
+    let getInstitute = this._config.environment.baseUrl + Constants.GetInstitute;
     this.http.post(getInstitute, RequestObject, { headers: this.dataService.headers })
       //  this.http.get(" https://jobportalapi.azurewebsites.net/GetInstitute?Culture=en-GB")
       .subscribe((response: any) => {

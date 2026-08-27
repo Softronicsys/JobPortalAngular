@@ -30,6 +30,15 @@ export class DataService {
         this.headers = this.buildHeaders();
     }
 
+    multipartHeaders(): HttpHeaders {
+        let headers = new HttpHeaders();
+        var accessToken = localStorage.getItem('AccessToken');
+        if (accessToken) {
+            headers = headers.set('Authorization', 'Bearer ' + accessToken);
+        }
+        return headers;
+    }
+
 
     ReplaceApostropheWthTelda(str: string): string
     {

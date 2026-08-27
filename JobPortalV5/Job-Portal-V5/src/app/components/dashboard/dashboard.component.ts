@@ -294,7 +294,8 @@ export class DashboardComponent implements OnInit {
 
     this.applicantId = localStorage.getItem('AppId');
 
-    this.CompanyIdService.CompanyId = localStorage.getItem('LastLoginId');
+    var lastLoginId = localStorage.getItem('LastLoginId') || "";
+    this.CompanyIdService.CompanyId = lastLoginId.split(",")[0];
 
 
     this.getCompanyParameter();
@@ -1594,7 +1595,9 @@ export class DashboardComponent implements OnInit {
           //console.log('data : ', response.Data);
           this.ApplicantData = response.Data;
 
-          this.ApprovalStatus = response.Data[0].ApprovalStatus;
+          this.ApprovalStatus = response && response.Data && response.Data.length > 0
+            ? (response.Data[0].ApprovalStatus || null)
+            : null;
 
           //console.log(this.ApprovalStatus);
 

@@ -399,7 +399,10 @@ export class LoginComponent implements OnInit {
 
                 let RequestObject = {
                     Culture: "en-GB",
-                    MPRCode: jobCode
+                    MPRCode: jobCode,
+                    ApplicantId: Number(localStorage.getItem("AppId")),
+                    CompanyId: companyID,
+                    Email: localStorage.getItem("Email")
                 }
 
                 this.openSpinner();

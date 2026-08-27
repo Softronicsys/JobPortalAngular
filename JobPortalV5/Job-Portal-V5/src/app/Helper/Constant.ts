@@ -29,6 +29,7 @@ export class Constants {
     /// </summary>
     static readonly SaveUser: string = "SaveUser";
     static readonly Login: string = "Login";
+    static readonly SignalRHub: string = "hubs/jobportal";
     static readonly LinkedInLogin: string = "LinkedInLogin";
     static readonly IsEmailExist: string = "IsEmailExist"
     /// <summary>

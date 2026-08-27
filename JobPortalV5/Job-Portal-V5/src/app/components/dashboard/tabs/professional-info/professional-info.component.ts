@@ -936,17 +936,17 @@ export class ProfessionalInfoComponent implements OnInit {
     VisExisitingInsuranceDetail: any;
     VisSocialMediaConnections: any;
     VisDocumentAttachment: any;
-    VisAcademicQualifications: any;
+    VisAcademicQualifications: any = true;
 
      // New Added.
-    VisRelativeInAtco: any;
+    VisRelativeInAtco: any = true;
     //  End.
 
-    VisCertifications: any;
-    VisTrainings: any;
-    VisExperience: any;
-    VisCompetenciesSkills: any;
-    VisProfessionalReferences: any;
+    VisCertifications: any = true;
+    VisTrainings: any = true;
+    VisExperience: any = true;
+    VisCompetenciesSkills: any = true;
+    VisProfessionalReferences: any = true;
     VisMaritalStatus: any;
     VisReligion: any;
     VisLegalHistory: any;
@@ -1050,6 +1050,29 @@ export class ProfessionalInfoComponent implements OnInit {
     MndermanentAddress: boolean = false;
     MndCV: boolean = false;
 
+    visFlag(value: any, defaultWhenMissing: boolean): boolean {
+        if (value === null || value === undefined || value === '') {
+            return defaultWhenMissing;
+        }
+        if (value === true || value === 1 || value === '1') {
+            return true;
+        }
+        if (value === false || value === 0 || value === '0') {
+            return false;
+        }
+        return !!value;
+    }
+
+    applyProfessionalVisFlags(response: any) {
+        this.VisAcademicQualifications = this.visFlag(response && response.VisAcademicQualifications, true);
+        this.VisRelativeInAtco = this.visFlag(response && response.VisRelativeInAtco, true);
+        this.VisCertifications = this.visFlag(response && response.VisCertifications, true);
+        this.VisTrainings = this.visFlag(response && response.VisTrainings, true);
+        this.VisExperience = this.visFlag(response && response.VisExperience, true);
+        this.VisCompetenciesSkills = this.visFlag(response && response.VisCompetenciesSkills, true);
+        this.VisProfessionalReferences = this.visFlag(response && response.VisProfessionalReferences, true);
+    }
+
     getJobPortalConfiguration1() {
       debugger;
         let RequestObject = {
@@ -1062,18 +1085,7 @@ export class ProfessionalInfoComponent implements OnInit {
             .subscribe((response: any) => {
 
                 this.ClrThemeChng.ChangeTheme = response.ThemeColor;
-                this.VisAcademicQualifications = response.VisAcademicQualifications;
-
-                 // New Added.
-
-                this.VisRelativeInAtco = response.VisRelativeInAtco;
-                // End FF
-
-                this.VisCertifications = response.VisCertifications;
-                this.VisTrainings = response.VisTrainings;
-                this.VisExperience = response.VisExperience;
-                this.VisCompetenciesSkills = response.VisCompetenciesSkills;
-                this.VisProfessionalReferences = response.VisProfessionalReferences;
+                this.applyProfessionalVisFlags(response);
 
                 this.MndAcademicQualifications = response.MndAcademicQualifications;
                 this.MndCertifications = response.MndCertifications;
@@ -1161,7 +1173,11 @@ export class ProfessionalInfoComponent implements OnInit {
                 this.Color();
                 this.HideSpinner();
 
-            })
+            }, (error: any) => {
+                this.applyProfessionalVisFlags(null);
+                this.HideSpinner();
+                console.log(error);
+            });
     }
 
 
@@ -1193,12 +1209,12 @@ export class ProfessionalInfoComponent implements OnInit {
 
           const row = response && response.Data && response.Data.length > 0 ? response.Data[0] : null;
           if (!row) {
-            this.ApprovalStatus = '';
+            this.ApprovalStatus = null;
             this.SubmissionDate = '';
             return;
           }
 
-          this.ApprovalStatus = row.ApprovalStatus;
+          this.ApprovalStatus = row.ApprovalStatus || null;
           this.SubmissionDate = row.SubmissioDate;
 
           //console.log(this.SubmissionDate);
@@ -1673,7 +1689,7 @@ export class ProfessionalInfoComponent implements OnInit {
 
         }
 
-        let getDegree = this._config.environment.baseUrl + Constants.GetDegree + "?Culture=" + Constants.Culture;
+        let getDegree = this._config.environment.baseUrl + Constants.GetDegree;
         this.http.post(getDegree, RequestObject, { headers: this.dataService.headers })
             //  this.http.get("https://jobportalapi.azurewebsites.net/GetDegree?Culture=en-GB")
             .subscribe((response: any) => {
@@ -1709,7 +1725,7 @@ export class ProfessionalInfoComponent implements OnInit {
             CompanyId: this.CompanyIdService.CompanyId,
 
         }
-        let getInstitute = this._config.environment.baseUrl + Constants.GetInstitute + "?Culture=" + Constants.Culture;
+        let getInstitute = this._config.environment.baseUrl + Constants.GetInstitute;
         this.http.post(getInstitute, RequestObject, { headers: this.dataService.headers })
             //  this.http.get(" https://jobportalapi.azurewebsites.net/GetInstitute?Culture=en-GB")
             .subscribe((response: any) => {
@@ -1744,8 +1760,8 @@ export class ProfessionalInfoComponent implements OnInit {
             this.tickImage = "assets/images/" + Constants.default + "/tick.png";
         }
         else if (!isNullOrUndefined(this.forChanges)) {
-          this.breakcode = this.forChanges.split('#');
-          this.code = this.breakcode[1];
+          this.breakcode = String(this.forChanges).split('#');
+          this.code = this.breakcode.length > 1 ? this.breakcode[1] : this.breakcode[0];
             this.ThemeFontColor = this.forChanges;
             this.BorderColor = "1px solid" + this.forChanges;
             this.tickImage = "assets/images/" + this.code + "/tick.png";

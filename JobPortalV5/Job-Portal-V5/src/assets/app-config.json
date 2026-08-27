@@ -1,6 +1,6 @@
 {
 
-  "baseUrl": "http://localhost:31697/",
+  "baseUrl": "http://localhost:5190/",
   
   "CompanyGroupID": "14",
   "AssessmentURL": "https://qaassessment.azurewebsites.net/",
