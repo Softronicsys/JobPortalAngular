@@ -255,7 +255,7 @@ export class LoginComponent implements OnInit {
      //let headers: HttpHeaders = new HttpHeaders();
      //headers = headers.append("Content-Type", 'application/x-www-form-urlencoded');
     // headers = headers.append("Access-Control-Allow-Credentials", 'true');
-     this.http.get('http://localhost:31697/TestHttp').subscribe(response => {
+     this.http.get(this._config.environment.baseUrl + 'TestHttp').subscribe(response => {
          console.log('Linkedin : ', response);
          alert(response);
        })
