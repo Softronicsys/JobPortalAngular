@@ -93,10 +93,18 @@ export class ProfessionalInformationNonCorporateComponent implements OnInit {
   ];
 
   relativeInAtco: string = "-1";
-  items = [    { Id: "-1", Name: "-- Select --" },    { Id: "1", Name: "Yes" },    { Id: "2", Name: "No" }  ];
+  items = [
+    { Id: "-1", Name: "-- Select --" },
+    { Id: "1", Name: "Yes" },
+    { Id: "2", Name: "No" }
+  ];
 
   workedInATCO: string = "-1";
-  workedIn  = [    { Id: "-1", Name: "-- Select --" },    { Id: "1", Name: "Yes" },    { Id: "2", Name: "No" }  ];
+  workedIn  = [
+    { Id: "-1", Name: "-- Select --" },
+    { Id: "1", Name: "Yes" },
+    { Id: "2", Name: "No" }
+  ];
 
   referenceType: string = "-1";
 

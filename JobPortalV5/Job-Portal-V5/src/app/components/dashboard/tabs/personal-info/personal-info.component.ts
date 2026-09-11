@@ -5495,6 +5495,10 @@ export class PersonalInfoComponent implements OnInit {
 
       const saveBankAccountEvidence = this._config.environment.baseUrl + Constants.SaveBankAccountEvidence;
       request.open("POST", saveBankAccountEvidence, true);
+      var accessToken = localStorage.getItem("AccessToken");
+      if (accessToken) {
+        request.setRequestHeader("Authorization", "Bearer " + accessToken);
+      }
       request.send(formData);
     }
 
@@ -7515,6 +7519,10 @@ export class PersonalInfoComponent implements OnInit {
 
           var saveCVAttachment = this._config.environment.baseUrl + Constants.SaveAttachment;
           request.open("POST", saveCVAttachment);
+          var accessToken = localStorage.getItem("AccessToken");
+          if (accessToken) {
+            request.setRequestHeader("Authorization", "Bearer " + accessToken);
+          }
           request.send(fd);
           this.openSpinner(); 
 

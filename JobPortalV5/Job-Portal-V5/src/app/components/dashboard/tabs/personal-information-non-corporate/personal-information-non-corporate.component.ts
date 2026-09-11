@@ -4152,6 +4152,10 @@ export class PersonalInformationNonCorporateComponent implements OnInit {
 
       var saveCVAttachment = this._config.environment.baseUrl + Constants.SaveAttachment;
       request.open("POST", saveCVAttachment);
+      var accessToken = localStorage.getItem("AccessToken");
+      if (accessToken) {
+        request.setRequestHeader("Authorization", "Bearer " + accessToken);
+      }
       request.send(fd);
       this.openSpinner();
 
