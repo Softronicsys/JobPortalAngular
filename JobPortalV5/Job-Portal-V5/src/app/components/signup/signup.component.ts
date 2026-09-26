@@ -379,13 +379,12 @@ export class SignupComponent implements OnInit {
                 this.link = response;
                 this.HideSpinner();
                 debugger;
-                const isValid = !!(response && (response.Valid || response.valid || response.isValid));
-                const message = response && (response.Message || response.message);
-                if (!isNullOrUndefined(response) && isValid) {
+                const normalized = this.normalizeApiResponse(response);
+                if (!isNullOrUndefined(response) && normalized.isValid == true) {
                   $("#myModalSingupErr").modal("hide");
-                    let msgs = (message || '').split('<br/>');
+                    let msgs = (normalized.message || "").split('<br/>');
                     let successMsg = msgs[0];
-                    let msg1 = (msgs[1] || '').split('.');
+                    let msg1 = (msgs[1] || "").split('.');
                     let msg2 = msg1[0];
                     let msg3 = msg1[1];
                     console.log('Msg : ', msgs);
@@ -405,8 +404,8 @@ export class SignupComponent implements OnInit {
 
                 }
 
-                if (!isNullOrUndefined(response) && !isValid) {
-                  this.MsgValidate = message;
+                if (!isNullOrUndefined(response) && normalized.isValid == false) {
+                  this.MsgValidate = normalized.message;
                   this.generateLink = false;
                 }
 
@@ -434,6 +433,34 @@ export class SignupComponent implements OnInit {
 
     private safeTrim(value: string | null | undefined): string {
       return (value || "").trim();
+    }
+
+    // Core API returns camelCase (message/valid/guidId); legacy API used PascalCase.
+    private normalizeApiResponse(response: any) {
+      if (!response) {
+        return {
+          isValid: undefined as any,
+          message: "",
+          guidId: "",
+          generateLink: false,
+          activeWithoutEmail: false
+        };
+      }
+
+      const isValid = (response.Valid !== undefined && response.Valid !== null)
+        ? response.Valid
+        : (response.valid !== undefined && response.valid !== null)
+          ? response.valid
+          : response.isValid;
+
+      return {
+        isValid: isValid,
+        message: response.Message || response.message || response.Msg || response.msg || "",
+        guidId: response.GuidID || response.guidId || response.GuidId || "",
+        generateLink: response.isValidationForGenerateLink === true
+          || response.IsValidationForGenerateLink === true,
+        activeWithoutEmail: !!(response.ActiveWithoutEmail || response.activeWithoutEmail)
+      };
     }
 
     btnPost1_Click() {
@@ -567,8 +594,8 @@ export class SignupComponent implements OnInit {
     passwordError: string = "";
     EmailError: string = "";
     DOBError: string = "";
-
-
+    showPassword: boolean = false;
+    showConfirmPassword: boolean = false;
 
     public PostData(model, url: string,headers:any) {
         const retVal = this.http.post(url, model,headers)
@@ -578,19 +605,20 @@ export class SignupComponent implements OnInit {
                 this.LinkMsgGenerate1 = "";
                 console.log(response);
 
-                // Normalize Core API camelCase + legacy PascalCase response shapes
-                const isValid = !!(response && (response.Valid || response.valid || response.isValid));
-                const message = response && (response.Message || response.message);
-                const guidId = response && (response.GuidID || response.guidId);
-                const generateLinkFlag = !!(response && (response.isValidationForGenerateLink === true
-                  || response.IsValidationForGenerateLink === true));
-                const activeWithoutEmail = !!(response && (response.ActiveWithoutEmail || response.activeWithoutEmail));
+                const normalized = this.normalizeApiResponse(response);
+                const isValid = normalized.isValid;
+                const message = normalized.message;
 
  
-                if (!isValid) {
+                if (isValid == false) {
                   debugger;
-                    if (!isNullOrUndefined(response) && !generateLinkFlag) {
+                    if (!isNullOrUndefined(response) && !normalized.generateLink) {
                         this.RestrictMsg = message;
+
+                        // Always reset field errors so a previous message is not left on another field.
+                        this.passwordError = "";
+                        this.EmailError = "";
+                        this.DOBError = "";
 
                         if (
                           message === "Password and confirm password does not match." ||
@@ -607,8 +635,7 @@ export class SignupComponent implements OnInit {
                         else if (message === "Invalid Password! Please enter at least 6 characters long password.") {
                           this.passwordError = message; 
                         }
-
-                        if (message === "Invalid Email Address!") {
+                        else if (message === "Invalid Email Address!") {
                           this.EmailError = message;
                         }
                         else if (message === "Email address already in use by another applicant.") {
@@ -617,10 +644,11 @@ export class SignupComponent implements OnInit {
                         else if (message === "Email address is already registered.") {
                           this.EmailError = message;
                         }
-                        if (message === "The selected date is not valid.") {
+                        else if (message === "The selected date is not valid.") {
                           this.DOBError = message;
                         }
-                        else if (message === "It looks like you've entered the wrong info.Please make sure that you use your real date of birth.") {
+                        else if (message === "It looks like you've entered the wrong info. Please make sure that you use your real date of birth."
+                          || message === "It looks like you've entered the wrong info.Please make sure that you use your real date of birth.") {
                           this.DOBError = message;
                         }
                       
@@ -634,15 +662,15 @@ export class SignupComponent implements OnInit {
                     }
                     }
                 }
-                if (!isValid) {
-                    if (!isNullOrUndefined(response) && generateLinkFlag) {
+                if (isValid == false) {
+                    if (!isNullOrUndefined(response) && normalized.generateLink) {
                         this.generateLink = true;
                         this.RestrictMsg1 = message;
                         //  console.log("RestrictMsg111", this.RestrictMsg1);
                         debugger;
-                        this.genLink1 = (this.RestrictMsg1 || '').split('.');
+                        this.genLink1 = this.RestrictMsg1.split('.');
                         this.genLink12 = this.genLink1[0];
-                        this.genLink13 = (this.genLink1[1] || '').split('to');
+                        this.genLink13 = this.genLink1[1].split('to');
                         this.genLink14 = this.genLink13[0];
                         this.genLink15 = " to "+this.genLink13[1];
 
@@ -651,20 +679,21 @@ export class SignupComponent implements OnInit {
                         //let generateLinkMsg = response.Message.split('.');
                         //let generateLinkMsg1 = generateLinkMsg[0];
                         //let generateLinkMsg2 = generateLinkMsg[1];
-                        localStorage.setItem('GuidID', guidId);
+                        let GuidID = normalized.guidId;
+                        localStorage.setItem('GuidID', GuidID);
                         $("#myModalSingupErr").modal("show");
 
                     }
                 }
 
                 this.HideSpinner();
-                if (isValid)
+                if (isValid == true)
                 {
-                  if (!activeWithoutEmail)
+                  if (!normalized.activeWithoutEmail)
                   {
-                    let msgs = (message || '').split('<br/>');
+                    let msgs = message.split('<br/>');
                     let successMsg = msgs[0];
-                    let msg1 = (msgs[1] || '').split('.');
+                    let msg1 = (msgs[1] || "").split('.');
                     let msg2 = msg1[0];
                     let msg3 = msg1[1];
                     console.log('Msg : ', msgs);
@@ -687,14 +716,14 @@ export class SignupComponent implements OnInit {
                   }
                   else
                   {
-                    const queryParams = { g: guidId, id: this._config.environment.CompanyGroupID };
+                    const queryParams = { g: normalized.guidId, id: this._config.environment.CompanyGroupID };
                     this.objRouter.navigate(['/AccountActivation'], { queryParams });
                   }
                   
                 }
                  
             }, (error: any) => {
-                alert((error.error && (error.error.Message || error.error.message)) || error.message);
+                alert((error.error && (error.error.Message || error.error.message)) || "Request failed.");
             });
     }
 

@@ -140,12 +140,12 @@ export class ForgetPasswordComponent implements OnInit {
                 debugger;
                 console.log(response);
                 this.HideSpinner();
-                if (!isNullOrUndefined(response) && response.IsValid == false && response.isEmailSend == false) {
+                if (!isNullOrUndefined(response) && (response.IsValid == false || response.isValid == false) && response.isEmailSend == false) {
                     this.iserrorMsg = true;
-                    this.errorMsg = response.Message;
+                    this.errorMsg = response.Message || response.message || "";
 
                 }
-                if (!isNullOrUndefined(response) && response.IsValid == true && response.isEmailSend == true) {
+                if (!isNullOrUndefined(response) && (response.IsValid == true || response.isValid == true) && response.isEmailSend == true) {
                     this.objRouter.navigate(['/pin/code']);
                     localStorage.setItem('Email', this.Email);
 
