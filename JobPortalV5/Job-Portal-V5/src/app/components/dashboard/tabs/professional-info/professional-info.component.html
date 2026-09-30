@@ -1085,7 +1085,7 @@
 
         <div class="col-sm-2 padding-unset">
           <div class="form-group">
-            <a data-toggle="modal" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null" (click)="btnAdd_Click('Experience'); resetDate();" [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-top: 4px;" data-target="#myModal4" class="btnClass popupStyle clrhover uppercase" data-backdrop="static" data-keyboard="false">
+            <a data-toggle="modal" *ngIf="(ApprovalStatus == 'R' || ApprovalStatus == null) && !(isFF && showFFExperienceQuestion && ffExperienceChoice === 'No')" (click)="btnAdd_Click('Experience'); resetDate();" [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-top: 4px;" data-target="#myModal4" class="btnClass popupStyle clrhover uppercase" data-backdrop="static" data-keyboard="false">
               <span class="glyphicon glyphicon-plus "></span> <!--ADD-->{{Add}}
             </a>
             <!-- Modal -->
@@ -1271,7 +1271,29 @@
         </div>
       </div>
 
-      <div class="row " style="word-break: break-all !important;">
+      <div class="row lineHeight" *ngIf="isFF && showFFExperienceQuestion">
+        <div class="col-lg-11" style="padding-left: 0px !important;">
+          <div class="col-lg-12">
+            <div class="form-group ff-experience-question">
+              <span class="ff-experience-question-text BlackTxtClr">Do you have any experience?</span>
+              <div class="ff-experience-choice-group" role="radiogroup" aria-label="Do you have any experience?">
+                <label class="ff-experience-choice-option" [ngClass]="{'active': ffExperienceChoice === 'Yes'}">
+                  <input type="radio" name="ffExperienceChoice" [value]="'Yes'" [(ngModel)]="ffExperienceChoice" (change)="onFFExperienceChoiceChange('Yes')">
+                  <span>Yes</span>
+                </label>
+                <label class="ff-experience-choice-option" [ngClass]="{'active': ffExperienceChoice === 'No', 'disabled': !canSelectFFExperienceNo()}" [attr.title]="!canSelectFFExperienceNo() ? 'Please remove experience from the list' : null">
+                  <input type="radio" name="ffExperienceChoice" [value]="'No'" [(ngModel)]="ffExperienceChoice" [disabled]="!canSelectFFExperienceNo()" [attr.aria-label]="!canSelectFFExperienceNo() ? 'No. Please remove experience from the list' : 'No'" (change)="onFFExperienceChoiceChange('No')">
+                  <span>No</span>
+                </label>
+              </div>
+              <small class="ff-experience-choice-note" *ngIf="ffExperienceChoice === 'No'">Experience details will not be required.</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-1"></div>
+      </div>
+
+      <div class="row " style="word-break: break-all !important;" *ngIf="!(isFF && showFFExperienceQuestion && ffExperienceChoice === 'No')">
         <div class="col-sm-12 " style="margin-bottom:10px; ">
           <div *ngIf="!updateProfService.IsGridStyle" class='normalView'>
             <table *ngIf="!ExperienceDetail || ExperienceDetail.length <= 0" style="width:100%;font-size: 12px;">

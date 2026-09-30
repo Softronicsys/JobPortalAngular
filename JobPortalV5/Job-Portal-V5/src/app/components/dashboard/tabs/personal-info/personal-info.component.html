@@ -1258,6 +1258,7 @@
                        id="bankAccountNumber"
                        [ngClass]="{'BorderColor': isMndBankInfo && safeTrim(AccountNoIBAN_No) == '' }"
                        [(ngModel)]="AccountNoIBAN_No"
+                       (ngModelChange)="clearDuplicateIbanValidation()"
                        name="AccountNoIBAN_No"
                        class="form-control"
                        placeholder="PK######################"
@@ -1269,6 +1270,9 @@
                 <small *ngIf="isValidIBAN && !validateIBAN(AccountNoIBAN_No)" style="color: red;">
                   <small style="color: red;">Invalid IBAN number. The valid format should be: PK######################</small>
                 </small>
+                <div *ngIf="duplicateIbanValidationMsg" style="color: red; font-size: 12px; font-weight: 600; margin-top: 4px;">
+                  {{duplicateIbanValidationMsg}}
+                </div>
               </div>
               <!--<div *ngIf="isBasicInformation22 == true">
     <input type="text" id="bankAccountNumber" [ngClass]="{'BorderColor':isMndBankInfo && safeTrim(AccountNoIBAN_No) == ''}" [(ngModel)]="AccountNoIBAN_No" name="AccountNoIBAN_No" class="form-control" placeholder="Enter IBAN No.">
@@ -2063,26 +2067,10 @@
 
     <form action="/action_page.php" style="font-size:12px;" *ngIf="VisDependentsInfo == true" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
       <br />
-      <div class="row lineHeight" *ngIf="isFF && showFFDependentsQuestion">
-        <div class="col-lg-11" style="padding-left: 0px !important;">
-          <div class="col-lg-12">
-            <div class="form-group">
-              <p class="BlackTxtClr">Do you have any dependents?</p>
-              <label style="margin-right:20px;">
-                <input type="radio" name="ffDependentsChoice" [value]="'Yes'" [(ngModel)]="ffDependentsChoice" (change)="onFFDependentsChoiceChange('Yes')"> Yes
-              </label>
-              <label>
-                <input type="radio" name="ffDependentsChoice" [value]="'No'" [(ngModel)]="ffDependentsChoice" (change)="onFFDependentsChoiceChange('No')"> No
-              </label>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-1"></div>
-      </div>
       <div class="row " style="display:flex;">
         <div class="col-sm-3 ">
           <div class="form-group ">
-            <p [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="font-size:20px; "><span *ngIf="isDependentsMandatoryForDisplay()" style="color:red; font-size:22px; margin-left: -10px !important; ">*</span>{{DependentsInformation}}</p>
+            <p [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="font-size:20px; "><span *ngIf="MndDepndsInfo == true" style="color:red; font-size:22px; margin-left: -10px !important; ">*</span>{{DependentsInformation}}</p>
           </div>
         </div>
         <div class="col-sm-7 ">
@@ -2093,7 +2081,7 @@
 
         <div class="col-sm-2 padding-unset">
           <div class="form-group">
-            <a id="DependentaddButton" data-toggle="modal" *ngIf="ApprovalStatus == 'R' || ApprovalStatus == null" [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-top: 4px;" data-target="#myModal22" class="btnClass popupStyle clrhover uppercase" data-backdrop="static" data-keyboard="false" (click)="btnAdd_Click();  resetDate()">
+            <a id="DependentaddButton" data-toggle="modal" *ngIf="(ApprovalStatus == 'R' || ApprovalStatus == null) && !(isFF && showFFDependentsQuestion && ffDependentsChoice === 'No')" [style.border]="[BorderColor ? BorderColor : DefaultBorderColor]" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="margin-top: 4px;" data-target="#myModal22" class="btnClass popupStyle clrhover uppercase" data-backdrop="static" data-keyboard="false" (click)="btnAdd_Click();  resetDate()">
               <span class="glyphicon glyphicon-plus"></span> <!--ADD--> {{Add}}
             </a>
 
@@ -2103,7 +2091,7 @@
                 <div class="modal-content">
                   <div class="modal-header" style="border-bottom: 0px solid #e5e5e5;">
                     <button type="button" class="close" style="color:#007FFF;" data-dismiss="modal"> <img src="assets/images/lookupclose.png"></button>
-                    <h4 class="modal-title PopupLeftRightPdngHeading" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><span *ngIf="isDependentsMandatoryForDisplay()" style="color:red;">*</span>{{DependentsInformation}}</h4>
+                    <h4 class="modal-title PopupLeftRightPdngHeading" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><span *ngIf="MndDepndsInfo == true" style="color:red;">*</span>{{DependentsInformation}}</h4>
                   </div>
                   <div class="modal-body">
                     <div class="row " *ngIf="isDependent || isDependentsMandatoryForDisplay() || DisconnectInternet || isCorrectDateCompetency">
@@ -2244,8 +2232,29 @@
         </div>
       </div>
 
+      <div class="row lineHeight" *ngIf="isFF && showFFDependentsQuestion">
+        <div class="col-lg-11" style="padding-left: 0px !important;">
+          <div class="col-lg-12">
+            <div class="form-group ff-dependents-question">
+              <span class="ff-dependents-question-text BlackTxtClr">Do you have any dependents?</span>
+              <div class="ff-dependents-choice-group" role="radiogroup" aria-label="Do you have any dependents?">
+                <label class="ff-dependents-choice-option" [ngClass]="{'active': ffDependentsChoice === 'Yes'}">
+                  <input type="radio" name="ffDependentsChoice" [value]="'Yes'" [(ngModel)]="ffDependentsChoice" (change)="onFFDependentsChoiceChange('Yes')">
+                  <span>Yes</span>
+                </label>
+                <label class="ff-dependents-choice-option" [ngClass]="{'active': ffDependentsChoice === 'No', 'disabled': !canSelectFFDependentsNo()}" [attr.title]="!canSelectFFDependentsNo() ? 'Please remove dependents from the list' : null">
+                  <input type="radio" name="ffDependentsChoice" [value]="'No'" [(ngModel)]="ffDependentsChoice" [disabled]="!canSelectFFDependentsNo()" [attr.aria-label]="!canSelectFFDependentsNo() ? 'No. Please remove dependents from the list' : 'No'" (change)="onFFDependentsChoiceChange('No')">
+                  <span>No</span>
+                </label>
+              </div>
+              <small class="ff-dependents-choice-note" *ngIf="ffDependentsChoice === 'No'">Dependents details will not be required.</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-1"></div>
+      </div>
 
-      <div class="row " style="word-break: break-all !important;">
+      <div class="row " style="word-break: break-all !important;" *ngIf="!(isFF && showFFDependentsQuestion && ffDependentsChoice === 'No')">
         <div class="col-sm-12 " style="margin-bottom:20px; ">
 
           <div *ngIf="!updateProfService.IsGridStyle" class='normalView'>
@@ -2912,14 +2921,8 @@
             </div>
           </div>
           <div class="col-sm-7 ">
-            <div class="form-group " *ngIf="shouldShowPastExperienceQuestionForCategory(item)">
-              <p class="BlackTxtClr">Do you have any Past Experience?</p>
-              <label style="margin-right: 15px;">
-                <input type="radio" name="hasPastExperienceChoice{{i}}" [value]="'Yes'" [(ngModel)]="hasPastExperienceChoice" (change)="onPastExperienceChoiceChange('Yes')"> Yes
-              </label>
-              <label>
-                <input type="radio" name="hasPastExperienceChoice{{i}}" [value]="'No'" [(ngModel)]="hasPastExperienceChoice" (change)="onPastExperienceChoiceChange('No')"> No
-              </label>
+            <div class="form-group ">
+
             </div>
           </div>
 

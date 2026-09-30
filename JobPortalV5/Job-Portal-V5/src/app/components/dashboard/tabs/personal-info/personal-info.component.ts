@@ -608,12 +608,6 @@ export class PersonalInfoComponent implements OnInit {
     ffBankAccountChoice: string = 'No';
     showFFDependentsQuestion: boolean = false;
     ffDependentsChoice: string = 'No';
-    pastExperienceLetterDocumentId: number = 12300;
-    showPastExperienceQuestion: boolean = false;
-    hasPastExperienceChoice: string = 'No';
-    pastExperienceRowsLoaded: boolean = false;
-    pastExperienceRowsExist: boolean = false;
-    documentAttachmentsLoaded: boolean = false;
 
     isBasicInformation23: boolean = false;
     isBtnHide23: boolean = false;
@@ -2142,7 +2136,6 @@ export class PersonalInfoComponent implements OnInit {
             //this.getWebConfiguration();
 
             this.getDocumentAttachmentGrid()
-            this.getPastExperienceRowsForQuestion();
 
             this.getPersonalAttributes();
 
@@ -2761,8 +2754,6 @@ export class PersonalInfoComponent implements OnInit {
               //  this.SocialMediaTypeId = "109";
 
             }, (error: any) => {
-                this.documentAttachmentsLoaded = true;
-                this.refreshPastExperienceChoiceBinding();
                 console.log(error);
             });
     }
@@ -5291,11 +5282,13 @@ export class PersonalInfoComponent implements OnInit {
 
 
     isMndBankInfo: boolean = false;
+    duplicateIbanValidationMsg: string = "";
     UpdateApplicantDataBasicInformation22_click() {
       debugger;
 
 
       if (navigator.onLine) {
+        this.duplicateIbanValidationMsg = "";
         if (this.isFF === true && this.ffBankAccountChoice === 'No') {
           this.isCloseEditLbl22_Click();
           return;
@@ -5418,6 +5411,11 @@ export class PersonalInfoComponent implements OnInit {
         .subscribe((response: any) => {
           if (!response || response.isValid !== true) {
             this.HideSpinner();
+            if (this.isDuplicateIbanResponse(response)) {
+              this.duplicateIbanValidationMsg = response.Msg;
+              this.isBtnHide22 = true;
+              return;
+            }
             $("#videoPopup1").modal('show');
             this.isTick = false;
             this.ApplyJobMsg = response && response.Msg ? response.Msg : "Invalid Data.";
@@ -5440,6 +5438,14 @@ export class PersonalInfoComponent implements OnInit {
           this.isTick = false;
           this.ApplyJobMsg = (error && error.error && error.error.Message) ? error.error.Message : "Invalid Data.";
         });
+    }
+
+    clearDuplicateIbanValidation(): void {
+      this.duplicateIbanValidationMsg = "";
+    }
+
+    private isDuplicateIbanResponse(response: any): boolean {
+      return !!(response && response.Msg && response.Msg.toLowerCase().indexOf('iban already exist') >= 0);
     }
 
     private finalizeBankSaveSuccess(successMsg: string): void {
@@ -5650,11 +5656,20 @@ export class PersonalInfoComponent implements OnInit {
     }
 
     onFFDependentsChoiceChange(choice: string): void {
+      if (choice === 'No' && !this.canSelectFFDependentsNo()) {
+        this.ffDependentsChoice = 'Yes';
+        this.persistFFDependentsChoiceForValidation();
+        return;
+      }
       this.ffDependentsChoice = choice;
       this.persistFFDependentsChoiceForValidation();
       if (choice === 'No') {
         this.isDependent = false;
       }
+    }
+
+    canSelectFFDependentsNo(): boolean {
+      return !this.hasAnyDependentsData();
     }
 
     private hasAnyDependentsData(): boolean {
@@ -6393,9 +6408,7 @@ export class PersonalInfoComponent implements OnInit {
             .subscribe((response: any) => {
 
                 this.DocumentAttachmentGrid = response;
-                this.documentAttachmentsLoaded = true;
                 this.refreshAccountEvidenceBinding();
-                this.refreshPastExperienceChoiceBinding();
 
                 //console.log(response);
               
@@ -7084,7 +7097,6 @@ export class PersonalInfoComponent implements OnInit {
 
 
           this.distinctCategoryID = Array.from(new Set(this.Documents_Cat_Type.map(doc => doc.DocCategoryTypeId)));
-          this.refreshPastExperienceChoiceBinding();
 
           //console.log(this.distinctCategoryID);
 
@@ -7119,7 +7131,6 @@ export class PersonalInfoComponent implements OnInit {
 
           this.distinctCategoryID = Array.from(new Set(this.Documents_Cat_Type.map(doc => doc.DocCategoryTypeId))); // Section Id 
           this.refreshAccountEvidenceBinding();
-          this.refreshPastExperienceChoiceBinding();
 
           //console.log(this.distinctCategoryID);
 
@@ -7141,7 +7152,7 @@ export class PersonalInfoComponent implements OnInit {
 
     isMandatoryCategory(categoryId: number): boolean {
       //debugger;
-      return this.Documents_Cat_Type.some(doc => doc.DocCategoryTypeId == categoryId && this.isDocumentMandatoryForDisplay(doc));
+      return this.Documents_Cat_Type.some(doc => doc.DocCategoryTypeId == categoryId && doc.Mandatory == 1);
     }
 
     
@@ -7152,95 +7163,6 @@ export class PersonalInfoComponent implements OnInit {
       return this.Documents_Cat_Type
         .filter(doc => doc.DocCategoryTypeId == categoryName)
         .map(doc => ({ DocumentID: doc.DocumentID, TypeName: doc.TypeName }));
-    }
-
-    shouldShowPastExperienceQuestionForCategory(categoryId: number): boolean {
-      return this.showPastExperienceQuestion
-        && this.Documents_Cat_Type
-        && this.Documents_Cat_Type.some(doc => doc.DocCategoryTypeId == categoryId && Number(doc.DocumentID) === this.pastExperienceLetterDocumentId);
-    }
-
-    onPastExperienceChoiceChange(choice: string): void {
-      this.hasPastExperienceChoice = choice;
-      this.persistPastExperienceChoiceForValidation();
-    }
-
-    private getPastExperienceRowsForQuestion(): void {
-      let RequestObject = {
-        ApplicantId: localStorage.getItem("AppId"),
-        Culture: Constants.Culture,
-        CompanyId: this.CompanyIdService.CompanyId
-      }
-      let getExperienceDetail = this._config.environment.baseUrl + Constants.GetExperienceDetail;
-      this.http.post(getExperienceDetail, RequestObject, { headers: this.dataService.headers })
-        .subscribe((response: any) => {
-          this.pastExperienceRowsExist = !!(response && response.length > 0);
-          this.pastExperienceRowsLoaded = true;
-          this.refreshPastExperienceChoiceBinding();
-        }, (error: any) => {
-          this.pastExperienceRowsLoaded = true;
-          this.refreshPastExperienceChoiceBinding();
-        });
-    }
-
-    private hasPastExperienceLetterAttachment(): boolean {
-      if (!this.DocumentAttachmentGrid || !this.DocumentAttachmentGrid.length) {
-        return false;
-      }
-      return this.DocumentAttachmentGrid.some(row => Number(row && row.DocCatId) === this.pastExperienceLetterDocumentId);
-    }
-
-    private hasPastExperienceDocumentPolicy(): boolean {
-      if (!this.Documents_Cat_Type || !this.Documents_Cat_Type.length) {
-        return false;
-      }
-      return this.Documents_Cat_Type.some(doc => Number(doc.DocumentID) === this.pastExperienceLetterDocumentId);
-    }
-
-    private refreshPastExperienceChoiceBinding(): void {
-      if (!this.hasPastExperienceDocumentPolicy()) {
-        this.showPastExperienceQuestion = false;
-        this.persistPastExperienceChoiceForValidation();
-        return;
-      }
-
-      this.showPastExperienceQuestion = true;
-      const storedValue = this.getStoredPastExperienceChoice();
-      if (storedValue === '1') {
-        this.hasPastExperienceChoice = 'Yes';
-      } else if (storedValue === '0') {
-        this.hasPastExperienceChoice = 'No';
-      } else if (!this.pastExperienceRowsLoaded || !this.documentAttachmentsLoaded) {
-        return;
-      } else {
-        this.hasPastExperienceChoice = (this.pastExperienceRowsExist || this.hasPastExperienceLetterAttachment()) ? 'Yes' : 'No';
-      }
-      this.persistPastExperienceChoiceForValidation();
-    }
-
-    private persistPastExperienceChoiceForValidation(): void {
-      if (!this.showPastExperienceQuestion) {
-        localStorage.removeItem('HasPastExperience');
-        localStorage.removeItem('HasPastExperienceAppId');
-        return;
-      }
-      localStorage.setItem('HasPastExperience', this.hasPastExperienceChoice === 'Yes' ? '1' : '0');
-      localStorage.setItem('HasPastExperienceAppId', localStorage.getItem("AppId") || '');
-    }
-
-    private getStoredPastExperienceChoice(): string | null {
-      const storedAppId = localStorage.getItem('HasPastExperienceAppId');
-      if (storedAppId !== (localStorage.getItem("AppId") || '')) {
-        return null;
-      }
-      return localStorage.getItem('HasPastExperience');
-    }
-
-    isDocumentMandatoryForDisplay(doc: any): boolean {
-      if (!doc || doc.Mandatory != 1) {
-        return false;
-      }
-      return !(Number(doc.DocumentID) === this.pastExperienceLetterDocumentId && this.hasPastExperienceChoice === 'No');
     }
 
 
