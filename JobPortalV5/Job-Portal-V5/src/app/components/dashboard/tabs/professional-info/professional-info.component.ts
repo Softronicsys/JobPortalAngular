@@ -2101,6 +2101,8 @@ export class ProfessionalInfoComponent implements OnInit {
     Validate() {
       debugger;
       const hasBankAccountValue = this.resolveHasBankAccountForValidation();
+      const hasDependentsValue = this.resolveHasDependentsForValidation();
+      const hasPastExperienceValue = this.resolveHasPastExperienceForValidation();
       let RequestObject = {
 
         ApplicantId: localStorage.getItem("AppId"),
@@ -2109,6 +2111,8 @@ export class ProfessionalInfoComponent implements OnInit {
         CompanyId: this.CompanyIdService.CompanyId,
         LoginCompanyId: this.CompanyIdService.CompanyId,
         HasBankAccount: hasBankAccountValue,
+        HasDependents: hasDependentsValue,
+        HasPastExperience: hasPastExperienceValue,
 
       }
       this.openSpinner();
@@ -3009,6 +3013,46 @@ export class ProfessionalInfoComponent implements OnInit {
       return null;
     }
 
+    private resolveHasDependentsForValidation(): number | null {
+      if (this.isFF !== true) {
+        return null;
+      }
+      const storedValue = localStorage.getItem('FFHasDependents');
+      if (storedValue === '1') {
+        return 1;
+      }
+      if (storedValue === '0') {
+        return 0;
+      }
+      return null;
+    }
+
+    private persistPastExperienceRowsForValidation(): void {
+      if (this.ExperienceDetail && this.ExperienceDetail.length > 0) {
+        const storedValue = localStorage.getItem('HasPastExperience');
+        const storedAppId = localStorage.getItem('HasPastExperienceAppId');
+        if (storedValue !== '0' || storedAppId !== (localStorage.getItem("AppId") || '')) {
+          localStorage.setItem('HasPastExperience', '1');
+          localStorage.setItem('HasPastExperienceAppId', localStorage.getItem("AppId") || '');
+        }
+      }
+    }
+
+    private resolveHasPastExperienceForValidation(): number | null {
+      const storedAppId = localStorage.getItem('HasPastExperienceAppId');
+      if (storedAppId !== (localStorage.getItem("AppId") || '')) {
+        return null;
+      }
+      const storedValue = localStorage.getItem('HasPastExperience');
+      if (storedValue === '1') {
+        return 1;
+      }
+      if (storedValue === '0') {
+        return 0;
+      }
+      return null;
+    }
+
 
     // for delete Qualification //
 
@@ -3895,6 +3939,7 @@ export class ProfessionalInfoComponent implements OnInit {
             .subscribe((response: any) => {
 
               this.ExperienceDetail = response;
+              this.persistPastExperienceRowsForValidation();
               //console.log("Experiance Details Data:", this.ExperienceDetail);
                 this.HideSpinner();
             }, (error: any) => {

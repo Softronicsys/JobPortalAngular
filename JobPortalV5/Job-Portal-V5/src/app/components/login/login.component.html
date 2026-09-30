@@ -1,8 +1,13 @@
 <style>
-  button:hover {
+  button:hover:not(.password-toggle) {
     background-color: #00b2ff;
     color: white;
 
+  }
+  button.password-toggle:hover,
+  button.password-toggle:focus {
+    background-color: transparent !important;
+    color: #666 !important;
   }
   #BackgroundImageLogin {
     position: absolute;
@@ -107,7 +112,12 @@
           </div>
           <div class="col-xs-10">
             <label for="exampleInputEmail1" class="fntWght" style="font-size:12px; margin-left: -6px"><span style="color:red; font-size:14px !important;" class="forValidation">*</span><!--Password-->{{LblPassword}}</label>
-            <input [ngClass]="{'BorderColor':isMandatoryfields && Password == ''}" maxlength="20" type="password" class="form-control" id="Password" name="Password" [(ngModel)]="Password" placeholder="" style="border-radius:0px;">
+            <div class="password-field-wrap">
+              <input [ngClass]="{'BorderColor':isMandatoryfields && Password == ''}" maxlength="20" [type]="Password && showPassword ? 'text' : 'password'" class="form-control" id="Password" name="Password" [(ngModel)]="Password" placeholder="" style="border-radius:0px;">
+              <button *ngIf="Password && Password.length > 0" type="button" class="password-toggle" (click)="showPassword = !showPassword" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+                {{showPassword ? 'Hide' : 'Show'}}
+              </button>
+            </div>
 
           </div>
 

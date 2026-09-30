@@ -2063,10 +2063,26 @@
 
     <form action="/action_page.php" style="font-size:12px;" *ngIf="VisDependentsInfo == true" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
       <br />
+      <div class="row lineHeight" *ngIf="isFF && showFFDependentsQuestion">
+        <div class="col-lg-11" style="padding-left: 0px !important;">
+          <div class="col-lg-12">
+            <div class="form-group">
+              <p class="BlackTxtClr">Do you have any dependents?</p>
+              <label style="margin-right:20px;">
+                <input type="radio" name="ffDependentsChoice" [value]="'Yes'" [(ngModel)]="ffDependentsChoice" (change)="onFFDependentsChoiceChange('Yes')"> Yes
+              </label>
+              <label>
+                <input type="radio" name="ffDependentsChoice" [value]="'No'" [(ngModel)]="ffDependentsChoice" (change)="onFFDependentsChoiceChange('No')"> No
+              </label>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-1"></div>
+      </div>
       <div class="row " style="display:flex;">
         <div class="col-sm-3 ">
           <div class="form-group ">
-            <p [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="font-size:20px; "><span *ngIf="MndDepndsInfo == true" style="color:red; font-size:22px; margin-left: -10px !important; ">*</span>{{DependentsInformation}}</p>
+            <p [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]" style="font-size:20px; "><span *ngIf="isDependentsMandatoryForDisplay()" style="color:red; font-size:22px; margin-left: -10px !important; ">*</span>{{DependentsInformation}}</p>
           </div>
         </div>
         <div class="col-sm-7 ">
@@ -2087,10 +2103,10 @@
                 <div class="modal-content">
                   <div class="modal-header" style="border-bottom: 0px solid #e5e5e5;">
                     <button type="button" class="close" style="color:#007FFF;" data-dismiss="modal"> <img src="assets/images/lookupclose.png"></button>
-                    <h4 class="modal-title PopupLeftRightPdngHeading" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><span *ngIf="MndDepndsInfo == true" style="color:red;">*</span>{{DependentsInformation}}</h4>
+                    <h4 class="modal-title PopupLeftRightPdngHeading" [style.color]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><span *ngIf="isDependentsMandatoryForDisplay()" style="color:red;">*</span>{{DependentsInformation}}</h4>
                   </div>
                   <div class="modal-body">
-                    <div class="row " *ngIf="isDependent || MndDepndsInfo || DisconnectInternet || isCorrectDateCompetency">
+                    <div class="row " *ngIf="isDependent || isDependentsMandatoryForDisplay() || DisconnectInternet || isCorrectDateCompetency">
                       <div class="col-sm-4">
                         <div class="form-group ">
 
@@ -2896,8 +2912,14 @@
             </div>
           </div>
           <div class="col-sm-7 ">
-            <div class="form-group ">
-
+            <div class="form-group " *ngIf="shouldShowPastExperienceQuestionForCategory(item)">
+              <p class="BlackTxtClr">Do you have any Past Experience?</p>
+              <label style="margin-right: 15px;">
+                <input type="radio" name="hasPastExperienceChoice{{i}}" [value]="'Yes'" [(ngModel)]="hasPastExperienceChoice" (change)="onPastExperienceChoiceChange('Yes')"> Yes
+              </label>
+              <label>
+                <input type="radio" name="hasPastExperienceChoice{{i}}" [value]="'No'" [(ngModel)]="hasPastExperienceChoice" (change)="onPastExperienceChoiceChange('No')"> No
+              </label>
             </div>
           </div>
 

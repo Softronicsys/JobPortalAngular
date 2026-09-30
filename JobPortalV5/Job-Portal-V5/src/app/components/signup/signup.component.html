@@ -180,8 +180,8 @@
               <div class="form-group col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <label for="Passport" class="fntWght"><span style="color:red;" class="mandatoryStar">*</span><!--Password-->{{LblPassword}}</label>
                 <div class="password-field-wrap">
-                  <input [type]="showPassword ? 'text' : 'password'" class="form-control" maxlength="20" [ngClass]="{'BorderColor':isMandatoryfields && Password == '' || (passwordError && passwordError.length > 0)}" id="Passport" placeholder="" name="password" [(ngModel)]="Password" style="border-radius:0px;">
-                  <button type="button" class="password-toggle" (click)="showPassword = !showPassword" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+                  <input [type]="Password && showPassword ? 'text' : 'password'" class="form-control" maxlength="20" [ngClass]="{'BorderColor':isMandatoryfields && Password == '' || (passwordError && passwordError.length > 0)}" id="Passport" placeholder="" name="password" [(ngModel)]="Password" style="border-radius:0px;">
+                  <button *ngIf="Password && Password.length > 0" type="button" class="password-toggle" (click)="showPassword = !showPassword" [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
                     {{showPassword ? 'Hide' : 'Show'}}
                   </button>
                 </div>
@@ -192,8 +192,8 @@
               <div class="form-group col-lg-4 col-md-4 col-sm-6 col-xs-12">
                 <label for="ConfirmPassword" class="fntWght"><span style="color:red;" class="mandatoryStar">*</span><!--Confirm Password-->{{lblConfirmPassword}}</label>
                 <div class="password-field-wrap">
-                  <input [type]="showConfirmPassword ? 'text' : 'password'" class="form-control" maxlength="20" [ngClass]="{'BorderColor':isMandatoryfields && ConfirmPassword == '' || (passwordError && passwordError.length > 0)}" id="ConfirmPassword" placeholder="" name="confirmpassword" [(ngModel)]="ConfirmPassword" style="border-radius:0px;">
-                  <button type="button" class="password-toggle" (click)="showConfirmPassword = !showConfirmPassword" [attr.aria-label]="showConfirmPassword ? 'Hide password' : 'Show password'">
+                  <input [type]="ConfirmPassword && showConfirmPassword ? 'text' : 'password'" class="form-control" maxlength="20" [ngClass]="{'BorderColor':isMandatoryfields && ConfirmPassword == '' || (passwordError && passwordError.length > 0)}" id="ConfirmPassword" placeholder="" name="confirmpassword" [(ngModel)]="ConfirmPassword" style="border-radius:0px;">
+                  <button *ngIf="ConfirmPassword && ConfirmPassword.length > 0" type="button" class="password-toggle" (click)="showConfirmPassword = !showConfirmPassword" [attr.aria-label]="showConfirmPassword ? 'Hide password' : 'Show password'">
                     {{showConfirmPassword ? 'Hide' : 'Show'}}
                   </button>
                 </div>

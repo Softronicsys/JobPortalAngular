@@ -21,6 +21,8 @@ export class ChangePasswordComponent implements OnInit {
 
     confirmPassword: string = "";
     newPassword: string = "";
+    showNewPassword: boolean = false;
+    showConfirmPassword: boolean = false;
     key1: any;
     key2: any;
     message: string = "";

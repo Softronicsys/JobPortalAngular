@@ -43,6 +43,7 @@ export class LoginComponent implements OnInit {
 
     Email: string = "";
     Password: string = "";
+    showPassword: boolean = false;
     ImageLinkedIn: any;
     public responseData;
     check: string = "False"
