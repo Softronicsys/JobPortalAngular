@@ -21,6 +21,8 @@ export class ChangePasswordComponent implements OnInit {
 
     confirmPassword: string = "";
     newPassword: string = "";
+    showNewPassword: boolean = false;
+    showConfirmPassword: boolean = false;
     key1: any;
     key2: any;
     message: string = "";
@@ -28,6 +30,7 @@ export class ChangePasswordComponent implements OnInit {
     isMandatoryfields: boolean = false;
     DisconnectInternet: boolean = false;
     errorMessage: boolean = false;
+    passwordChangeSucceeded: boolean = false;
 
     // for backgrouud color // 
 
@@ -36,6 +39,7 @@ export class ChangePasswordComponent implements OnInit {
     DefaultFontColor: string = "";
     tickImage: string = "";
     Email: string = "";
+    resetToken: string = "";
     notAppropriate: boolean = false;
     WrongUrl: boolean = true;
     CompGroupIdKey: string = "";
@@ -54,11 +58,11 @@ export class ChangePasswordComponent implements OnInit {
                 this.key2 = params['p'];
             }
 
-            //if (!isNullOrUndefined(params.id)) {
-            //    this.CompGroupIdKey = params['id'];
+            if (!isNullOrUndefined(params.id)) {
+                this.CompGroupIdKey = params['id'];
                 
-            //    this._config.environment.CompanyGroupID = this.CompGroupIdKey;
-            //}
+                this._config.environment.CompanyGroupID = this.CompGroupIdKey;
+            }
              
         });
 
@@ -67,48 +71,42 @@ export class ChangePasswordComponent implements OnInit {
 
     forgotPasswordChangePassword() {
         debugger;
-        if (navigator.onLine) {
-            debugger;
-            if (this.Email == null || this.Email == '') {
-                this.notAppropriate = true;
-                this.errorMessage = false;
-                this.isMandatoryfields = false;
-                return;
-            }
-            if (this.confirmPassword !== this.newPassword) {
-                this.errorMessage = true;
-                this.isMandatoryfields = false;
-                this.notAppropriate = false;
-                return;
-            }
-            if (this.confirmPassword == "" || this.newPassword == "") {
-                this.isMandatoryfields = true;
-                this.errorMessage = false;
-                this.notAppropriate = false;
-                return;
-            
-        } else {
-                let RequestObject = {
-                Email: this.Email,
-                NewPassword: this.newPassword,
-                ConfirmPassword: this.confirmPassword,
-                CompanyId: this.CompanyIdService.CompanyId,
-            }
-            this.isMandatoryfields = false;
-            this.errorMessage = false;
-            this.notAppropriate = false;
-            this.openSpinner();
-            let forgotPassChangePassword = this._config.environment.baseUrl + Constants.ForgotPassChangePassword;
-                this.PostData(RequestObject, forgotPassChangePassword, { headers: this.dataService.headers });
-         //   this.PostData(RequestObject, "https://jobportalapi.azurewebsites.net/ForgotPassChangePassword");
-          
-        }
-    }
-        else {
-    
+        if (!navigator.onLine) {
             this.DisconnectInternet = true;
             this.ShowMessage = false;
-}
+            return;
+        }
+
+        debugger;
+        this.isMandatoryfields = false;
+        this.errorMessage = false;
+        this.notAppropriate = false;
+        this.DisconnectInternet = false;
+
+        if (this.Email == null || this.Email == '') {
+            this.notAppropriate = true;
+            return;
+        }
+        if (this.confirmPassword == "" || this.newPassword == "") {
+            this.isMandatoryfields = true;
+            return;
+        }
+        if (this.confirmPassword !== this.newPassword) {
+            this.errorMessage = true;
+            return;
+        }
+
+        let RequestObject = {
+            Email: this.Email,
+            NewPassword: this.newPassword,
+            ConfirmPassword: this.confirmPassword,
+            CompanyId: this.CompanyIdService.CompanyId,
+            ResetToken: this.resetToken,
+        }
+        this.openSpinner();
+        let forgotPassChangePassword = this._config.environment.baseUrl + Constants.ForgotPassChangePassword;
+        this.PostData(RequestObject, forgotPassChangePassword, { headers: this.dataService.headers });
+        //   this.PostData(RequestObject, "https://jobportalapi.azurewebsites.net/ForgotPassChangePassword");
     }
     clickBtn: any;
     ChangePassMsg: string = "";
@@ -118,6 +116,7 @@ export class ChangePasswordComponent implements OnInit {
         let RequestObject = {
 
             Email: this.key1,
+            Pin: this.key2,
             PinCode: this.key2,
             CompanyId: this.CompanyIdService.CompanyId,
 
@@ -129,14 +128,15 @@ export class ChangePasswordComponent implements OnInit {
                 debugger;
                 console.log('response : ', response);
                 this.clickBtn = response;
-                //if (response.IsValid == false) {
-                //    $("#myModal1").modal("show");
-                //    this.ChangePassMsg = response.Message;
+                if (response.IsValid == false) {
+                    $("#myModal1").modal("show");
+                    this.ChangePassMsg = response.Message;
 
-                //}
+                }
                 
                 debugger;
-                if (!isNullOrUndefined(response) && response.IsValid == true && response.Result == "2") {
+                if (!isNullOrUndefined(response) && response.IsValid == true && (response.Result == "2" || response.Result == 2)) {
+                    this.resetToken = response.ResetToken;
                   //  localStorage.removeItem('Email');
                 }
             }, (error: any) => {
@@ -183,13 +183,15 @@ export class ChangePasswordComponent implements OnInit {
 
                 console.log(response);
                 if (!isNullOrUndefined(response) && response.IsValid == true) {
+                    this.passwordChangeSucceeded = true;
                     $("#myModal").modal("show");
                     this.message = response.Message;
                     this.HideSpinner();
                 }
                 if (response.IsValid == false) {
+                    this.passwordChangeSucceeded = false;
                     $("#myModal").modal("show");
-                    this.errorMessage = true;;
+                    this.errorMessage = false;
                     this.message = response.Message;
                     this.HideSpinner();
                 }
@@ -332,8 +334,10 @@ export class ChangePasswordComponent implements OnInit {
     }
 
     RedirectToLogin() {
-      //location.href = "/login";
       $("#myModal").modal("hide");
+      if (this.passwordChangeSucceeded) {
+        this.objRouter.navigate(['/login']);
+      }
     }
 
     ChangeTheme: any;
@@ -361,7 +365,6 @@ export class ChangePasswordComponent implements OnInit {
     ngOnInit() {
    
         this.getCompanyParameter();
-        this.forgotPasswordClickBtn(this.key1, this.key2);
 
         //this.activatedRoute.queryParams.subscribe(params => {
         //    debugger;

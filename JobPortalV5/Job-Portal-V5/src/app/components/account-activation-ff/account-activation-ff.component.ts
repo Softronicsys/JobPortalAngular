@@ -280,6 +280,14 @@ export class AccountActivationFFComponent implements OnInit {
 
   personalInformation: any;
 
+  StoreAccessToken(response: any) {
+    if (!isNullOrUndefined(response) && !isNullOrUndefined(response.AccessToken) && response.AccessToken != '') {
+      localStorage.setItem('AccessToken', response.AccessToken);
+      localStorage.setItem('AccessTokenExpiresUtc', response.AccessTokenExpiresUtc || '');
+      this.dataService.PassHeader();
+    }
+  }
+
   PersonalInfo() {
     debugger;
     let RequestObject = {
@@ -299,6 +307,7 @@ export class AccountActivationFFComponent implements OnInit {
         this.HideSpinner();
         debugger;
         if (!isNullOrUndefined(response) && response.IsValid == true) {
+          this.StoreAccessToken(response);
           localStorage.setItem('Email', response.Email);
           //console.log('Email : ', localStorage.getItem('Email'));
           localStorage.setItem('AppId', response.AppId);
@@ -365,6 +374,7 @@ export class AccountActivationFFComponent implements OnInit {
         this.HideSpinner();
         debugger;
         if (!isNullOrUndefined(response) && response.IsValid == true) {
+          this.StoreAccessToken(response);
           localStorage.setItem('Email', response.Email);
           //console.log('Email : ', localStorage.getItem('Email'));
           localStorage.setItem('AppId', response.AppId);

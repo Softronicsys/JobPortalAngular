@@ -43,6 +43,7 @@ export class LoginComponent implements OnInit {
 
     Email: string = "";
     Password: string = "";
+    showPassword: boolean = false;
     ImageLinkedIn: any;
     public responseData;
     check: string = "False"
@@ -466,7 +467,7 @@ export class LoginComponent implements OnInit {
                     localStorage.setItem("IsLinkedInLogin", "0");
                     this.CompanyIdService.IsLinkedInLogin = "0";
 
-                    this.msg = response.Message;
+                    this.msg = response.Message || response.message || "";
 
                     await this.ApplyJob();
                     
@@ -490,15 +491,16 @@ export class LoginComponent implements OnInit {
                 }
 
                 if (response.isValid == false) {
-                  if (response.Message == 'Your account is not activated.')
+                  const loginMessage = response.Message || response.message || "";
+                  if (loginMessage == 'Your account is not activated.')
                   {
                     this.isAccountActivated = false;
-                    this.msg = response.Message;
+                    this.msg = loginMessage;
                   }
                   else
                   {
                     this.isAccountActivated = true;
-                    this.msg = response.Message;
+                    this.msg = loginMessage;
                   }
                     this.correctEmail = true;
                     this.DisconnectInternet = false;
@@ -694,7 +696,7 @@ export class LoginComponent implements OnInit {
 
           this.HideSpinner();
           debugger;
-          if (!isNullOrUndefined(response) && response.Valid == true) {
+          if (!isNullOrUndefined(response) && (response.Valid == true || response.valid == true)) {
 
             this.MsgRegEmail = "Registration email has been sent on " + this.emailForRegLink + ".<br/>Please check your email.<br/>If you can't find the email, please check your spam or junk folder.";
 

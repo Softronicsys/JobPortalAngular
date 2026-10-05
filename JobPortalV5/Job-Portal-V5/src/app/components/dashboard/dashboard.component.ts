@@ -1509,6 +1509,10 @@ export class DashboardComponent implements OnInit {
       }
       // request.open("POST", this._config.environment.baseUrl + Constants.UploadImage + "?CompanyId=" + this.CompanyIdService.CompanyId + "&AppId=" + this.applicantId);
       request.open("POST", this._config.environment.baseUrl + Constants.UploadImage + "?CompanyId=" + this.CompanyIdService.CompanyId + "&AppId=" + this.applicantId + "&Identifier=0");
+      var accessToken = localStorage.getItem("AccessToken");
+      if (accessToken) {
+        request.setRequestHeader("Authorization", "Bearer " + accessToken);
+      }
       request.send(fd);
       this.getLastProfileUpdateValue()
       $("#myModalChangePicture").modal("toggle");

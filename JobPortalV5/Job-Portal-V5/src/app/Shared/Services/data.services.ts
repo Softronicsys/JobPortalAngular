@@ -190,7 +190,7 @@ export class DataService {
 
     private getApiRoot(sourceUrl: string): string {
         var url = new URL(sourceUrl, window.location.origin);
-        return url.protocol + '//' + url.host + '/';
+        return url.href.substring(0, url.href.lastIndexOf('/') + 1);
     }
 
     private buildHeaders(): HttpHeaders {

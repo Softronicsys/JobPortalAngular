@@ -606,6 +606,8 @@ export class PersonalInfoComponent implements OnInit {
     isBtnHide22: boolean = false;
     showFFBankAccountQuestion: boolean = false;
     ffBankAccountChoice: string = 'No';
+    showFFDependentsQuestion: boolean = false;
+    ffDependentsChoice: string = 'No';
 
     isBasicInformation23: boolean = false;
     isBtnHide23: boolean = false;
@@ -2954,7 +2956,13 @@ export class PersonalInfoComponent implements OnInit {
 
           this.DependentsinformationGrid = response;
 
-           //console.log(this.DependentsinformationGrid);
+          if (this.isFF === true) {
+            this.showFFDependentsQuestion = true;
+            this.ffDependentsChoice = this.hasAnyDependentsData() ? 'Yes' : 'No';
+            this.persistFFDependentsChoiceForValidation();
+          }
+
+          //console.log(this.DependentsinformationGrid);
 
           
           this.HideSpinner();
@@ -5274,11 +5282,13 @@ export class PersonalInfoComponent implements OnInit {
 
 
     isMndBankInfo: boolean = false;
+    duplicateIbanValidationMsg: string = "";
     UpdateApplicantDataBasicInformation22_click() {
       debugger;
 
 
       if (navigator.onLine) {
+        this.duplicateIbanValidationMsg = "";
         if (this.isFF === true && this.ffBankAccountChoice === 'No') {
           this.isCloseEditLbl22_Click();
           return;
@@ -5401,6 +5411,11 @@ export class PersonalInfoComponent implements OnInit {
         .subscribe((response: any) => {
           if (!response || response.isValid !== true) {
             this.HideSpinner();
+            if (this.isDuplicateIbanResponse(response)) {
+              this.duplicateIbanValidationMsg = response.Msg;
+              this.isBtnHide22 = true;
+              return;
+            }
             $("#videoPopup1").modal('show');
             this.isTick = false;
             this.ApplyJobMsg = response && response.Msg ? response.Msg : "Invalid Data.";
@@ -5423,6 +5438,14 @@ export class PersonalInfoComponent implements OnInit {
           this.isTick = false;
           this.ApplyJobMsg = (error && error.error && error.error.Message) ? error.error.Message : "Invalid Data.";
         });
+    }
+
+    clearDuplicateIbanValidation(): void {
+      this.duplicateIbanValidationMsg = "";
+    }
+
+    private isDuplicateIbanResponse(response: any): boolean {
+      return !!(response && response.Msg && response.Msg.toLowerCase().indexOf('iban already exist') >= 0);
     }
 
     private finalizeBankSaveSuccess(successMsg: string): void {
@@ -5495,6 +5518,10 @@ export class PersonalInfoComponent implements OnInit {
 
       const saveBankAccountEvidence = this._config.environment.baseUrl + Constants.SaveBankAccountEvidence;
       request.open("POST", saveBankAccountEvidence, true);
+      var accessToken = localStorage.getItem("AccessToken");
+      if (accessToken) {
+        request.setRequestHeader("Authorization", "Bearer " + accessToken);
+      }
       request.send(formData);
     }
 
@@ -5626,6 +5653,39 @@ export class PersonalInfoComponent implements OnInit {
         return;
       }
       localStorage.setItem('FFHasBankAccount', this.ffBankAccountChoice === 'Yes' ? '1' : '0');
+    }
+
+    onFFDependentsChoiceChange(choice: string): void {
+      if (choice === 'No' && !this.canSelectFFDependentsNo()) {
+        this.ffDependentsChoice = 'Yes';
+        this.persistFFDependentsChoiceForValidation();
+        return;
+      }
+      this.ffDependentsChoice = choice;
+      this.persistFFDependentsChoiceForValidation();
+      if (choice === 'No') {
+        this.isDependent = false;
+      }
+    }
+
+    canSelectFFDependentsNo(): boolean {
+      return !this.hasAnyDependentsData();
+    }
+
+    private hasAnyDependentsData(): boolean {
+      return !!(this.DependentsinformationGrid && this.DependentsinformationGrid.length > 0);
+    }
+
+    private persistFFDependentsChoiceForValidation(): void {
+      if (this.isFF !== true) {
+        localStorage.removeItem('FFHasDependents');
+        return;
+      }
+      localStorage.setItem('FFHasDependents', this.ffDependentsChoice === 'Yes' ? '1' : '0');
+    }
+
+    isDependentsMandatoryForDisplay(): boolean {
+      return this.MndDepndsInfo === true && !(this.isFF === true && this.ffDependentsChoice === 'No');
     }
 
     fatherIDCardInvalid: boolean = false;
@@ -7515,6 +7575,10 @@ export class PersonalInfoComponent implements OnInit {
 
           var saveCVAttachment = this._config.environment.baseUrl + Constants.SaveAttachment;
           request.open("POST", saveCVAttachment);
+          var accessToken = localStorage.getItem("AccessToken");
+          if (accessToken) {
+            request.setRequestHeader("Authorization", "Bearer " + accessToken);
+          }
           request.send(fd);
           this.openSpinner(); 
 

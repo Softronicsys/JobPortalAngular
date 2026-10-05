@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER } from '@angular/core';
-import { HttpClientModule, HttpHeaders } from '@angular/common/http';
+import { HttpClientModule, HttpHeaders, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpModule, Http } from '@angular/http';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -66,6 +66,7 @@ import { ApplicantPackageComponent } from './components/dashboard/tabs/applicant
 import { CtcOfferLetterViewComponent } from './components/dashboard/tabs/ctc-offer-letter-view/ctc-offer-letter-view.component';
 import { AiInterviewComponent } from './components/ai-interview/ai-interview.component';
 import { GeminiService } from '@app/Service/gemini.service';
+import { JobPortalAuthInterceptor } from './Shared/Services/jobportal-auth.interceptor';
 
 
 // import { SanitizeHtmlPipe } from '@app/Service/Sanitizer';
@@ -139,7 +140,13 @@ const appInitializerFn = (appConfig: AppConfigService) => {
       useFactory: appInitializerFn,
       multi: true,
       deps: [AppConfigService]
-    }, { provide: ErrorHandler, useClass: AppErrorHandler }],
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JobPortalAuthInterceptor,
+      multi: true
+    },
+    { provide: ErrorHandler, useClass: AppErrorHandler }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

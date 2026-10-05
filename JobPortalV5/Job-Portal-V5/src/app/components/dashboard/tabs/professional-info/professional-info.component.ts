@@ -79,6 +79,8 @@ export class ProfessionalInfoComponent implements OnInit {
   isUpdateProfessionalReference: boolean = false;
   isTick: boolean = false;
   SuccessMsg: string = "";
+  showFFExperienceQuestion: boolean = false;
+  ffExperienceChoice: string = 'No';
 
   minimum: string = "0";
   maximum: string = "4";
@@ -2101,6 +2103,8 @@ export class ProfessionalInfoComponent implements OnInit {
     Validate() {
       debugger;
       const hasBankAccountValue = this.resolveHasBankAccountForValidation();
+      const hasDependentsValue = this.resolveHasDependentsForValidation();
+      const hasExperienceValue = this.resolveHasExperienceForValidation();
       let RequestObject = {
 
         ApplicantId: localStorage.getItem("AppId"),
@@ -2109,6 +2113,8 @@ export class ProfessionalInfoComponent implements OnInit {
         CompanyId: this.CompanyIdService.CompanyId,
         LoginCompanyId: this.CompanyIdService.CompanyId,
         HasBankAccount: hasBankAccountValue,
+        HasDependents: hasDependentsValue,
+        HasExperience: hasExperienceValue,
 
       }
       this.openSpinner();
@@ -3009,6 +3015,33 @@ export class ProfessionalInfoComponent implements OnInit {
       return null;
     }
 
+    private resolveHasDependentsForValidation(): number | null {
+      if (this.isFF !== true) {
+        return null;
+      }
+      const storedValue = localStorage.getItem('FFHasDependents');
+      if (storedValue === '1') {
+        return 1;
+      }
+      if (storedValue === '0') {
+        return 0;
+      }
+      return null;
+    }
+
+    private resolveHasExperienceForValidation(): number | null {
+      if (this.isFF !== true) {
+        return null;
+      }
+      const storedValue = localStorage.getItem('FFHasExperience');
+      if (storedValue === '1') {
+        return 1;
+      }
+      if (storedValue === '0') {
+        return 0;
+      }
+      return null;
+    }
 
     // for delete Qualification //
 
@@ -3895,11 +3928,46 @@ export class ProfessionalInfoComponent implements OnInit {
             .subscribe((response: any) => {
 
               this.ExperienceDetail = response;
+              if (this.isFF === true) {
+                this.showFFExperienceQuestion = true;
+                this.ffExperienceChoice = this.hasAnyExperienceData() ? 'Yes' : 'No';
+                this.persistFFExperienceChoiceForValidation();
+              }
               //console.log("Experiance Details Data:", this.ExperienceDetail);
                 this.HideSpinner();
             }, (error: any) => {
                 console.log(error);
             });
+    }
+
+    onFFExperienceChoiceChange(choice: string): void {
+      if (choice === 'No' && !this.canSelectFFExperienceNo()) {
+        this.ffExperienceChoice = 'Yes';
+        this.persistFFExperienceChoiceForValidation();
+        return;
+      }
+      this.ffExperienceChoice = choice;
+      this.persistFFExperienceChoiceForValidation();
+    }
+
+    canSelectFFExperienceNo(): boolean {
+      return !this.hasAnyExperienceData();
+    }
+
+    private hasAnyExperienceData(): boolean {
+      return !!(this.ExperienceDetail && this.ExperienceDetail.length > 0);
+    }
+
+    private persistFFExperienceChoiceForValidation(): void {
+      if (this.isFF !== true) {
+        localStorage.removeItem('FFHasExperience');
+        return;
+      }
+      localStorage.setItem('FFHasExperience', this.ffExperienceChoice === 'Yes' ? '1' : '0');
+    }
+
+    isExperienceMandatoryForDisplay(): boolean {
+      return this.MndExperience === true && !(this.isFF === true && this.ffExperienceChoice === 'No');
     }
 
     // for saving Experience Details //

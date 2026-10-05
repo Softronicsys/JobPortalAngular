@@ -16,10 +16,24 @@ export class Security implements CanActivate {
    //     let appId: string = localStorage.getItem("AppId");
          
 
-        this._config.environment.CompanyGroupID = localStorage.getItem("LastLoginId").split(",")[1];
-        let appId: string = localStorage.getItem(this._config.environment.CompanyGroupID).split(',')[3];
-        let email: string = localStorage.getItem(this._config.environment.CompanyGroupID).split(',')[4];
-        let username: string = localStorage.getItem(this._config.environment.CompanyGroupID).split(',')[5];
+        let lastLoginId = localStorage.getItem("LastLoginId");
+        if (isNullOrUndefined(lastLoginId) || lastLoginId == '' || lastLoginId.split(",").length < 2) {
+            this._router.navigate(['/login']);
+            return false;
+        }
+
+        this._config.environment.CompanyGroupID = lastLoginId.split(",")[1];
+        let companyLogin = localStorage.getItem(this._config.environment.CompanyGroupID);
+        if (isNullOrUndefined(companyLogin) || companyLogin == '') {
+            this._router.navigate(['/login']);
+            return false;
+        }
+
+        let loginParts = companyLogin.split(',');
+        let appId: string = loginParts[3];
+        let email: string = loginParts[4];
+        let username: string = loginParts[5];
+        let accessToken: string = localStorage.getItem("AccessToken");
 
         localStorage.setItem('UserName', username);
         localStorage.setItem('Email', email);
@@ -33,7 +47,7 @@ export class Security implements CanActivate {
         //    this._router.navigate(['/dashboard'])
         //}
 
-        if (!isNullOrUndefined(email) && email != '' && !isNullOrUndefined(appId) && appId != '') {
+        if (!isNullOrUndefined(email) && email != '' && !isNullOrUndefined(appId) && appId != '' && !isNullOrUndefined(accessToken) && accessToken != '') {
             return true;
         } else {
             this._router.navigate(['/login']);
