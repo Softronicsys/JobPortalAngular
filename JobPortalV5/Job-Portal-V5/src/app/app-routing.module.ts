@@ -22,6 +22,7 @@ import { LinkedinLoginResponseComponent } from './components/linkedin-login-resp
 import { QuickSignupComponent } from './components/quick-signup/quick-signup.component';
 import { AccountActivationFFComponent } from './components/account-activation-ff/account-activation-ff.component';
 import { CtcOfferLetterViewComponent } from './components/dashboard/tabs/ctc-offer-letter-view/ctc-offer-letter-view.component';
+import { AiInterviewComponent } from './components/ai-interview/ai-interview.component';
 
 
 const appRoutes: Routes = [
@@ -153,6 +154,14 @@ const appRoutes: Routes = [
     },
 
     
+
+    {
+      path: 'ai-interview',
+      component: AiInterviewComponent,
+      data: {
+        hideButtons1: true
+      },
+    },
 
     { path: '**', component: PageNotFoundComponent }
 ];

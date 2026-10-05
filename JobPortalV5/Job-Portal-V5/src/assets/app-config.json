@@ -5,6 +5,8 @@
   "CompanyGroupID": "14",
   "AssessmentURL": "https://qaassessment.azurewebsites.net/",
 
+  "GeminiApiKey": "",
+
   "ShowLoginWithLinkedIN": false,
   "SigninWithLinkedInCred": {
     "clientId": "77vwoaw3pcxkxj",

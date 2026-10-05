@@ -64,6 +64,8 @@ import { AccountActivationFFComponent } from './components/account-activation-ff
 import { ChatboxComponent } from './components/chatbox/chatbox.component';
 import { ApplicantPackageComponent } from './components/dashboard/tabs/applicant-package/applicant-package.component';
 import { CtcOfferLetterViewComponent } from './components/dashboard/tabs/ctc-offer-letter-view/ctc-offer-letter-view.component';
+import { AiInterviewComponent } from './components/ai-interview/ai-interview.component';
+import { GeminiService } from '@app/Service/gemini.service';
 
 
 // import { SanitizeHtmlPipe } from '@app/Service/Sanitizer';
@@ -110,6 +112,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     AccountActivationFFComponent,
     ChatboxComponent,
     ApplicantPackageComponent,
+    AiInterviewComponent,
     CtcOfferLetterViewComponent,
     
   ],
@@ -130,7 +133,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     SanitizeHtmlPipe
   ],
   providers: [Security, UpdateProfileService, GetCompanyParameter, Labels,
-    ThemeColorService, AppConfigService, AssessmentService, ImageCompressService,
+    ThemeColorService, AppConfigService, AssessmentService, ImageCompressService, GeminiService,
     {
       provide: APP_INITIALIZER,
       useFactory: appInitializerFn,

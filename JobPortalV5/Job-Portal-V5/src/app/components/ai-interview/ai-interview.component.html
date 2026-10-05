@@ -1,0 +1,294 @@
+<div class="ai-root">
+
+  <header class="ai-header">
+    <h1 class="ai-title">
+      <span class="ai-title-grad">People.Partners</span>
+      <span class="ai-title-light">AI Interviewer</span>
+    </h1>
+  </header>
+
+  <!-- View mode switcher -->
+  <div class="ai-tabs-wrap">
+    <div class="ai-tabs">
+      <button type="button" class="ai-tab" [class.active-recruiter]="viewMode === 'recruiter'"
+              [disabled]="appState === 'recording'" (click)="setViewMode('recruiter')">Recruiter View</button>
+      <button type="button" class="ai-tab" [class.active-candidate]="viewMode === 'candidate'"
+              [disabled]="appState === 'recording'" (click)="setViewMode('candidate')">Candidate View (Job Portal)</button>
+      <button type="button" class="ai-tab" [class.active-schedule]="viewMode === 'schedule'"
+              [disabled]="appState === 'recording'" (click)="setViewMode('schedule')">AI Interview Schedule (Job Portal)</button>
+    </div>
+  </div>
+
+  <div [ngClass]="viewMode === 'recruiter' ? 'ai-grid' : 'ai-stack'">
+
+    <!-- ============================= LEFT / MAIN ============================= -->
+    <div [ngClass]="viewMode === 'recruiter' ? 'ai-col-main' : 'ai-col-wide'">
+
+      <!-- ---------------------------- CANDIDATE VIDEO ---------------------------- -->
+      <div class="ai-video-shell" *ngIf="viewMode === 'candidate'">
+        <video #liveVideo class="ai-video" autoplay playsinline muted
+               *ngIf="appState === 'idle' || appState === 'recording'"></video>
+        <video #previewVideo class="ai-video ai-video-contain" controls
+               *ngIf="appState === 'review' || appState === 'analyzing' || appState === 'complete'"></video>
+
+        <div class="ai-rec-badge" *ngIf="appState === 'recording'">
+          <span class="ai-rec-dot"></span> REC {{ formatTime(recordingTime) }}
+        </div>
+
+        <div class="ai-video-error" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+        <!-- Question overlay while recording -->
+        <div class="ai-question-overlay" *ngIf="appState === 'recording'">
+          <div class="ai-question-card">
+            <div class="ai-question-head">
+              <span class="ai-question-step">{{ questionLabel }}</span>
+              <span class="ai-speaking" *ngIf="aiSpeaking">AI Speaking...</span>
+            </div>
+            <h2 class="ai-question-text">
+              <span class="ai-preparing" *ngIf="isPreparingNext">
+                <span class="ai-spinner-sm"></span> Preparing next question...
+              </span>
+              <span *ngIf="!isPreparingNext">{{ currentQuestionText }}</span>
+            </h2>
+          </div>
+          <button type="button" class="ai-btn ai-btn-emerald ai-btn-pill"
+                  *ngIf="currentQuestionIndex !== -1 && !isPreparingNext"
+                  (click)="nextQuestion()">
+            {{ isLastQuestion ? 'Finish Interview' : "I've finished answering" }}
+          </button>
+        </div>
+
+        <div class="ai-overlay-block" *ngIf="isGeneratingQuestions">
+          <div class="ai-spinner ai-spinner-emerald"></div>
+          <h3 class="ai-overlay-title">Preparing Interview...</h3>
+        </div>
+
+        <div class="ai-overlay-block" *ngIf="!hasPermissions">
+          <p class="ai-muted">Camera access is required.</p>
+          <button type="button" class="ai-btn ai-btn-indigo" (click)="requestPermissions()">Grant Access</button>
+        </div>
+      </div>
+
+      <!-- ---------------------------- RECRUITER PANEL ---------------------------- -->
+      <div class="ai-panel" *ngIf="viewMode === 'recruiter'">
+        <div class="ai-error-box" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+        <div class="ai-dashed" *ngIf="appState === 'idle'">
+          <div class="ai-field">
+            <label class="ai-label">AI Model</label>
+            <select class="ai-select" [(ngModel)]="selectedModel">
+              <option *ngFor="let m of models" [value]="m.value">{{ m.label }}</option>
+            </select>
+            <p class="ai-warn" *ngIf="!isGeminiModel">
+              Note: Non-Gemini models require additional API configuration. Will fallback to Gemini.
+            </p>
+          </div>
+
+          <p class="ai-muted">Upload a recorded interview video for analysis</p>
+          <label class="ai-btn ai-btn-indigo ai-upload">
+            <span class="ai-upload-icon">&#8679;</span> Upload Video
+            <input type="file" accept="video/*" hidden (change)="onFileSelected($event)">
+          </label>
+        </div>
+
+        <div class="ai-dashed ai-muted" *ngIf="appState === 'recording'">
+          Candidate is currently recording...
+        </div>
+
+        <div class="ai-dashed" *ngIf="appState === 'analyzing'">
+          <div class="ai-spinner ai-spinner-indigo"></div>
+          <p class="ai-strong">Analyzing Video...</p>
+        </div>
+
+        <div class="ai-actions" *ngIf="appState === 'review' || appState === 'complete'">
+          <button type="button" class="ai-btn ai-btn-block"
+                  [class.ai-btn-emerald]="appState === 'complete'"
+                  [class.ai-btn-indigo]="appState !== 'complete'"
+                  [disabled]="appState === 'complete'"
+                  (click)="analyzeRecording()">
+            {{ appState === 'complete' ? 'ANALYSIS COMPLETE' : 'ANALYZE CANDIDATE' }}
+          </button>
+          <button type="button" class="ai-link" (click)="resetSession()">Discard and Start New Session</button>
+        </div>
+      </div>
+
+      <!-- ---------------------------- CANDIDATE START ---------------------------- -->
+      <div class="ai-panel ai-center" *ngIf="viewMode === 'candidate' && appState === 'idle'">
+        <h3 class="ai-h3">Ready for your Interview?</h3>
+        <p class="ai-muted ai-narrow">
+          The AI will ask you 5 questions.<br>
+          <span class="ai-warn-strong">Please ensure your speakers are ON.</span>
+        </p>
+
+        <div class="ai-device-grid">
+          <select class="ai-select ai-select-sm" [(ngModel)]="selectedVideoId" (change)="onDeviceChange()">
+            <option *ngFor="let d of videoDevices" [value]="d.deviceId">{{ d.label }}</option>
+          </select>
+          <select class="ai-select ai-select-sm" [(ngModel)]="selectedAudioId" (change)="onDeviceChange()">
+            <option *ngFor="let d of audioDevices" [value]="d.deviceId">{{ d.label }}</option>
+          </select>
+        </div>
+
+        <div class="ai-consent" [class.ai-consent-on]="hasConsented">
+          <input type="checkbox" id="ai-consent-checkbox" class="ai-checkbox" [(ngModel)]="hasConsented">
+          <label for="ai-consent-checkbox" class="ai-consent-label">
+            <span class="ai-consent-title" [class.ai-consent-title-on]="hasConsented">Required Consent</span>
+            I consent to having my video and audio recorded and analyzed by Artificial Intelligence for the
+            purpose of this interview assessment. I understand that this analysis includes evaluating my
+            communication skills and generating a professional profile.
+          </label>
+        </div>
+
+        <button type="button" class="ai-btn ai-btn-start"
+                [disabled]="!cameraReady || !hasConsented"
+                (click)="startCandidateSession()">START AI INTERVIEW</button>
+      </div>
+
+      <!-- ---------------------------- CANDIDATE DONE ---------------------------- -->
+      <div class="ai-panel ai-center" *ngIf="viewMode === 'candidate' && (appState === 'review' || appState === 'complete')">
+        <div class="ai-check-circle">&#10003;</div>
+        <h3 class="ai-h3">Interview Submitted!</h3>
+        <p class="ai-muted">Thank you. Your responses have been recorded.</p>
+      </div>
+
+      <!-- ---------------------------- SCHEDULE ---------------------------- -->
+      <div class="ai-panel ai-center ai-schedule" *ngIf="viewMode === 'schedule'">
+        <h3 class="ai-h2">Schedule AI Interview</h3>
+        <p class="ai-muted ai-mb">Select a date and time for your interview with People.Partners AI.</p>
+
+        <div class="ai-schedule-form" *ngIf="!isScheduled">
+          <div class="ai-field ai-field-left">
+            <label class="ai-label">Date</label>
+            <input type="date" class="ai-input" [(ngModel)]="scheduleDate">
+          </div>
+          <div class="ai-field ai-field-left">
+            <label class="ai-label">Time</label>
+            <input type="time" class="ai-input" [(ngModel)]="scheduleTime">
+          </div>
+          <button type="button" class="ai-btn ai-btn-purple"
+                  [disabled]="!scheduleDate || !scheduleTime"
+                  (click)="confirmSchedule()">CONFIRM SCHEDULE</button>
+        </div>
+
+        <div class="ai-scheduled" *ngIf="isScheduled">
+          <div class="ai-check-circle ai-check-lg">&#10003;</div>
+          <h4 class="ai-h3">Interview Scheduled!</h4>
+          <p class="ai-muted">
+            Your interview with People.Partners AI is confirmed for
+            <strong class="ai-white">{{ scheduleDate }}</strong> at
+            <strong class="ai-white">{{ scheduleTime }}</strong>.
+          </p>
+          <button type="button" class="ai-btn ai-btn-slate" (click)="resetSchedule()">Schedule another</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ============================= RIGHT / RECRUITER SIDEBAR ============================= -->
+    <div class="ai-col-side" *ngIf="viewMode === 'recruiter'">
+
+      <div class="ai-pending" *ngIf="appState !== 'complete'">
+        <div class="ai-pending-icon">&#9783;</div>
+        <h3 class="ai-pending-title">Analysis Pending</h3>
+      </div>
+
+      <ng-container *ngIf="appState === 'complete'">
+        <!-- Competency bar chart (CSS bars; recharts is React-only) -->
+        <div class="ai-card ai-card-lg">
+          <h2 class="ai-card-title"><span class="ai-dot"></span>Competency Dashboard</h2>
+          <div class="ai-chart">
+            <div class="ai-chart-row" *ngFor="let bar of chartData">
+              <span class="ai-chart-label">{{ bar.name }}</span>
+              <div class="ai-chart-track">
+                <div class="ai-chart-fill"
+                     [style.width.%]="scoreWidth(bar.score)"
+                     [style.background-color]="bar.fill"></div>
+              </div>
+              <span class="ai-chart-value">{{ bar.score | number:'1.1-1' }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="ai-card">
+          <div class="ai-card-head">
+            <h3 class="ai-card-sub">Strategic Verdict</h3>
+            <span class="ai-verdict" [ngClass]="verdict.cssClass">{{ verdict.label }}</span>
+          </div>
+          <div class="ai-reason">
+            <p class="ai-reason-label">Reasoning</p>
+            {{ metrics.recommendationReason }}
+          </div>
+          <div class="ai-concerns" *ngIf="metrics.potentialConcerns">
+            <p class="ai-concerns-label">Potential Concerns</p>
+            {{ metrics.potentialConcerns }}
+          </div>
+        </div>
+      </ng-container>
+
+      <div class="ai-card ai-logs">
+        <div class="ai-log-row" *ngFor="let log of logs">
+          <span class="ai-log-src" [class.ai-log-ai]="log.source === 'ai'">{{ log.source }}</span>
+          <span class="ai-log-msg">{{ log.message }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================= RESULTS ============================= -->
+  <div class="ai-results" *ngIf="viewMode === 'recruiter' && appState === 'complete'">
+
+    <div class="ai-metric-grid">
+      <div class="ai-metric" *ngFor="let m of [
+            { t: 'Communication',    s: metrics.communication,   r: metrics.communicationReason,   c: '' },
+            { t: 'Comprehension',    s: metrics.comprehension,   r: metrics.comprehensionReason,   c: '' },
+            { t: 'English',          s: metrics.english,         r: metrics.englishReason,         c: '' },
+            { t: 'Interpersonal EQ', s: metrics.interpersonalEQ, r: metrics.interpersonalEQReason, c: '' }]">
+        <div class="ai-metric-head">
+          <h3 class="ai-metric-title">{{ m.t }}</h3>
+        </div>
+        <div class="ai-metric-score">
+          <span class="ai-metric-value" [style.color]="m.c || scoreColor(m.s)">{{ m.s | number:'1.1-1' }}</span>
+          <span class="ai-metric-max">/ 5.0</span>
+        </div>
+        <p class="ai-metric-reason" *ngIf="m.r">"{{ m.r }}"</p>
+        <div class="ai-metric-track">
+          <div class="ai-metric-fill"
+               [style.width.%]="scoreWidth(m.s)"
+               [style.background-color]="m.c || scoreColor(m.s)"></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="ai-section-title">DISC Behavioral Profile</h3>
+      <div class="ai-metric-grid">
+        <div class="ai-metric" *ngFor="let m of [
+              { t: 'Dominance',         s: metrics.discD, c: '#ef4444' },
+              { t: 'Influence',         s: metrics.discI, c: '#facc15' },
+              { t: 'Steadiness',        s: metrics.discS, c: '#22c55e' },
+              { t: 'Conscientiousness', s: metrics.discC, c: '#3b82f6' }]">
+          <div class="ai-metric-head">
+            <h3 class="ai-metric-title">{{ m.t }}</h3>
+          </div>
+          <div class="ai-metric-score">
+            <span class="ai-metric-value" [style.color]="m.c">{{ m.s | number:'1.1-1' }}</span>
+            <span class="ai-metric-max">/ 5.0</span>
+          </div>
+          <div class="ai-metric-track">
+            <div class="ai-metric-fill" [style.width.%]="scoreWidth(m.s)" [style.background-color]="m.c"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ai-role-card">
+      <h3 class="ai-role-label">AI Role Recommendation</h3>
+      <div class="ai-role-title">{{ metrics.suggestedRole }}</div>
+      <p class="ai-role-text">{{ metrics.roleFitAnalysis }}</p>
+    </div>
+  </div>
+
+  <footer class="ai-footer">
+    <p>Ensure permissions are granted for Camera and Microphone. Analysis is generated by AI and should be used as a support tool.</p>
+  </footer>
+</div>
