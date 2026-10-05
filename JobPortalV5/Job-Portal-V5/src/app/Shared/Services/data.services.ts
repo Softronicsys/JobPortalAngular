@@ -3,6 +3,7 @@ import { HttpClient, HttpResponse, HttpErrorResponse, HttpHeaders } from '@angul
 import { Observable, throwError, observable } from 'rxjs';
 import { catchError, retry, map, switchMap } from 'rxjs/operators';
 import { isNullOrUndefined } from 'util';
+import { JobPortalSessionService } from './jobportal-session.service';
 
 //import { environment } from '@env/environment';
 //import { GeneralPopupService } from './general-popup.service';
@@ -19,7 +20,8 @@ export class DataService {
 
 
     constructor(
-        private _http: HttpClient
+        private _http: HttpClient,
+        private sessionService: JobPortalSessionService
         //private _GeneralPopupService: GeneralPopupService,
         //private _spinnerService: SpinnerService
     ) {
@@ -163,34 +165,15 @@ export class DataService {
 
     private handleAuthError(error: HttpErrorResponse, name, type, url: string, retryRequest: () => Observable<any>) {
         if (error && error.status === 401 && url && url.indexOf('/Auth/Refresh') === -1) {
-            return this.refreshAccessToken(url).pipe(
-                switchMap(() => retryRequest()),
+            return this.sessionService.refreshAccessToken(url).pipe(
+                switchMap(() => {
+                    this.PassHeader();
+                    return retryRequest();
+                }),
                 catchError((refreshError) => this.handleError(refreshError || error, name, type))
             );
         }
         return this.handleError(error, name, type);
-    }
-
-    private refreshAccessToken(sourceUrl: string): Observable<any> {
-        var refreshUrl = this.getApiRoot(sourceUrl) + 'Auth/Refresh';
-        return this._http.post<any>(refreshUrl, {}, {
-            headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-            withCredentials: true
-        }).pipe(
-            map((response) => {
-                if (response && response.AccessToken) {
-                    localStorage.setItem('AccessToken', response.AccessToken);
-                    localStorage.setItem('AccessTokenExpiresUtc', response.AccessTokenExpiresUtc || '');
-                    this.PassHeader();
-                }
-                return response;
-            })
-        );
-    }
-
-    private getApiRoot(sourceUrl: string): string {
-        var url = new URL(sourceUrl, window.location.origin);
-        return url.href.substring(0, url.href.lastIndexOf('/') + 1);
     }
 
     private buildHeaders(): HttpHeaders {

@@ -5289,6 +5289,7 @@ export class PersonalInfoComponent implements OnInit {
 
       if (navigator.onLine) {
         this.duplicateIbanValidationMsg = "";
+        this.AccountNoIBAN_No = this.normalizeIbanInput(this.AccountNoIBAN_No);
         if (this.isFF === true && this.ffBankAccountChoice === 'No') {
           this.isCloseEditLbl22_Click();
           return;
@@ -5356,12 +5357,24 @@ export class PersonalInfoComponent implements OnInit {
     validateIBAN(iban: string): boolean {
       if (!iban) return false;
 
-      iban = iban.trim().toUpperCase();
+      iban = this.normalizeIbanInput(iban);
 
       // Pakistan = PK + 2 digits + 20 alphanumeric = 24 chars
       const pkIbanPattern = /^PK\d{2}[0-9A-Z]{20}$/;
 
       return iban.length === 24 && pkIbanPattern.test(iban);
+    }
+
+    onIbanChange(value: string): void {
+      const normalizedValue = this.normalizeIbanInput(value);
+      if (this.AccountNoIBAN_No !== normalizedValue) {
+        this.AccountNoIBAN_No = normalizedValue;
+      }
+      this.clearDuplicateIbanValidation();
+    }
+
+    private normalizeIbanInput(value: string): string {
+      return (value || '').trim().toUpperCase();
     }
 
 
