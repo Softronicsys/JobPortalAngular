@@ -72,6 +72,7 @@ export class ForgetPasswordComponent implements OnInit {
             if (this.Email == "") {
                 this.isMandatoryfields = true;
             } else {
+                this.Email = this.Email.trim().toLowerCase();
                 localStorage.setItem('Email', this.Email);
                 let RequestObject = {
 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { isNullOrUndefined } from 'util';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { GetCompanyParameter } from '../../Service/CompanyParameter.service';
 import { Constants } from '../../Helper/Constant';
@@ -33,7 +33,18 @@ export class PinCodeComponent implements OnInit {
     check: string = "False"
 
     constructor(private Labels: Labels, private _config: AppConfigService, private http: HttpClient, private objRouter: Router, private spinner: NgxSpinnerService,
+        private activatedRoute: ActivatedRoute,
         public CompanyIdService: GetCompanyParameter, public ClrThemeChng: ThemeColorService, private dataService: DataService) {
+
+        this.activatedRoute.queryParams.subscribe(params => {
+            if (!isNullOrUndefined(params.e) && params.e != "") {
+                localStorage.setItem('Email', params.e.trim().toLowerCase());
+            }
+
+            if (!isNullOrUndefined(params.id) && params.id != "") {
+                this._config.environment.CompanyGroupID = params.id;
+            }
+        });
 
       //if (localStorage.length > 0) {
       //  let groupid = localStorage.getItem("LastLoginId").split(",")[1];
@@ -69,9 +80,16 @@ export class PinCodeComponent implements OnInit {
             if (this.PinCode == "") {
                 this.isMandatoryfields = true;
             } else {
+                const email = localStorage.getItem('Email');
+                if (email == null || email == '') {
+                    this.iserrorMsg = true;
+                    this.errorMsg = "Please open the PIN code page from Forgot Password or use the latest email link.";
+                    return;
+                }
+
                 let RequestObject = {
                     PinCode: this.PinCode,
-                    Email: localStorage.getItem('Email'),
+                    Email: email,
                     CompanyId: this.CompanyIdService.CompanyId,
                 }
                 this.openSpinner();
@@ -130,7 +148,8 @@ export class PinCodeComponent implements OnInit {
                 debugger;
                 this.HideSpinner();
                 console.log(response);
-                if (!isNullOrUndefined(response) && response.IsValid == true && response.Result == "2") {
+                if (!isNullOrUndefined(response) && response.IsValid == true && (response.Result == "2" || response.Result == 2)) {
+                    sessionStorage.setItem('PasswordResetToken', response.ResetToken || "");
                     this.objRouter.navigate(['Change-Password']);
                     this.HideSpinner();
                 }

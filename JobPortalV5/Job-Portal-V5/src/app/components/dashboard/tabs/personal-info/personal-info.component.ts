@@ -1425,11 +1425,16 @@ export class PersonalInfoComponent implements OnInit {
         //this.EduDocumentTitle = "";
         //this.DocumentType = this.DocumentTypeDropdown.find(doc => doc.Id == '-1') || null;
         this.EduDocumentTitle = "";
-
-        const fileInput = document.getElementById('EducattachmentFileInput') as HTMLInputElement;
-        if (fileInput) {
-          fileInput.value = ''; // Clear the file input
-        }
+        this.EduDocFile = "";
+        this.EduDocFilename = "";
+        this.isEducationalDocFileName = "";
+        this.isEducationalDocUpload = false;
+        this.urlEducationalDocFile = "";
+        this.blobEducationalDoc = null;
+        this.uniqueEducationalDocName = "";
+        this.checkForEducationalDocum = false;
+        this.checkForEducationalDoc = false;
+        this.ClearFileInputs('input[id^="EducattachmentFileInput"]');
 
 
         // Othe rDoc
@@ -1438,11 +1443,16 @@ export class PersonalInfoComponent implements OnInit {
         this.otherDocumentType = this.otherDocumentTypeDropdown.find(doc => doc.Id == '-1') || null;
         
         this.OtherdocumentTitle = "";
-
-        const OtherfileInput = document.getElementById('otherFileInput') as HTMLInputElement;
-         if (OtherfileInput) {
-          OtherfileInput.value = ''; // Clear the file input
-         }
+        this.OtherDocFile = "";
+        this.OtherDocFilename = "";
+        this.isOtherDocFileName = "";
+        this.isOtherDocUpload = false;
+        this.urlOtherDocFile = "";
+        this.blobOtherDoc = null;
+        this.uniqueOtherImgName = "";
+        this.checkForOtherDocum = false;
+        this.checkForOtherDoc = false;
+        this.ClearFileInputs('#otherFileInput');
 
 
         this.isMandatoryDocument = false;
@@ -1492,6 +1502,13 @@ export class PersonalInfoComponent implements OnInit {
         this.isFileSizeOfDoc = '';
         this.isFileSizeCheck = false;
         this.SelectAtleastOneFile = false;
+    }
+
+    private ClearFileInputs(selector: string) {
+      const fileInputs = document.querySelectorAll(selector);
+      Array.prototype.forEach.call(fileInputs, (fileInput: HTMLInputElement) => {
+        fileInput.value = '';
+      });
     }
 
 
@@ -7615,15 +7632,7 @@ export class PersonalInfoComponent implements OnInit {
         + "&Type=" + Type
         + "&DocId=" +DocId
 
-      const filename = s.substring(s.lastIndexOf('/') + 1);
-
-
-      const anchor = document.createElement('a');
-      anchor.href = s;
-      anchor.download = filename;
-      document.body.appendChild(anchor);
-      anchor.click();
-      document.body.removeChild(anchor);
+      this.DownloadProtectedDocument(s, "CV");
     }
 
 
@@ -7642,16 +7651,7 @@ export class PersonalInfoComponent implements OnInit {
         + "&CompanyId=" + this.CompanyIdService.CompanyId
         + "&AppDocId=" + AppDocId
 
-     
-      const filename = fileUrl.substring(fileUrl.lastIndexOf('/') + 1);
-
-     
-      const anchor = document.createElement('a');
-      anchor.href = fileUrl;
-      anchor.download = filename;  
-      document.body.appendChild(anchor);
-      anchor.click();
-      document.body.removeChild(anchor);
+      this.DownloadProtectedDocument(fileUrl, "Document");
     
     }
 
@@ -7671,7 +7671,51 @@ export class PersonalInfoComponent implements OnInit {
         + "&AppDocId=" + AppDocId
 
 
-      window.open(s);
+      this.DownloadProtectedDocument(s, "Other-Doc");
+    }
+
+    private DownloadProtectedDocument(fileUrl: string, fallbackFileName: string) {
+      this.http.get(fileUrl, { observe: 'response', responseType: 'blob' }).subscribe((response: HttpResponse<Blob>) => {
+        if (response == null || response.body == null) {
+          this.toastr.error("File wasn't available on site");
+          return;
+        }
+
+        var fileName = this.GetDownloadFileName(response, fallbackFileName);
+        var blobUrl = window.URL.createObjectURL(response.body);
+        var anchor = document.createElement('a');
+        anchor.href = blobUrl;
+        anchor.download = fileName;
+        document.body.appendChild(anchor);
+        anchor.click();
+        document.body.removeChild(anchor);
+        window.URL.revokeObjectURL(blobUrl);
+      }, error => {
+        console.log(error);
+        this.toastr.error("File wasn't available on site");
+      });
+    }
+
+    private GetDownloadFileName(response: HttpResponse<Blob>, fallbackFileName: string): string {
+      var contentDisposition = response.headers.get("content-disposition");
+      if (contentDisposition != null && contentDisposition != "") {
+        var utf8Match = /filename\*=UTF-8''([^;]+)/i.exec(contentDisposition);
+        if (utf8Match != null && utf8Match.length > 1) {
+          return decodeURIComponent(utf8Match[1].replace(/"/g, ""));
+        }
+
+        var filenameMatch = /filename="?([^"]+)"?/i.exec(contentDisposition);
+        if (filenameMatch != null && filenameMatch.length > 1) {
+          return filenameMatch[1];
+        }
+      }
+
+      var contentType = response.body != null ? response.body.type : "";
+      if (fallbackFileName.indexOf(".") === -1 && contentType == "application/pdf") {
+        return fallbackFileName + ".pdf";
+      }
+
+      return fallbackFileName;
     }
 
 
