@@ -1,0 +1,107 @@
+<div class="ais-app">
+  <div class="ais-shell">
+
+    <!-- Brand header, as the prototype: gradient wordmark, light suffix,
+         hairline rule underneath. -->
+    <header class="ais-header">
+      <h1 class="ais-brand">People.Partners <span>AI Interviewer</span></h1>
+    </header>
+
+    <!-- loading -->
+    <div *ngIf="state === 'loading'" class="ais-card ais-centre">
+      <div class="ais-spinner"></div>
+      <p class="ais-sub">Opening your invitation…</p>
+    </div>
+
+    <!-- the link is dead: expired, cancelled or simply wrong -->
+    <div *ngIf="state === 'error'" class="ais-card ais-centre">
+      <h3 class="ais-title">We can't open this invitation</h3>
+      <p class="ais-sub">{{ errorMsg }}</p>
+      <div *ngIf="hasSupportContact" class="ais-support">
+        <span class="ais-support-tag">Contact</span>
+        {{ invite?.SupportContactName }}<span *ngIf="invite?.SupportContactChannel"> — {{ invite?.SupportContactChannel }}</span>
+      </div>
+    </div>
+
+    <!-- the form -->
+    <div *ngIf="state === 'ready' || state === 'saving'" class="ais-card">
+      <h3 class="ais-title">{{ invite?.IsScheduled ? 'Change your interview time' : 'Schedule AI Interview' }}</h3>
+      <p class="ais-sub">Select a date and time for your interview with People.Partners AI.</p>
+
+      <!-- Already booked. Shown rather than hidden so a returning applicant
+           sees what they chose before changing it. -->
+      <div *ngIf="invite?.IsScheduled" class="ais-note">
+        Currently booked for
+        <strong>{{ invite?.ScheduledStartAt | date:'EEEE d MMMM y, HH:mm' }}</strong>.
+        Submitting a new time replaces it, and the previous interview link stops working.
+      </div>
+
+      <div class="ais-facts">
+        <div><span>Role</span><strong>{{ invite?.JobTitle || invite?.RoleName }}</strong></div>
+        <div><span>Duration</span><strong>{{ invite?.DurationMinutes }} min</strong></div>
+        <div><span>Questions</span><strong>{{ invite?.QuestionCount }}</strong></div>
+        <div><span>Respond by</span><strong>{{ invite?.InviteExpiresAt | date:'d MMM, HH:mm' }}</strong></div>
+      </div>
+
+      <form class="ais-fields" (ngSubmit)="submit()" #slotForm="ngForm" novalidate>
+        <div class="ais-field">
+          <label>Date</label>
+          <input type="date" name="pickedDate" [(ngModel)]="pickedDate"
+                 [min]="minDate" [max]="maxDate" required [disabled]="state === 'saving'">
+        </div>
+
+        <div class="ais-field">
+          <label>Time</label>
+          <input type="time" name="pickedTime" [(ngModel)]="pickedTime" required
+                 [disabled]="state === 'saving'">
+        </div>
+
+        <p class="ais-hint">
+          Any time between {{ invite?.EarliestStartAt | date:'d MMM, HH:mm' }}
+          and {{ invite?.LatestStartAt | date:'d MMM y' }}.
+        </p>
+
+        <div *ngIf="errorMsg" class="ais-error">{{ errorMsg }}</div>
+
+        <button type="submit" class="ais-cta" [disabled]="state === 'saving' || !slotForm.form.valid">
+          {{ state === 'saving' ? 'BOOKING…' : (invite?.IsScheduled ? 'CHANGE MY TIME' : 'CONFIRM SCHEDULE') }}
+        </button>
+      </form>
+    </div>
+
+    <!-- booked -->
+    <div *ngIf="state === 'done'" class="ais-card">
+      <h3 class="ais-title">You're booked</h3>
+      <p class="ais-sub">{{ successMsg }}</p>
+
+      <div class="ais-confirmed">
+        <span>Your interview</span>
+        <strong>{{ confirmedStart | date:'EEEE d MMMM y' }}</strong>
+        <strong>{{ confirmedStart | date:'HH:mm' }} – {{ confirmedEnd | date:'HH:mm' }}</strong>
+      </div>
+
+      <!-- TEMPORARY - REMOVE WHEN THE INTERVIEW EMAIL IS WIRED.
+           Normally this arrives in a second email once the slot is confirmed.
+           Surfaced here only so the flow is usable before email integration.
+           The link does not work until the scheduled time. -->
+      <div *ngIf="interviewUrl" class="ais-temp">
+        <span class="ais-temp-tag">Temporary — until interview emails are on</span>
+        <p>Save this link. It opens your interview room at the time you booked.</p>
+        <input class="ais-link" type="text" readonly [value]="interviewUrl" onclick="this.select()">
+      </div>
+
+      <p class="ais-hint">
+        Need a different time?
+        <a href="javascript:void(0)" (click)="changeSlot()">Change your booking</a>
+      </p>
+    </div>
+
+    <!-- The contact for technical trouble. A team name and a shared channel -
+         never an individual's personal email or number. -->
+    <div *ngIf="hasSupportContact && state !== 'error'" class="ais-support">
+      <span class="ais-support-tag">Having trouble?</span>
+      {{ invite?.SupportContactName }}<span *ngIf="invite?.SupportContactChannel"> — {{ invite?.SupportContactChannel }}</span>
+    </div>
+
+  </div>
+</div>

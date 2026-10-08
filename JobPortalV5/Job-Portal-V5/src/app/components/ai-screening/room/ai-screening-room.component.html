@@ -1,0 +1,140 @@
+<div class="air-app">
+  <div class="air-shell">
+
+    <header class="air-header">
+      <h1 class="air-brand">People.Partners <span>AI Interviewer</span></h1>
+    </header>
+
+    <!-- loading -->
+    <div *ngIf="state === 'loading'" class="air-panel air-centre">
+      <div class="air-spinner"></div>
+      <p class="air-sub">One moment…</p>
+    </div>
+
+    <!-- dead link / nothing configured -->
+    <div *ngIf="state === 'error' && !access" class="air-panel air-centre">
+      <h3 class="air-title">We can't open your interview</h3>
+      <p class="air-sub">{{ errorMsg }}</p>
+    </div>
+
+    <!-- ============================================================
+         The interview surface: video stage on top, controls beneath.
+         Matches the prototype's Candidate View.
+         ============================================================ -->
+    <div *ngIf="access && state !== 'done'" class="air-stack">
+
+      <!-- video stage -->
+      <div class="air-stage">
+        <video #preview class="air-video" autoplay playsinline muted></video>
+
+        <!-- failure toast, as the prototype: pill, centred at the top -->
+        <div *ngIf="errorMsg" class="air-toast">{{ errorMsg }}</div>
+
+        <!-- Camera not granted yet. The prototype makes this an explicit
+             action, and so does this: the browser only shows its permission
+             prompt for a getUserMedia call made inside the user-activation
+             window of a real click, so it MUST hang off a button rather than
+             fire on page load or after a network round trip. -->
+        <div *ngIf="!mediaStream" class="air-veil">
+          <div class="air-veil-inner">
+            <p>Camera access is required.</p>
+            <button class="air-grant" (click)="grantAccess()">Grant Access</button>
+          </div>
+        </div>
+
+        <!-- recording indicator -->
+        <div *ngIf="state === 'recording'" class="air-rec">
+          <span class="air-dot"></span>{{ secondsLeft }}s left
+        </div>
+      </div>
+
+      <!-- ---- before the interview starts ---- -->
+      <div *ngIf="state === 'consent' || state === 'arming'" class="air-panel">
+        <h3 class="air-title-sm">Ready for your Interview?</h3>
+        <p class="air-sub-sm">
+          The AI will ask you {{ totalCount }} question<span *ngIf="totalCount !== 1">s</span>.
+          <br>
+          <span class="air-warn">Please ensure your speakers are ON.</span>
+        </p>
+
+        <div *ngIf="notice" class="air-note">{{ notice }}</div>
+
+        <!-- device pickers, as the prototype -->
+        <div class="air-devices">
+          <select [(ngModel)]="selectedCameraId" (change)="switchDevice()" [disabled]="!mediaStream">
+            <option value="">Camera</option>
+            <option *ngFor="let d of cameras" [value]="d.deviceId">{{ d.label || 'Camera' }}</option>
+          </select>
+          <select [(ngModel)]="selectedMicId" (change)="switchDevice()" [disabled]="!mediaStream">
+            <option value="">Mic</option>
+            <option *ngFor="let d of mics" [value]="d.deviceId">{{ d.label || 'Microphone' }}</option>
+          </select>
+        </div>
+
+        <!-- One consent control, as the prototype. It covers recording AND AI
+             analysis, and accepting it records BOTH consent rows the API
+             requires (Terms and Recording) - the applicant should not be asked
+             to tick the same agreement twice because our schema stores it in
+             two places. -->
+        <div class="air-consent" [class.air-consent-on]="agreeConsent">
+          <input id="consent-checkbox" type="checkbox" name="agreeConsent" [(ngModel)]="agreeConsent">
+          <label for="consent-checkbox">
+            <span class="air-consent-tag">Required Consent</span>
+            I consent to having my video and audio recorded and analyzed by Artificial
+            Intelligence for the purpose of this interview assessment. I understand that
+            this analysis includes evaluating my communication skills and generating a
+            professional profile.
+          </label>
+        </div>
+
+        <button class="air-start" [class.air-start-on]="canStart"
+                [disabled]="!canStart" (click)="beginInterview()">
+          START AI INTERVIEW
+        </button>
+      </div>
+
+      <!-- ---- during the interview ---- -->
+      <div *ngIf="state === 'ready' || state === 'recording' || state === 'uploading'" class="air-panel">
+        <div class="air-progress">
+          <span>Question {{ currentIndex + 1 }} of {{ totalCount }}</span>
+          <span class="air-muted">{{ answeredCount }} answered</span>
+        </div>
+        <div class="air-bar"><i [style.width.%]="(answeredCount / totalCount) * 100"></i></div>
+
+        <div class="air-question">{{ currentQuestion?.QuestionText }}</div>
+
+        <div class="air-actions">
+          <button *ngIf="state === 'ready'" class="air-start air-start-on" (click)="startRecording()">
+            START ANSWERING
+          </button>
+          <button *ngIf="state === 'recording'" class="air-start air-start-stop" (click)="stopRecording()">
+            STOP AND SUBMIT ANSWER
+          </button>
+          <button *ngIf="state === 'uploading'" class="air-start" disabled>
+            UPLOADING…
+          </button>
+        </div>
+
+        <p class="air-hint">
+          {{ currentQuestion?.TimeLimitSeconds }} seconds for this answer — recording stops on its own.
+          <a *ngIf="state === 'ready'" href="javascript:void(0)" (click)="finish()">Finish and submit now</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- submitted -->
+    <div *ngIf="state === 'done'" class="air-panel air-centre">
+      <h3 class="air-title">Thank you — your interview is submitted</h3>
+      <p class="air-sub">
+        You answered {{ answeredCount }} of {{ totalCount }} question<span *ngIf="totalCount !== 1">s</span>.
+        The recruitment team will be in touch. You can close this page.
+      </p>
+    </div>
+
+    <div *ngIf="access?.SupportContactName" class="air-support">
+      <span class="air-support-tag">Having trouble?</span>
+      {{ access?.SupportContactName }}<span *ngIf="access?.SupportContactChannel"> — {{ access?.SupportContactChannel }}</span>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,250 @@
+/* Styled to match the People.Partners AI Interviewer prototype exactly.
+
+   The prototype is Tailwind; this portal has no Tailwind (Angular 6 +
+   Bootstrap), so the utility classes are translated to plain CSS using the
+   same Tailwind palette values rather than approximated by eye:
+
+     slate-950 #020617   slate-800 #1e293b   slate-400 #94a3b8
+     slate-900 #0f172a   slate-700 #334155   slate-300 #cbd5e1
+     indigo-400 #818cf8  cyan-400  #22d3ee   slate-500 #64748b
+     purple-600 #9333ea  indigo-600 #4f46e5  amber-500 #f59e0b
+
+   Adding Tailwind to this build would mean changing angular.json, postcss and
+   the global stylesheet for two pages - far more disruptive than translating
+   a dozen utilities. */
+
+.ais-app {
+  min-height: 100vh;
+  background: #0f172a;                 /* slate-900 */
+  color: #f1f5f9;                      /* slate-100 */
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               Oxygen, Ubuntu, Cantarell, sans-serif;
+  padding: 32px 24px 48px;
+  box-sizing: border-box;
+}
+
+.ais-shell { max-width: 1152px; margin: 0 auto; }
+
+/* header ------------------------------------------------------------------ */
+
+.ais-header {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid #1e293b;    /* slate-800 */
+}
+
+/* The gradient wordmark: indigo-400 -> cyan-400, clipped to the text. */
+.ais-brand {
+  margin: 0;
+  font-size: 30px;
+  line-height: 36px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  background-image: linear-gradient(to right, #818cf8, #22d3ee);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+.ais-brand span {
+  color: #64748b;                      /* slate-500 */
+  font-weight: 300;
+  -webkit-text-fill-color: #64748b;    /* opt out of the gradient clip */
+}
+
+/* card -------------------------------------------------------------------- */
+
+.ais-card {
+  background: #0f172a;                 /* slate-900 */
+  border: 1px solid #1e293b;           /* slate-800 */
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 672px;                    /* max-w-2xl */
+  margin: 48px auto 0;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.ais-title { margin: 0 0 8px; font-size: 24px; line-height: 32px; font-weight: 700; color: #fff; }
+.ais-sub   { margin: 0 0 32px; color: #94a3b8; font-size: 16px; }
+.ais-centre { display: flex; flex-direction: column; align-items: center; }
+
+/* fields ------------------------------------------------------------------ */
+
+.ais-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  max-width: 448px;                    /* max-w-md */
+  margin: 0 auto;
+}
+
+.ais-field { display: flex; flex-direction: column; text-align: left; }
+
+.ais-field label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #94a3b8;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.ais-field input {
+  background: #020617;                 /* slate-950 */
+  border: 1px solid #334155;           /* slate-700 */
+  color: #cbd5e1;                      /* slate-300 */
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-family: inherit;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+.ais-field input:focus { box-shadow: 0 0 0 2px #a855f7; }   /* ring purple-500 */
+.ais-field input:disabled { opacity: .5; }
+
+/* the primary action ------------------------------------------------------ */
+
+.ais-cta {
+  margin-top: 16px;
+  padding: 16px 32px;
+  background-image: linear-gradient(to right, #9333ea, #4f46e5);
+  color: #fff;
+  font-weight: 900;
+  border: 0;
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, .3);
+  cursor: pointer;
+  font-size: 15px;
+  font-family: inherit;
+  transition: all .15s ease;
+  width: 100%;
+}
+.ais-cta:hover:enabled { background-image: linear-gradient(to right, #a855f7, #6366f1); }
+.ais-cta:disabled { opacity: .5; cursor: not-allowed; }
+
+/* supporting blocks ------------------------------------------------------- */
+
+.ais-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 0 0 28px;
+  padding: 16px;
+  background: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  text-align: left;
+}
+.ais-facts > div { flex: 1 1 110px; display: flex; flex-direction: column; gap: 3px; }
+.ais-facts span   { font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .05em; }
+.ais-facts strong { font-size: 14px; color: #e2e8f0; }
+
+.ais-hint { font-size: 13px; color: #94a3b8; margin: 4px 0 0; }
+.ais-hint a { color: #818cf8; }
+
+.ais-error {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(239, 68, 68, .12);
+  border: 1px solid rgba(239, 68, 68, .5);
+  color: #fca5a5;
+  font-size: 14px;
+  text-align: left;
+}
+
+.ais-note {
+  margin: 0 0 24px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(30, 41, 59, .5);
+  border: 2px solid rgba(245, 158, 11, .5);   /* amber-500/50 */
+  color: #e2e8f0;
+  font-size: 14px;
+  line-height: 1.55;
+  text-align: left;
+}
+
+.ais-confirmed {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 20px;
+  margin: 0 0 24px;
+  background: #020617;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+}
+.ais-confirmed span   { font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: .05em; }
+.ais-confirmed strong { font-size: 18px; color: #fff; }
+
+/* the temporary link block - visually marked so nobody mistakes it for a
+   finished feature */
+.ais-temp {
+  margin: 0 0 24px;
+  padding: 16px;
+  border: 1px dashed rgba(168, 85, 247, .6);
+  border-radius: 12px;
+  background: rgba(88, 28, 135, .15);
+  text-align: left;
+}
+.ais-temp-tag {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  color: #c084fc;
+  margin-bottom: 8px;
+}
+.ais-temp p { margin: 0 0 10px; font-size: 14px; color: #cbd5e1; }
+
+.ais-link {
+  width: 100%;
+  padding: 10px 12px;
+  background: #020617;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  color: #cbd5e1;
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+
+.ais-support {
+  max-width: 672px;
+  margin: 24px auto 0;
+  padding-top: 16px;
+  border-top: 1px solid #1e293b;
+  font-size: 14px;
+  color: #cbd5e1;
+  text-align: center;
+}
+.ais-support-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  margin-right: 8px;
+}
+
+.ais-spinner {
+  width: 34px; height: 34px;
+  margin: 0 auto 14px;
+  border: 3px solid #1e293b;
+  border-top-color: #818cf8;
+  border-radius: 50%;
+  animation: ais-spin .8s linear infinite;
+}
+@keyframes ais-spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 560px) {
+  .ais-app { padding: 20px 14px 32px; }
+  .ais-card { padding: 22px 18px; margin-top: 24px; }
+  .ais-brand { font-size: 24px; }
+}

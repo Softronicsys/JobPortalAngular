@@ -64,7 +64,9 @@ import { AccountActivationFFComponent } from './components/account-activation-ff
 import { ChatboxComponent } from './components/chatbox/chatbox.component';
 import { ApplicantPackageComponent } from './components/dashboard/tabs/applicant-package/applicant-package.component';
 import { CtcOfferLetterViewComponent } from './components/dashboard/tabs/ctc-offer-letter-view/ctc-offer-letter-view.component';
-import { AiInterviewComponent } from './components/ai-interview/ai-interview.component';
+import { AiScreeningScheduleComponent } from './components/ai-screening/schedule/ai-screening-schedule.component';
+import { AiScreeningRoomComponent } from './components/ai-screening/room/ai-screening-room.component';
+import { AiScreeningService } from './Service/ai-screening.service';
 import { GeminiService } from '@app/Service/gemini.service';
 import { JobPortalAuthInterceptor } from './Shared/Services/jobportal-auth.interceptor';
 
@@ -113,7 +115,8 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     AccountActivationFFComponent,
     ChatboxComponent,
     ApplicantPackageComponent,
-    AiInterviewComponent,
+    AiScreeningScheduleComponent,
+    AiScreeningRoomComponent,
     CtcOfferLetterViewComponent,
     
   ],
@@ -135,6 +138,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
   ],
   providers: [Security, UpdateProfileService, GetCompanyParameter, Labels,
     ThemeColorService, AppConfigService, AssessmentService, ImageCompressService, GeminiService,
+    AiScreeningService,
     {
       provide: APP_INITIALIZER,
       useFactory: appInitializerFn,
