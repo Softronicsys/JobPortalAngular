@@ -280,20 +280,20 @@ export class ChatboxComponent implements OnInit {
               this.ModalHeading = "Rescind Letter";
             }
 
-            if (this.appliedJobs[i].VisOrganization != "" && !this.HideOrganization)
+            if (this.appliedJobs[i].VisOrganization === false && !this.HideOrganization)
               this.HideOrganization = true;
             //console.log(this.HideOrganization);
 
-            if (this.appliedJobs[i].VisJobCode != "" && !this.HideJobCode)
+            if (this.appliedJobs[i].VisJobCode === false && !this.HideJobCode)
               this.HideJobCode = true;
 
-            if (this.appliedJobs[i].VisTotalPositions != "" && !this.HideTotalPositions)
+            if (this.appliedJobs[i].VisTotalPositions === false && !this.HideTotalPositions)
               this.HideTotalPositions = true;
 
             //if (this.appliedJobs[i].JobAttributeName != "" && this.appliedJobs[i].JobAttributeName.trim().toUpperCase() !== "N/A" && !this.HideJobAttributeName)
             //  this.HideJobAttributeName = true;
 
-            if (this.appliedJobs[i].AdditionalFilter != "" && !this.HideJobAttributeName)
+            if (this.appliedJobs[i].AdditionalFilter === true && !this.HideJobAttributeName)
               this.HideJobAttributeName = true;
 
             for (let i = 0; i < this.appliedJobs.length; i++) {
