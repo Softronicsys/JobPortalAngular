@@ -681,7 +681,7 @@ export class HomeComponent implements OnInit {
                 if (this.filteredJobs[i].VisJobCode != "" && !this.HideJobCode)
                 this.HideJobCode = true;
 
-                if (this.filteredJobs[i].VisTotalPositions != "" && !this.HideTotalPositions)
+                if (this.filteredJobs[i].VisTotalPositions === false && !this.HideTotalPositions)
                   this.HideTotalPositions = true;
 
                 //if (this.filteredJobs[i].JobAttributeName != "" && this.filteredJobs[i].JobAttributeName.trim().toUpperCase() !== "N/A" && !this.HideJobAttributeName)
