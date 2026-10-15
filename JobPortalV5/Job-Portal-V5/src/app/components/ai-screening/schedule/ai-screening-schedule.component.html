@@ -37,7 +37,13 @@
       </div>
 
       <div class="ais-facts">
-        <div><span>Role</span><strong>{{ invite?.JobTitle || invite?.RoleName }}</strong></div>
+        <!-- RoleName first, then JobTitle. JobTitle is the requisition's own
+             label and is often a territory - "West Africa" - rather than the
+             role applied for, and this field is labelled Role. The 343/344
+             emails resolve it the same way round, so the page and the inbox
+             agree. RoleName is "" rather than null when absent, which is
+             falsy, so the fallback still works. -->
+        <div><span>Role</span><strong>{{ invite?.RoleName || invite?.JobTitle }}</strong></div>
         <div><span>Duration</span><strong>{{ invite?.DurationMinutes }} min</strong></div>
         <div><span>Questions</span><strong>{{ invite?.QuestionCount }}</strong></div>
         <div><span>Respond by</span><strong>{{ invite?.InviteExpiresAt | date:'d MMM, HH:mm' }}</strong></div>
