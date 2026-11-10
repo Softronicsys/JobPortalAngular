@@ -1,338 +1,448 @@
-/* Styled to match the People.Partners AI Interviewer prototype's Candidate
-   View. The prototype is Tailwind and this portal has none, so the utilities
-   are translated to plain CSS using the same palette values - see the
-   scheduling page's stylesheet for the token list. */
+/* The light portal theme - see the scheduling page's stylesheet for the
+   reasoning and the token list. The three custom properties are set by the
+   component from the company's tblJobportalpolicy row, delivered with the
+   room payload.
+
+   One deliberate exception: the video stage stays dark. A camera preview sits
+   in a near-black frame on every video product there is, a white frame makes
+   the picture look washed out, and letterbox bars around a non-16:9 camera
+   would be glaring white. The chrome around it is light like the rest of the
+   portal. */
 
 .air-app {
+  --air-accent: #007FFF;       /* ThemeColor - buttons, links, focus */
+  --air-ink:    #202020;       /* FontColor  - body copy */
+
+  --air-page:   #ffffff;
+  --air-panel:  #f7f9fc;
+  --air-line:   #e3e7ee;
+  --air-muted:  #6b7280;
+
   min-height: 100vh;
-  background: #0f172a;                 /* slate-900 */
-  color: #f1f5f9;                      /* slate-100 */
+  background: var(--air-page);
+  color: var(--air-ink);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
                Oxygen, Ubuntu, Cantarell, sans-serif;
   padding: 32px 24px 48px;
   box-sizing: border-box;
 }
 
-.air-shell { max-width: 1152px; margin: 0 auto; }
+.air-shell { max-width: 880px; margin: 0 auto; }
 
-/* header ------------------------------------------------------------------ */
+/* panels ------------------------------------------------------------------ */
 
-.air-header {
-  margin-bottom: 32px;
-  padding-bottom: 24px;
-  border-bottom: 1px solid #1e293b;
-}
-.air-brand {
-  margin: 0;
-  font-size: 30px;
-  line-height: 36px;
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  background-image: linear-gradient(to right, #818cf8, #22d3ee);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-}
-.air-brand span {
-  color: #64748b;
-  font-weight: 300;
-  -webkit-text-fill-color: #64748b;
+.air-stack { display: block; }
+
+.air-panel {
+  background: var(--air-page);
+  border: 1px solid var(--air-line);
+  border-radius: 10px;
+  padding: 28px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.04);
 }
 
-/* the stack: video stage then controls, both max-w-4xl ------------------- */
+.air-centre { display: flex; flex-direction: column; align-items: center; text-align: center; }
 
-.air-stack {
-  width: 100%;
-  max-width: 896px;                    /* max-w-4xl */
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.air-title    { margin: 0 0 8px; font-size: 22px; line-height: 28px; font-weight: 700; color: var(--air-ink); }
+.air-title-sm { margin: 0 0 6px; font-size: 18px; line-height: 24px; font-weight: 700; color: var(--air-ink); }
+.air-sub      { margin: 0 0 8px; font-size: 15px; line-height: 22px; color: var(--air-muted); }
+.air-sub-sm   { margin: 0 0 18px; font-size: 14px; line-height: 21px; color: var(--air-muted); }
+.air-muted    { color: var(--air-muted); }
+.air-warn     { color: #b45309; font-weight: 600; }
+
+/* spinner ----------------------------------------------------------------- */
+
+.air-spinner {
+  width: 32px;
+  height: 32px;
+  margin: 8px auto 16px;
+  border: 3px solid var(--air-line);
+  border-top-color: var(--air-accent);
+  border-radius: 50%;
+  animation: air-spin 0.9s linear infinite;
 }
+@keyframes air-spin { to { transform: rotate(360deg); } }
 
-/* video stage ------------------------------------------------------------- */
+/* the video stage - intentionally dark ------------------------------------ */
 
 .air-stage {
   position: relative;
-  background: #020617;                 /* slate-950 */
-  border: 1px solid #1e293b;
-  border-radius: 16px;
+  background: #0b1220;
+  border: 1px solid var(--air-line);
+  border-radius: 10px;
   overflow: hidden;
-  min-height: 400px;
+  margin-bottom: 20px;
   aspect-ratio: 16 / 9;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, .5);
+  min-height: 320px;
 }
-
 .air-video {
   width: 100%;
   height: 100%;
-  object-fit: cover;
   display: block;
-  /* Mirrored, which is what people expect of a self-view. */
-  transform: scaleX(-1);
+  object-fit: cover;
+  background: #0b1220;
 }
 
-/* the "camera access is required" veil */
 .air-veil {
   position: absolute;
-  top: 0; right: 0; bottom: 0; left: 0;
+  top: 0; left: 0; right: 0; bottom: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(15, 23, 42, .9);
-  text-align: center;
-  padding: 24px;
+  background: rgba(11, 18, 32, 0.92);
 }
-.air-veil-inner { max-width: 448px; }
-.air-veil p { color: #cbd5e1; margin: 0 0 16px; font-size: 15px; }
-
+.air-veil-inner { text-align: center; padding: 20px; }
+.air-veil-inner p {
+  margin: 0 0 14px;
+  font-size: 15px;
+  color: #e6eaf2;
+}
 .air-grant {
-  padding: 8px 24px;
-  background: #4f46e5;                 /* indigo-600 */
-  color: #fff;
+  background: var(--air-accent);
+  color: #ffffff;
   border: 0;
-  border-radius: 8px;
-  font-weight: 700;
+  border-radius: 6px;
+  padding: 11px 22px;
   font-size: 14px;
-  font-family: inherit;
+  font-weight: 700;
   cursor: pointer;
+  font-family: inherit;
 }
-.air-grant:hover { background: #6366f1; }
+.air-grant:hover { filter: brightness(0.92); }
 
-/* failure toast, as the prototype: pill, centred at the top */
 .air-toast {
   position: absolute;
-  top: 16px;
+  top: 14px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(239, 68, 68, .9);
-  color: #fff;
-  padding: 8px 24px;
-  border-radius: 9999px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, .3);
-  z-index: 50;
+  background: rgba(168, 35, 42, 0.95);
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 8px 16px;
   font-size: 13px;
-  font-weight: 700;
-  max-width: 90%;
+  max-width: 80%;
+  text-align: center;
 }
 
 .air-rec {
   position: absolute;
-  bottom: 16px; left: 16px;
+  top: 14px;
+  right: 14px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
-  background: rgba(0, 0, 0, .7);
-  border-radius: 9999px;
+  background: rgba(168, 35, 42, 0.95);
+  color: #ffffff;
+  border-radius: 999px;
+  padding: 6px 13px;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
 }
-.air-dot { width: 9px; height: 9px; border-radius: 50%; background: #ef4444; animation: air-pulse 1s ease-in-out infinite; }
-@keyframes air-pulse { 50% { opacity: .25; } }
-
-/* panel ------------------------------------------------------------------- */
-
-.air-panel {
-  background: #0f172a;
-  border: 1px solid #1e293b;
-  border-radius: 12px;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  box-sizing: border-box;
+.air-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ffffff;
+  margin-right: 7px;
+  animation: air-pulse 1s ease-in-out infinite;
 }
-.air-centre { max-width: 672px; margin: 48px auto 0; padding: 32px; }
+@keyframes air-pulse { 50% { opacity: 0.25; } }
 
-.air-title    { margin: 0 0 8px; font-size: 24px; font-weight: 700; color: #fff; }
-.air-title-sm { margin: 0 0 8px; font-size: 20px; font-weight: 700; color: #fff; }
-.air-sub      { margin: 0; color: #94a3b8; font-size: 16px; }
-.air-sub-sm   { margin: 0 0 24px; color: #94a3b8; font-size: 14px; max-width: 448px; }
-.air-warn     { display: block; margin-top: 8px; color: #f59e0b; font-size: 12px; font-weight: 700; }
-.air-muted    { color: #94a3b8; }
+/* notes ------------------------------------------------------------------- */
+
+.air-note {
+  background: var(--air-panel);
+  border-left: 3px solid var(--air-accent);
+  border-radius: 0 6px 6px 0;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  line-height: 21px;
+  color: var(--air-ink);
+}
 
 /* device pickers ---------------------------------------------------------- */
 
 .air-devices {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  width: 100%;
-  max-width: 448px;
-  margin-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
 }
 .air-devices select {
-  background: #020617;
-  border: 1px solid #334155;
-  color: #cbd5e1;
-  font-size: 12px;
-  padding: 12px;
-  border-radius: 8px;
-  outline: none;
+  flex: 1 1 180px;
+  background: var(--air-page);
+  border: 1px solid #cbd2dd;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--air-ink);
   font-family: inherit;
-  width: 100%;
+  margin-right: 10px;
+  margin-bottom: 8px;
   box-sizing: border-box;
 }
-.air-devices select:focus { box-shadow: 0 0 0 2px #6366f1; }
-.air-devices select:disabled { opacity: .5; }
+.air-devices select:last-child { margin-right: 0; }
+.air-devices select:focus {
+  outline: none;
+  border-color: var(--air-accent);
+  box-shadow: 0 0 0 3px rgba(0, 127, 255, 0.12);
+}
+.air-devices select[disabled] { background: var(--air-panel); color: var(--air-muted); }
+
+/* the device test --------------------------------------------------------- */
+
+.air-devicetest {
+  background: var(--air-panel);
+  border: 1px solid var(--air-line);
+  border-radius: 8px;
+  padding: 16px 18px;
+  margin-bottom: 18px;
+}
+
+.air-devicetest-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 12px;
+}
+.air-devicetest-state {
+  font-size: 12px;
+  color: var(--air-muted);
+}
+.air-devicetest-ok { color: #15803d; font-weight: 600; }
+
+.air-devicerow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.air-devicerow label {
+  flex: 0 0 92px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--air-ink);
+  margin: 0;
+}
+.air-devicerow select {
+  flex: 1 1 180px;
+  background: var(--air-page);
+  border: 1px solid #cbd2dd;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--air-ink);
+  font-family: inherit;
+  margin-right: 10px;
+  box-sizing: border-box;
+}
+.air-devicerow select:focus {
+  outline: none;
+  border-color: var(--air-accent);
+  box-shadow: 0 0 0 3px rgba(0, 127, 255, 0.12);
+}
+.air-devicerow select[disabled] { background: var(--air-panel); color: var(--air-muted); }
+
+.air-devicestate {
+  flex: 0 0 auto;
+  font-size: 12px;
+  color: var(--air-muted);
+  min-width: 120px;
+}
+.air-devicestate-ok { color: #15803d; font-weight: 600; }
+
+.air-devicenote {
+  flex: 1 1 180px;
+  font-size: 12px;
+  color: var(--air-muted);
+  margin-right: 10px;
+}
+
+.air-testbtn {
+  background: var(--air-page);
+  border: 1px solid var(--air-accent);
+  color: var(--air-accent);
+  border-radius: 6px;
+  padding: 7px 13px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  margin-right: 10px;
+}
+.air-testbtn:hover { background: rgba(0, 127, 255, 0.06); }
+
+/* The live microphone level. */
+.air-meter {
+  height: 6px;
+  background: var(--air-line);
+  border-radius: 999px;
+  overflow: hidden;
+  margin: 0 0 12px 92px;
+}
+.air-meter i {
+  display: block;
+  height: 100%;
+  background: var(--air-accent);
+  border-radius: 999px;
+  transition: width 0.1s linear;
+}
 
 /* consent ----------------------------------------------------------------- */
 
 .air-consent {
-  width: 100%;
-  max-width: 448px;
-  margin-bottom: 32px;
   display: flex;
   align-items: flex-start;
-  gap: 16px;
-  text-align: left;
-  padding: 20px;
-  border-radius: 12px;
-  border: 2px solid rgba(245, 158, 11, .5);   /* amber-500/50 */
-  background: rgba(30, 41, 59, .5);
-  transition: all .15s ease;
+  background: var(--air-panel);
+  border: 1px solid var(--air-line);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 20px;
 }
-/* Once ticked the amber "needs your attention" framing is wrong, so it goes
-   green - the prototype does the same on its consent box. */
-.air-consent-on { border-color: rgba(16, 185, 129, .5); }
-
+.air-consent-on {
+  border-color: var(--air-accent);
+  background: rgba(0, 127, 255, 0.04);
+}
 .air-consent input {
-  margin-top: 4px;
-  width: 24px; height: 24px;
+  margin: 3px 12px 0 0;
+  width: 16px;
+  height: 16px;
   flex: 0 0 auto;
-  cursor: pointer;
-  accent-color: #4f46e5;
 }
 .air-consent label {
-  font-size: 14px;
-  color: #e2e8f0;
-  line-height: 1.6;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--air-ink);
   cursor: pointer;
-  font-weight: 500;
   margin: 0;
+  font-weight: 400;
 }
 .air-consent-tag {
   display: block;
+  font-size: 10px;
   font-weight: 700;
-  margin-bottom: 4px;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  letter-spacing: .05em;
-  font-size: 12px;
-  color: #fbbf24;                      /* amber-400 */
+  color: var(--air-accent);
+  margin-bottom: 5px;
 }
-.air-consent-on .air-consent-tag { color: #34d399; }
 
-/* primary action ---------------------------------------------------------- */
+/* The three named analyses. Set out as separate lines rather than run
+   together in a paragraph - consent that is skimmed is not consent. */
+.air-consent-list {
+  display: block;
+  margin: 8px 0;
+}
+.air-consent-list span {
+  display: block;
+  padding-left: 12px;
+  border-left: 2px solid var(--air-line);
+  margin-bottom: 6px;
+}
+.air-consent-list strong { color: var(--air-ink); }
+
+/* buttons ----------------------------------------------------------------- */
 
 .air-start {
-  padding: 16px 32px;
-  font-weight: 900;
+  display: block;
+  width: 100%;
+  background: #c9cfdb;
+  color: #ffffff;
   border: 0;
-  border-radius: 9999px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, .3);
-  font-size: 15px;
-  font-family: inherit;
-  background: #1e293b;
-  color: #64748b;
-  cursor: not-allowed;
-  transition: all .15s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-}
-.air-start-on {
-  background-image: linear-gradient(to right, #9333ea, #4f46e5);
-  color: #fff;
+  border-radius: 6px;
+  padding: 14px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   cursor: pointer;
+  font-family: inherit;
 }
-.air-start-on:hover { background-image: linear-gradient(to right, #a855f7, #6366f1); }
-.air-start-stop { background: #ef4444; background-image: none; color: #fff; cursor: pointer; }
-.air-start-stop:hover { background: #dc2626; }
+.air-start-on { background: var(--air-accent); }
+.air-start-on:hover:enabled { filter: brightness(0.92); }
+.air-start-stop { background: #a8232a; }
+.air-start-stop:hover:enabled { filter: brightness(0.92); }
+.air-start:disabled { opacity: 0.6; cursor: not-allowed; }
 
-.air-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+.air-actions { margin-bottom: 14px; }
 
-/* during the interview ---------------------------------------------------- */
+/* progress ---------------------------------------------------------------- */
 
 .air-progress {
   display: flex;
   justify-content: space-between;
-  width: 100%;
+  align-items: baseline;
   font-size: 13px;
-  margin-bottom: 7px;
+  font-weight: 600;
+  color: var(--air-ink);
+  margin-bottom: 8px;
 }
+
 .air-bar {
-  width: 100%;
-  height: 5px;
-  background: #1e293b;
-  border-radius: 3px;
+  height: 6px;
+  background: var(--air-line);
+  border-radius: 999px;
   overflow: hidden;
   margin-bottom: 20px;
 }
-.air-bar i { display: block; height: 100%; background: #6366f1; transition: width .25s ease; }
+.air-bar i {
+  display: block;
+  height: 100%;
+  background: var(--air-accent);
+  border-radius: 999px;
+  transition: width 0.25s ease;
+}
 
 .air-question {
-  width: 100%;
-  font-size: 18px;
-  line-height: 1.5;
-  padding: 16px;
-  background: #020617;
-  border-left: 3px solid #6366f1;
+  background: var(--air-panel);
+  border: 1px solid var(--air-line);
   border-radius: 8px;
+  padding: 20px;
+  font-size: 17px;
+  line-height: 26px;
+  font-weight: 600;
+  color: var(--air-ink);
   margin-bottom: 20px;
-  text-align: left;
-  box-sizing: border-box;
 }
 
-.air-hint { font-size: 13px; color: #94a3b8; margin: 14px 0 0; }
-.air-hint a { color: #818cf8; margin-left: 8px; }
-
-.air-note {
-  width: 100%;
-  max-width: 448px;
-  margin: 0 0 20px;
-  padding: 11px 13px;
-  background: rgba(16, 185, 129, .12);
-  border: 1px solid rgba(16, 185, 129, .4);
-  border-radius: 8px;
-  font-size: 14px;
+.air-hint {
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--air-muted);
+  margin: 0;
 }
+.air-hint a {
+  color: var(--air-accent);
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 6px;
+}
+
+/* support ----------------------------------------------------------------- */
 
 .air-support {
-  max-width: 896px;
-  margin: 24px auto 0;
-  padding-top: 16px;
-  border-top: 1px solid #1e293b;
-  font-size: 14px;
-  color: #cbd5e1;
   text-align: center;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--air-muted);
+  padding-top: 8px;
 }
 .air-support-tag {
   display: inline-block;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  color: #94a3b8;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  letter-spacing: .05em;
-  margin-right: 8px;
+  color: var(--air-accent);
+  margin-right: 6px;
 }
 
-.air-spinner {
-  width: 34px; height: 34px;
-  margin: 0 auto 14px;
-  border: 3px solid #1e293b;
-  border-top-color: #818cf8;
-  border-radius: 50%;
-  animation: air-spin .8s linear infinite;
-}
-@keyframes air-spin { to { transform: rotate(360deg); } }
+/* narrow ------------------------------------------------------------------ */
 
-@media (max-width: 640px) {
+@media (max-width: 600px) {
   .air-app { padding: 20px 14px 32px; }
-  .air-brand { font-size: 24px; }
-  .air-stage { min-height: 240px; }
-  .air-devices { grid-template-columns: 1fr; }
-  .air-question { font-size: 16px; }
+  .air-panel { padding: 20px 16px; }
+  .air-stage { min-height: 220px; }
+  .air-devices select { flex: 1 1 100%; margin-right: 0; }
 }

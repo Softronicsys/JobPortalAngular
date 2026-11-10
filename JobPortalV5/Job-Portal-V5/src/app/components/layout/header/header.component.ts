@@ -36,6 +36,38 @@ export class HeaderComponent implements OnInit {
     @Input()
     hideSignupButton: boolean = true;
 
+    /* Whether the person looking at this header is signed in.
+
+       The AI screening pages are reachable two ways - from an emailed link
+       with no session at all, and from the portal by a signed-in applicant -
+       and this header showed SIGN IN to both. To someone who had just clicked
+       through from their own profile that reads as having been signed out,
+       which is alarming on the page where they are about to sit an interview.
+
+       Read from storage rather than passed in, because the header sits above
+       the router outlet and has no route data of its own. AccessToken is what
+       the auth interceptor sends, so "signed in" here means the same thing it
+       means to every API call the page makes. */
+    get isSignedIn(): boolean {
+        try {
+            var token = localStorage.getItem('AccessToken');
+            return !!token && token.length > 0;
+        } catch (e) {
+            /* Storage can throw in a private window. A header that cannot
+               tell falls back to the signed-out buttons: never wrong, just
+               less helpful. */
+            return false;
+        }
+    }
+
+    get signedInName(): string {
+        try {
+            return localStorage.getItem('UserName') || '';
+        } catch (e) {
+            return '';
+        }
+    }
+
     constructor(public sanitizer: DomSanitizer, private Labels: Labels, private _config: AppConfigService, public CompanyIdService: GetCompanyParameter,
         public ClrThemeChng: ThemeColorService, private http: HttpClient, private dataService: DataService) {
         //if (!isNullOrUndefined(localStorage.getItem('GroupId'))) {

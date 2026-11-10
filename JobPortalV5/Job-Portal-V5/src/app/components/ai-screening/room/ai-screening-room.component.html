@@ -1,9 +1,7 @@
 <div class="air-app">
   <div class="air-shell">
 
-    <header class="air-header">
-      <h1 class="air-brand">People.Partners <span>AI Interviewer</span></h1>
-    </header>
+    <!-- No page heading - see the scheduling page's template. -->
 
     <!-- loading -->
     <div *ngIf="state === 'loading'" class="air-panel air-centre">
@@ -43,8 +41,10 @@
         </div>
 
         <!-- recording indicator -->
+        <!-- Untimed answers show that they are recording, without a number
+             counting down at the applicant. -->
         <div *ngIf="state === 'recording'" class="air-rec">
-          <span class="air-dot"></span>{{ secondsLeft }}s left
+          <span class="air-dot"></span>{{ isTimed ? (secondsLeft + 's left') : 'Recording' }}
         </div>
       </div>
 
@@ -59,16 +59,73 @@
 
         <div *ngIf="notice" class="air-note">{{ notice }}</div>
 
-        <!-- device pickers, as the prototype -->
-        <div class="air-devices">
-          <select [(ngModel)]="selectedCameraId" (change)="switchDevice()" [disabled]="!mediaStream">
-            <option value="">Camera</option>
-            <option *ngFor="let d of cameras" [value]="d.deviceId">{{ d.label || 'Camera' }}</option>
-          </select>
-          <select [(ngModel)]="selectedMicId" (change)="switchDevice()" [disabled]="!mediaStream">
-            <option value="">Mic</option>
-            <option *ngFor="let d of mics" [value]="d.deviceId">{{ d.label || 'Microphone' }}</option>
-          </select>
+        <!-- ============================================================
+             Device test. Camera, microphone and speaker each get a picker
+             and a way to see that it actually works - a preview above, a
+             live level meter, and a test tone.
+
+             Deliberately NOT a gate on starting. An applicant on a browser
+             with no AudioContext, or a machine whose meter never moves
+             because of an OS-level mute we cannot see, must still be able
+             to sit their interview: a blocked applicant is a worse outcome
+             than an unverified microphone. The checks are advisory and say
+             so.
+             ============================================================ -->
+        <div class="air-devicetest">
+          <div class="air-devicetest-head">
+            <span class="air-consent-tag">Check your devices</span>
+            <span class="air-devicetest-state" [class.air-devicetest-ok]="devicesChecked">
+              {{ devicesChecked ? 'All three checked' : 'Please test each one' }}
+            </span>
+          </div>
+
+          <!-- camera -->
+          <div class="air-devicerow">
+            <label>Camera</label>
+            <select [(ngModel)]="selectedCameraId" name="selectedCameraId"
+                    (change)="switchDevice()" [disabled]="!mediaStream">
+              <option value="">Default camera</option>
+              <option *ngFor="let d of cameras" [value]="d.deviceId">{{ d.label || 'Camera' }}</option>
+            </select>
+            <span class="air-devicestate" [class.air-devicestate-ok]="mediaStream">
+              {{ mediaStream ? 'Preview is live above' : 'Not granted yet' }}
+            </span>
+          </div>
+
+          <!-- microphone, with a live level meter -->
+          <div class="air-devicerow">
+            <label>Microphone</label>
+            <select [(ngModel)]="selectedMicId" name="selectedMicId"
+                    (change)="switchDevice()" [disabled]="!mediaStream">
+              <option value="">Default microphone</option>
+              <option *ngFor="let d of mics" [value]="d.deviceId">{{ d.label || 'Microphone' }}</option>
+            </select>
+            <span class="air-devicestate" [class.air-devicestate-ok]="micSeenSound">
+              {{ micSeenSound ? 'Sound detected' : 'Say something' }}
+            </span>
+          </div>
+          <div class="air-meter" *ngIf="mediaStream">
+            <i [style.width.%]="micLevel"></i>
+          </div>
+
+          <!-- speaker, with a test tone -->
+          <div class="air-devicerow">
+            <label>Speaker</label>
+            <select *ngIf="speakerSupported" [(ngModel)]="selectedSpeakerId" name="selectedSpeakerId"
+                    [disabled]="!mediaStream">
+              <option value="">Default speaker</option>
+              <option *ngFor="let d of speakers" [value]="d.deviceId">{{ d.label || 'Speaker' }}</option>
+            </select>
+            <!-- Firefox and Safari expose no outputs; the tone still plays on
+                 whatever the system has chosen. -->
+            <span *ngIf="!speakerSupported" class="air-devicenote">
+              Your browser uses the system speaker.
+            </span>
+            <button type="button" class="air-testbtn" (click)="testSpeaker()">Play test sound</button>
+            <span class="air-devicestate" [class.air-devicestate-ok]="speakerTested">
+              {{ speakerTested ? 'Tone played' : 'Not tested' }}
+            </span>
+          </div>
         </div>
 
         <!-- One consent control, as the prototype. It covers recording AND AI
@@ -78,12 +135,29 @@
              two places. -->
         <div class="air-consent" [class.air-consent-on]="agreeConsent">
           <input id="consent-checkbox" type="checkbox" name="agreeConsent" [(ngModel)]="agreeConsent">
+          <!-- Consent wording v2. The three analyses are named separately
+               because they are separately surprising: an applicant who
+               expects their answers to be read does not necessarily expect
+               their face or their voice to be measured. One tick still
+               records both the Terms and Recording rows the API requires -
+               nobody should agree to the same thing twice because our schema
+               stores it in two places. Any change here must bump
+               policyVersion in the component, so earlier consents stay
+               distinguishable. -->
           <label for="consent-checkbox">
             <span class="air-consent-tag">Required Consent</span>
-            I consent to having my video and audio recorded and analyzed by Artificial
-            Intelligence for the purpose of this interview assessment. I understand that
-            this analysis includes evaluating my communication skills and generating a
-            professional profile.
+            I consent to this interview being recorded and assessed by Artificial
+            Intelligence. I understand this covers:
+            <span class="air-consent-list">
+              <span><strong>Recording</strong> — my video and audio are recorded and stored
+                for the hiring team to review.</span>
+              <span><strong>Behavioural analysis</strong> — my non-verbal cues, such as facial
+                expression and eye contact, may be analysed from the recording.</span>
+              <span><strong>Voice analysis</strong> — the way I speak, such as pace and
+                clarity, may be analysed alongside what I say.</span>
+            </span>
+            The results form a professional profile used to assess my application. I may
+            contact the team below with any questions before I begin.
           </label>
         </div>
 
@@ -116,7 +190,8 @@
         </div>
 
         <p class="air-hint">
-          {{ currentQuestion?.TimeLimitSeconds }} seconds for this answer — recording stops on its own.
+          <span *ngIf="isTimed">{{ currentQuestion?.TimeLimitSeconds }} seconds for this answer — recording stops on its own.</span>
+          <span *ngIf="!isTimed">Take as long as you need — stop when you have finished answering.</span>
           <a *ngIf="state === 'ready'" href="javascript:void(0)" (click)="finish()">Finish and submit now</a>
         </p>
       </div>

@@ -31,6 +31,49 @@ export interface ScreeningQuestion {
     TimeLimitSeconds: number;
 }
 
+/* The company's portal colours, served with both landing payloads.
+
+   These pages open from an emailed link with no portal session, so the usual
+   route - app.component calling GetJobPortalConfiguration with
+   GetCompanyParameter.CompanyId - cannot work here: that service is filled in
+   during the normal landing flow and is empty on a token-only page. The API
+   knows the company from the attempt the token resolved to, so it sends the
+   theme rather than the browser asking about a company it does not know. */
+/* What the signed-in applicant is told about their AI screening.
+
+   Stage is decided on the server, so the rules about what counts as expired
+   live in one place rather than being reimplemented here:
+
+     None | Schedule | Interview | Completed | Expired
+
+   Token is populated only for Schedule and Interview, and is the same token
+   the matching email carries. */
+export interface ScreeningMyStatus {
+    Stage: string;
+    Message: string;
+    AttemptId: number;
+    Token: string;
+    RoleName: string;
+    InviteStatus: string;
+    InterviewStatus: string;
+    ScheduledStartAt: string;
+    ScheduledEndAt: string;
+
+    /* The vacancy this screening belongs to, so My Jobs can put the button on
+       the right row rather than assuming one application. */
+    JobCode: string;
+
+    /* True once the room will actually admit them. Decided on the server, not
+       from the browser clock. */
+    IsRoomOpen: boolean;
+}
+
+export interface ScreeningTheme {
+    ThemeColor: string;
+    HeaderColor: string;
+    FontColor: string;
+}
+
 /* What the scheduling page shows. EarliestStartAt/LatestStartAt bound the
    picker; InviteExpiresAt is when the chance to answer runs out, which is a
    different thing and is shown separately. */
@@ -50,6 +93,7 @@ export interface ScreeningInviteLanding {
     ScheduledEndAt: string;
     SupportContactName: string;
     SupportContactChannel: string;
+    Theme: ScreeningTheme;
 }
 
 export interface ScreeningSlotResult {
@@ -76,6 +120,7 @@ export interface ScreeningRoomAccess {
     SupportContactName: string;
     SupportContactChannel: string;
     Questions: ScreeningQuestion[];
+    Theme: ScreeningTheme;
 }
 
 export interface ScreeningConsentState {
@@ -109,6 +154,20 @@ export class AiScreeningService {
             base = base + '/';
         }
         return base + path;
+    }
+
+    /* ---- the signed-in route ---------------------------------------------
+
+       The emailed links stay the primary way in. This is for an applicant who
+       has signed into the portal and no longer has the email: the server says
+       which stage they are at and hands back the same token the matching email
+       carries, so both doors lead to the same two pages.
+
+       No header is set here - jobportal-auth.interceptor attaches the Bearer
+       token to every HttpClient request, and the session IS the credential for
+       this one call. */
+    getMyScreening(): Observable<ScreeningMyStatus> {
+        return this.http.get<ScreeningMyStatus>(this.url('api/AIScreeningAttempt/MyScreening'));
     }
 
     private roomHeaders(roomToken: string): HttpHeaders {

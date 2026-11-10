@@ -24,6 +24,7 @@ import { AccountActivationFFComponent } from './components/account-activation-ff
 import { CtcOfferLetterViewComponent } from './components/dashboard/tabs/ctc-offer-letter-view/ctc-offer-letter-view.component';
 import { AiScreeningScheduleComponent } from './components/ai-screening/schedule/ai-screening-schedule.component';
 import { AiScreeningRoomComponent } from './components/ai-screening/room/ai-screening-room.component';
+import { AiScreeningMyComponent } from './components/ai-screening/my/ai-screening-my.component';
 
 
 const appRoutes: Routes = [
@@ -172,6 +173,17 @@ const appRoutes: Routes = [
     {
       path: 'ai-screening/interview',
       component: AiScreeningRoomComponent,
+      data: { hideButtons: true, hideButtons1: true }
+    },
+
+    /* The signed-in way in. Unlike the two above it carries no token, so the
+       portal session is the credential and the Security guard applies - an
+       applicant who is not signed in is sent to log in, which is exactly
+       right here and exactly wrong for the emailed links. */
+    {
+      path: 'ai-screening/my',
+      component: AiScreeningMyComponent,
+      canActivate: [Security],
       data: { hideButtons: true, hideButtons1: true }
     },
 

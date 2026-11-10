@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AiScreeningService, ScreeningInviteLanding } from '@app/Service/ai-screening.service';
+import { AiScreeningService, ScreeningInviteLanding, ScreeningTheme } from '@app/Service/ai-screening.service';
+import { applyScreeningTheme } from '../screening-theme';
 
 /*
  * The AI screening scheduling page - the whole of the applicant's interaction.
@@ -50,7 +51,8 @@ export class AiScreeningScheduleComponent implements OnInit {
        confirmation screen so the flow is usable end to end today. */
     interviewUrl = '';
 
-    constructor(private route: ActivatedRoute, private api: AiScreeningService) { }
+    constructor(private route: ActivatedRoute, private api: AiScreeningService,
+                private host: ElementRef) { }
 
     ngOnInit() {
         this.token = this.route.snapshot.queryParams['token'] || '';
@@ -70,6 +72,10 @@ export class AiScreeningScheduleComponent implements OnInit {
         this.api.openInvite(this.token).subscribe(
             invite => {
                 this.invite = invite;
+
+                /* The company's colours, before anything is painted. */
+                applyScreeningTheme(this.host, 'ais', invite.Theme);
+
                 this.minDate = this.toDateInput(invite.EarliestStartAt);
                 this.maxDate = this.toDateInput(invite.LatestStartAt);
 

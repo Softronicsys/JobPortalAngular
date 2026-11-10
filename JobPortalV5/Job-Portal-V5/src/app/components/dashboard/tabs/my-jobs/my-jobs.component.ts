@@ -14,6 +14,7 @@ import { AssessmentService } from '@app/Service/UpdateProfile.service';
 import { DataService } from '@app/Shared/Services/data.services';
 import { ChatService } from '@app/Service/chat.service';
 import { Router } from '@angular/router';
+import { AiScreeningService, ScreeningMyStatus } from '@app/Service/ai-screening.service';
 
 
 @Component({
@@ -63,7 +64,7 @@ export class MyJobsComponent implements OnInit {
     constructor(private Labels: Labels, private _config: AppConfigService, private http: HttpClient, private spinner: NgxSpinnerService,
         private toastr: ToastrService, public CompanyIdService: GetCompanyParameter, public ClrThemeChng: ThemeColorService,
         public assessService: AssessmentService, private dataService: DataService, public updateProfService: UpdateProfileService, private chatService: ChatService,
-        private router: Router) {
+        private router: Router, private aiApi: AiScreeningService) {
 
         this.getCounter = new EventEmitter<any>();
     }
@@ -84,7 +85,82 @@ export class MyJobsComponent implements OnInit {
         this.getAssociatedCompanies();
         this.SaveGridViewStyle(-1);
         //console.log(this.isFF);
-        
+        this.loadAiScreening();
+    }
+
+    /* ---- AI screening -----------------------------------------------------
+
+       An applicant invited to an AI interview should not have to be told a
+       URL. The button below sits on the vacancy it belongs to and says what
+       to do next, so the emailed links become a convenience rather than the
+       only way in.
+
+       One call, not one per row: an applicant has at most one live screening,
+       and the row is matched on JobCode. A failure is silent - this is an
+       extra affordance on a page that has to keep working without it. */
+    aiScreening: ScreeningMyStatus = null;
+
+    private loadAiScreening() {
+        this.aiApi.getMyScreening().subscribe(
+            status => { this.aiScreening = status; },
+            () => { this.aiScreening = null; });
+    }
+
+    /* The button's label, or '' when this row has no AI interview to offer.
+       Which of the three it is comes from the server: Stage, and IsRoomOpen
+       for the one decision that depends on the clock - a browser running a
+       few minutes fast must not offer "Start Interview" to someone the room
+       is about to turn away. */
+    aiScreeningLabel(item: any): string {
+        if (!this.aiScreening) { return ''; }
+
+        /* Only on the vacancy the screening belongs to. Compared trimmed
+           because the grid and the attempt row come from different queries
+           and one of them pads the code. */
+        var rowJob = ('' + (item && item.JobCode ? item.JobCode : '')).trim();
+        var mineJob = ('' + (this.aiScreening.JobCode || '')).trim();
+        if (!rowJob || rowJob !== mineJob) { return ''; }
+
+        /* Applied, but no recruiter has sent the invite yet. Shown so the
+           applicant knows the AI interview is coming and that the wait is
+           not theirs to act on - it is the one state here with no token and
+           nowhere to click. */
+        if (this.aiScreening.Stage === 'AwaitingHR') { return 'Waiting for HR Approval'; }
+
+        /* Everything below needs somewhere to go. */
+        if (!this.aiScreening.Token) { return ''; }
+
+        if (this.aiScreening.Stage === 'Schedule') { return 'Schedule Your Interview'; }
+
+        if (this.aiScreening.Stage === 'Interview') {
+            return this.aiScreening.IsRoomOpen ? 'Start Interview' : 'Wait in the Interview Room';
+        }
+
+        /* Completed and Expired get no button: there is nowhere useful to
+           send them, and a dead button is worse than none. */
+        return '';
+    }
+
+    /* Whether the button does anything. The waiting state is a status, not an
+       action, so it renders flat and ignores clicks rather than looking
+       pressable and doing nothing. */
+    aiScreeningIsActionable(): boolean {
+        return !!this.aiScreening
+            && !!this.aiScreening.Token
+            && this.aiScreening.Stage !== 'AwaitingHR';
+    }
+
+    openAiScreening(event: any) {
+        /* The row itself opens the job-details modal on click. */
+        if (event) { event.stopPropagation(); }
+
+        if (!this.aiScreeningIsActionable()) { return; }
+
+        var path = this.aiScreening.Stage === 'Schedule'
+            ? '/ai-screening/schedule'
+            : '/ai-screening/interview';
+
+        this.router.navigate([path], { queryParams: { token: this.aiScreening.Token } });
     }
 
     SaveGridViewStyle(IsNormalView) {

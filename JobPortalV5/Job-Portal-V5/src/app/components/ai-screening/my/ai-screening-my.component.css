@@ -1,0 +1,80 @@
+/* The same light portal palette as the two pages this one forwards to, so an
+   applicant who lands here briefly does not see a different product for a
+   second. Only the handful of classes this page actually uses are defined;
+   it has no theme of its own to apply because it is on screen only while the
+   lookup runs. */
+
+.ais-app {
+  --ais-accent: #007FFF;
+  --ais-ink:    #202020;
+  --ais-page:   #ffffff;
+  --ais-line:   #e3e7ee;
+  --ais-muted:  #6b7280;
+
+  min-height: 60vh;
+  background: var(--ais-page);
+  color: var(--ais-ink);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+               Oxygen, Ubuntu, Cantarell, sans-serif;
+  padding: 48px 24px;
+  box-sizing: border-box;
+}
+
+.ais-shell { max-width: 560px; margin: 0 auto; }
+
+.ais-card {
+  background: var(--ais-page);
+  border: 1px solid var(--ais-line);
+  border-radius: 10px;
+  padding: 32px;
+  box-sizing: border-box;
+  box-shadow: 0 1px 3px rgba(16, 24, 40, 0.04);
+}
+
+.ais-centre { display: flex; flex-direction: column; align-items: center; text-align: center; }
+
+.ais-title {
+  margin: 0 0 8px;
+  font-size: 22px;
+  line-height: 28px;
+  font-weight: 700;
+  color: var(--ais-ink);
+}
+
+.ais-sub {
+  margin: 0 0 24px;
+  font-size: 15px;
+  line-height: 22px;
+  color: var(--ais-muted);
+}
+
+.ais-spinner {
+  width: 32px;
+  height: 32px;
+  margin: 8px auto 16px;
+  border: 3px solid var(--ais-line);
+  border-top-color: var(--ais-accent);
+  border-radius: 50%;
+  animation: ais-my-spin 0.9s linear infinite;
+}
+@keyframes ais-my-spin { to { transform: rotate(360deg); } }
+
+.ais-cta {
+  background: var(--ais-accent);
+  color: #ffffff;
+  border: 0;
+  border-radius: 6px;
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-family: inherit;
+}
+.ais-cta:hover { filter: brightness(0.92); }
+
+@media (max-width: 600px) {
+  .ais-app { padding: 28px 14px; }
+  .ais-card { padding: 22px 18px; }
+}

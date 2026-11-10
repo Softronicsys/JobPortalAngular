@@ -340,6 +340,9 @@
               <th *ngIf="IsOfferLetter == true" class="fntFmly tblHeaderFnt fntWght2" style="color: #524d4d !important;text-align:center;"><strong>{{lblChat}}</strong></th>
 
               <th></th>
+              <!-- AI interview. No heading: the button names itself, and a
+                   column title would sit empty on every other row. -->
+              <th></th>
             </tr>
           </thead>
           <tbody class="tblbodyclr member" style="max-height: 250px !important;">
@@ -433,6 +436,31 @@
                     </a>
                   </span>
                 </span>
+              </td>
+
+              <!-- AI interview.
+
+                   Only on the vacancy the screening belongs to, and only
+                   while there is somewhere useful to send the applicant -
+                   aiScreeningLabel returns '' otherwise, so every other row
+                   keeps an empty cell rather than a dead button.
+
+                   The label is the instruction: schedule it, wait for it, or
+                   start it. Colour is the company's ThemeColor, the same
+                   value the rest of this page themes from. -->
+              <td class="PdgTop fntWght fntFmly" style="vertical-align:middle; text-align:right; white-space:nowrap;">
+                <!-- The portal's own button classes, and the same themed
+                     background binding as VIEW / APPLY, so this reads as part
+                     of the page rather than something bolted on. -->
+                <button *ngIf="aiScreeningLabel(item)" type="button"
+                        style="width:auto;" class="btn tbl-btn app-btn uppercase"
+                        [class.clrhover]="aiScreeningIsActionable()"
+                        [disabled]="!aiScreeningIsActionable()"
+                        [style.backgroundColor]="aiScreeningIsActionable() ? (ThemeFontColor ? ThemeFontColor : DefaultFontColor) : '#9e9e9e'"
+                        [style.cursor]="aiScreeningIsActionable() ? 'pointer' : 'default'"
+                        (click)="openAiScreening($event)">
+                  {{ aiScreeningLabel(item) }}
+                </button>
               </td>
             </tr>
           </tbody>

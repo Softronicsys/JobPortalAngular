@@ -1,0 +1,16 @@
+<div class="ais-app">
+  <div class="ais-shell">
+
+    <div *ngIf="state === 'loading'" class="ais-card ais-centre">
+      <div class="ais-spinner"></div>
+      <p class="ais-sub">Finding your AI interview…</p>
+    </div>
+
+    <div *ngIf="state === 'message'" class="ais-card ais-centre">
+      <h3 class="ais-title">AI interview</h3>
+      <p class="ais-sub">{{ message }}</p>
+      <button type="button" class="ais-cta" (click)="goToDashboard()">Back to my dashboard</button>
+    </div>
+
+  </div>
+</div>

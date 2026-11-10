@@ -66,6 +66,7 @@ import { ApplicantPackageComponent } from './components/dashboard/tabs/applicant
 import { CtcOfferLetterViewComponent } from './components/dashboard/tabs/ctc-offer-letter-view/ctc-offer-letter-view.component';
 import { AiScreeningScheduleComponent } from './components/ai-screening/schedule/ai-screening-schedule.component';
 import { AiScreeningRoomComponent } from './components/ai-screening/room/ai-screening-room.component';
+import { AiScreeningMyComponent } from './components/ai-screening/my/ai-screening-my.component';
 import { AiScreeningService } from './Service/ai-screening.service';
 import { GeminiService } from '@app/Service/gemini.service';
 import { JobPortalAuthInterceptor } from './Shared/Services/jobportal-auth.interceptor';
@@ -117,6 +118,7 @@ const appInitializerFn = (appConfig: AppConfigService) => {
     ApplicantPackageComponent,
     AiScreeningScheduleComponent,
     AiScreeningRoomComponent,
+    AiScreeningMyComponent,
     CtcOfferLetterViewComponent,
     
   ],

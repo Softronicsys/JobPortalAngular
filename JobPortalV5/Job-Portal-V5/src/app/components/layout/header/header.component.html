@@ -23,25 +23,42 @@
           <!--<a href="https://www.serenahotels.com/en/about-us.html" target="_blank">
     About Us
   </a>&nbsp;&nbsp;&nbsp;-->
-          <a [style.visibility]="hideHomeButton == true ? 'hidden' : 'visible'" routerLink="/" (click)="emptyIDandCode()">
+          <!-- Home. Shown to a signed-in applicant whatever the route asked
+               for: a page with no way back to the portal is a dead end for
+               someone who arrived from their own profile. -->
+          <a [style.visibility]="(isSignedIn || hideHomeButton != true) ? 'visible' : 'hidden'"
+             routerLink="/" (click)="emptyIDandCode()">
             <img style="width: 26px; margin-bottom: 6px;" src={{BackgroundImage}} />
           </a><!--&nbsp;&nbsp;&nbsp;-->
 
-          <a [style.visibility]="hideSignupButton == true ? 'hidden' : 'visible'" routerLink="/registration" (click)="emptyIDandCode()">
+          <!-- Signed OUT: the usual Sign up / Sign in / About us. -->
+          <a *ngIf="!isSignedIn" [style.visibility]="hideSignupButton == true ? 'hidden' : 'visible'" routerLink="/registration" (click)="emptyIDandCode()">
             <button style="margin-bottom: 6px; margin-left: 6px;" type="button" class="btn app-btn   clrhover" id="mb-5" [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]"><!--SIGN UP-->{{btnSignUp}}</button>
           </a><!--&nbsp;&nbsp;&nbsp;-->
-          <a routerLink="/login">
+          <a *ngIf="!isSignedIn" routerLink="/login">
             <button style="margin-bottom: 6px; margin-left: 6px;" type="button" class="btn app-btn clrhover"
                     [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
             <!--LOG IN-->{{btnLogin}}</button>
           </a>
-          <a [style.visibility]="hideSignupButton == true ? 'hidden' : 'visible'"
+          <a *ngIf="!isSignedIn" [style.visibility]="hideSignupButton == true ? 'hidden' : 'visible'"
              href="{{lnkAboutUs}}" target="_blank">
             <button style="margin-bottom: 6px; margin-left: 6px;" type="button"
                     class="btn app-btn   clrhover" id="mb-5"
                     [style.backgroundColor]="[ThemeFontColor ? ThemeFontColor  : DefaultFontColor]">
               {{btnAboutUs}}
             </button>
+          </a>
+
+          <!-- Signed IN: their name, as the profile header shows it, instead
+               of a SIGN IN button telling them they are not. Not the
+               profile's full dropdown - that lives in the dashboard and is
+               wired to its tabs; what matters here is that the applicant can
+               see who they are signed in as, and get back. -->
+          <a *ngIf="isSignedIn" routerLink="/MyProfile" style="text-decoration: none;">
+            <span style="margin-bottom: 6px; margin-left: 10px; font-size: 13px; font-weight: 600; cursor: pointer;"
+                  [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]">
+              {{ signedInName }}
+            </span>
           </a>
         </div>
     </div>

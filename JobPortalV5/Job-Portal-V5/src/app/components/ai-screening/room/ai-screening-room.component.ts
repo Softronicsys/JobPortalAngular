@@ -5,8 +5,10 @@ import { ActivatedRoute } from '@angular/router';
 import {
     AiScreeningService,
     ScreeningRoomAccess,
-    ScreeningQuestion
+    ScreeningQuestion,
+    ScreeningTheme
 } from '@app/Service/ai-screening.service';
+import { applyScreeningTheme } from '../screening-theme';
 
 /* MediaRecorder is absent from the DOM typings shipped with TypeScript 2.7,
    which is what this project builds with. */
@@ -56,15 +58,33 @@ export class AiScreeningRoomComponent implements OnInit, OnDestroy, AfterViewChe
     errorMsg = '';
     notice = '';
 
-    /* consent - one control, as the prototype */
+    /* consent - one control, as the prototype.
+
+       v2 names the three analyses separately (recording, non-verbal /
+       behavioural, voice) instead of the single "analyzed by AI" of v1. The
+       version is stamped on every tblAIScreeningConsent row, so a consent
+       given against the older wording stays distinguishable rather than being
+       silently re-interpreted as agreement to something broader. */
     agreeConsent = false;
-    private readonly policyVersion = 'v1';
+    private readonly policyVersion = 'v2';
 
     /* devices */
     cameras: any[] = [];
     mics: any[] = [];
+    speakers: any[] = [];
     selectedCameraId = '';
     selectedMicId = '';
+    selectedSpeakerId = '';
+
+    /* The device test. micLevel is 0-100 and drives the meter; speakerTested
+       and micSeenSound are what the applicant is actually told. */
+    micLevel = 0;
+    micSeenSound = false;
+    speakerTested = false;
+    speakerSupported = true;
+    private audioCtx: any = null;
+    private analyser: any = null;
+    private meterTimer: any = null;
 
     /* questions */
     questions: ScreeningQuestion[] = [];
@@ -87,7 +107,8 @@ export class AiScreeningRoomComponent implements OnInit, OnDestroy, AfterViewChe
 
     constructor(private route: ActivatedRoute,
                 private api: AiScreeningService,
-                private zone: NgZone) { }
+                private zone: NgZone,
+                private host: ElementRef) { }
 
     ngOnInit() {
         this.token = this.route.snapshot.queryParams['token'] || '';
@@ -100,6 +121,10 @@ export class AiScreeningRoomComponent implements OnInit, OnDestroy, AfterViewChe
         this.api.openInterview(this.token).subscribe(
             access => {
                 this.access = access;
+
+                /* The company's colours, before anything is painted. */
+                applyScreeningTheme(this.host, 'air', access.Theme);
+
                 this.questions = access.Questions || [];
 
                 if (this.questions.length === 0) {
@@ -142,6 +167,7 @@ export class AiScreeningRoomComponent implements OnInit, OnDestroy, AfterViewChe
 
     ngOnDestroy() {
         this.stopTicking();
+        this.stopMicMeter();
         this.releaseCamera();
     }
 
@@ -183,6 +209,12 @@ export class AiScreeningRoomComponent implements OnInit, OnDestroy, AfterViewChe
                     this.streamAttached = false;
                     this.errorMsg = '';
                     this.listDevices();
+
+                    /* Switching device rebuilds the stream, so the old meter
+                       is torn down first - otherwise it would keep reading
+                       the microphone that has just been released. */
+                    this.stopMicMeter();
+                    this.startMicMeter();
                 });
             },
             (err: any) => {
@@ -214,8 +246,125 @@ export class AiScreeningRoomComponent implements OnInit, OnDestroy, AfterViewChe
             this.zone.run(() => {
                 this.cameras = devices.filter(d => d.kind === 'videoinput');
                 this.mics = devices.filter(d => d.kind === 'audioinput');
+                this.speakers = devices.filter(d => d.kind === 'audiooutput');
+
+                /* Only Chromium enumerates outputs and implements setSinkId.
+                   Firefox and Safari report none, and the applicant there can
+                   only use the system default - so the picker is hidden rather
+                   than shown empty and broken. The test tone still works. */
+                this.speakerSupported = this.speakers.length > 0;
             });
         }, () => { /* listing is a convenience; the stream already works */ });
+    }
+
+    /* ---- the device test --------------------------------------------------- */
+
+    /* A live level meter off the microphone track already open for the
+       interview - no second getUserMedia, which would prompt again on some
+       browsers and can fail outright while the first stream holds the device.
+
+       Runs on a timer outside Angular and only re-enters the zone when the
+       rounded value actually changes: at 10fps an unconditional zone.run would
+       trigger change detection across the whole page for the entire sitting. */
+    private startMicMeter() {
+        if (!this.mediaStream || this.analyser) { return; }
+
+        var Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
+        if (!Ctx) { return; }
+
+        try {
+            this.audioCtx = new Ctx();
+            var source = this.audioCtx.createMediaStreamSource(this.mediaStream);
+            this.analyser = this.audioCtx.createAnalyser();
+            this.analyser.fftSize = 512;
+            source.connect(this.analyser);
+        } catch (e) {
+            this.analyser = null;
+            return;
+        }
+
+        var buffer = new Uint8Array(this.analyser.frequencyBinCount);
+        var self = this;
+
+        this.zone.runOutsideAngular(function () {
+            self.meterTimer = setInterval(function () {
+                if (!self.analyser) { return; }
+                self.analyser.getByteTimeDomainData(buffer);
+
+                /* Peak deviation from the 128 centre line, as a percentage.
+                   Scaled by 2.2 so ordinary speech fills a useful part of the
+                   meter rather than creeping along the bottom. */
+                var peak = 0;
+                for (var i = 0; i < buffer.length; i++) {
+                    var d = Math.abs(buffer[i] - 128);
+                    if (d > peak) { peak = d; }
+                }
+                var level = Math.min(100, Math.round((peak / 128) * 100 * 2.2));
+
+                if (level !== self.micLevel) {
+                    self.zone.run(function () {
+                        self.micLevel = level;
+                        if (level > 12) { self.micSeenSound = true; }
+                    });
+                }
+            }, 100);
+        });
+    }
+
+    private stopMicMeter() {
+        if (this.meterTimer) { clearInterval(this.meterTimer); this.meterTimer = null; }
+        this.analyser = null;
+        if (this.audioCtx && this.audioCtx.close) {
+            try { this.audioCtx.close(); } catch (e) { /* already closed */ }
+        }
+        this.audioCtx = null;
+    }
+
+    /* A short tone rather than an audio file: nothing to ship, nothing to
+       fail to load, and it routes through the chosen output device so the
+       applicant hears whether their pick is the right one. */
+    testSpeaker() {
+        var Ctx = (window as any).AudioContext || (window as any).webkitAudioContext;
+        if (!Ctx) { this.speakerTested = true; return; }
+
+        try {
+            var ctx = new Ctx();
+            var osc = ctx.createOscillator();
+            var gain = ctx.createGain();
+
+            osc.type = 'sine';
+            osc.frequency.value = 528;
+
+            /* Ramped, not switched: an abrupt start and stop on a sine wave
+               produces an audible click on most hardware. */
+            gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.2, ctx.currentTime + 0.05);
+            gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.75);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            /* Route to the chosen speaker where the browser allows it. */
+            var dest: any = ctx.destination;
+            if (this.selectedSpeakerId && dest.setSinkId) {
+                dest.setSinkId(this.selectedSpeakerId).catch(function () { /* default output */ });
+            }
+
+            osc.start();
+            osc.stop(ctx.currentTime + 0.8);
+            osc.onended = function () { try { ctx.close(); } catch (e) { /* closed */ } };
+        } catch (e) {
+            /* The tone is a convenience; a browser that refuses it must not
+               stand between the applicant and their interview. */
+        }
+
+        this.speakerTested = true;
+    }
+
+    /* True once camera, microphone and speaker have each been seen working.
+       Deliberately NOT a gate on starting - see the template. */
+    get devicesChecked(): boolean {
+        return !!this.mediaStream && this.micSeenSound && this.speakerTested;
     }
 
     private releaseCamera() {
@@ -252,6 +401,10 @@ export class AiScreeningRoomComponent implements OnInit, OnDestroy, AfterViewChe
                             this.fail('Consent could not be recorded. Please contact HR.');
                             return;
                         }
+                        /* The test is over once the interview starts, and the
+                           meter would otherwise keep sampling the microphone
+                           for the whole sitting for nothing. */
+                        this.stopMicMeter();
                         this.notice = '';
                         this.state = 'ready';
                     },
@@ -295,8 +448,18 @@ export class AiScreeningRoomComponent implements OnInit, OnDestroy, AfterViewChe
         this.recorder.start();
         this.startedAt = Date.now();
         this.state = 'recording';
-        this.secondsLeft = q.TimeLimitSeconds;
-        this.startTicking();
+
+        /* A limit of 0 - or a missing one - means the applicant answers for as
+           long as they need and stops when they are ready. No countdown is
+           started, so nothing can cut them off mid-sentence. */
+        this.secondsLeft = q.TimeLimitSeconds > 0 ? q.TimeLimitSeconds : 0;
+        if (this.secondsLeft > 0) { this.startTicking(); }
+    }
+
+    /* Whether this answer is on the clock. Drives the countdown pill and the
+       wording underneath the button. */
+    get isTimed(): boolean {
+        return !!this.currentQuestion && this.currentQuestion.TimeLimitSeconds > 0;
     }
 
     stopRecording() {
