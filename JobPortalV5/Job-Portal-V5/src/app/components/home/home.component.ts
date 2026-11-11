@@ -665,6 +665,10 @@ export class HomeComponent implements OnInit {
         .subscribe((response: any) => {
           this.responseData = response ? response.Data : [];
           this.filteredJobs = this.responseData;
+          this.HideOrganization = false;
+          this.HideJobCode = false;
+          this.HideTotalPositions = false;
+          this.HideJobAttributeName = false;
           //console.log("home  data", this.responseData)
           //console.log("filteredJobs", this.filteredJobs)
 
@@ -674,14 +678,14 @@ export class HomeComponent implements OnInit {
             //this.isOpenVacancy = true;
 
             for (let i = 0; i < len; i++) {
-              if (this.filteredJobs[i].VisOrganization != "" && !this.HideOrganization)
+              if (this.filteredJobs[i].VisOrganization === true && !this.HideOrganization)
                 this.HideOrganization = true;
                 //console.log(this.HideOrganization);
 
-                if (this.filteredJobs[i].VisJobCode != "" && !this.HideJobCode)
+                if (this.filteredJobs[i].VisJobCode === true && !this.HideJobCode)
                 this.HideJobCode = true;
 
-                if (this.filteredJobs[i].VisTotalPositions === false && !this.HideTotalPositions)
+                if (this.filteredJobs[i].VisTotalPositions === true && !this.HideTotalPositions)
                   this.HideTotalPositions = true;
 
                 //if (this.filteredJobs[i].JobAttributeName != "" && this.filteredJobs[i].JobAttributeName.trim().toUpperCase() !== "N/A" && !this.HideJobAttributeName)
@@ -691,7 +695,7 @@ export class HomeComponent implements OnInit {
                   this.HideLocation = true;
             
 
-                if (this.filteredJobs[i].AdditionalFilter != "" && !this.HideJobAttributeName)
+                if (this.filteredJobs[i].AdditionalFilter === true && !this.HideJobAttributeName)
                   this.HideJobAttributeName = true;
 
                 for (let i = 0; i < this.filteredJobs.length; i++) {

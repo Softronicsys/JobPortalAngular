@@ -526,14 +526,14 @@ export class MyJobsComponent implements OnInit {
                 //this.isOpenVacancy = true;
 
                 for (let i = 0; i < len; i++) {
-                  if (this.filteredJobs[i].VisOrganization === false && !this.HideOrganization)
+                  if (this.filteredJobs[i].VisOrganization === true && !this.HideOrganization)
                     this.HideOrganization = true;
                   //console.log(this.HideOrganization);
 
-                  if (this.filteredJobs[i].VisJobCode === false && !this.HideJobCode)
+                  if (this.filteredJobs[i].VisJobCode === true && !this.HideJobCode)
                     this.HideJobCode = true;
 
-                  if (this.filteredJobs[i].VisTotalPositions === false && !this.HideTotalPositions)
+                  if (this.filteredJobs[i].VisTotalPositions === true && !this.HideTotalPositions)
                     this.HideTotalPositions = true;
 
                   //if (this.filteredJobs[i].JobAttributeName != "" && this.filteredJobs[i].JobAttributeName.trim().toUpperCase() !== "N/A" && !this.HideJobAttributeName)
@@ -666,14 +666,14 @@ export class MyJobsComponent implements OnInit {
                     //  this.OfferResponded = true;
                     //}
 
-                    if (this.appliedJobs[i].VisOrganization === false && !this.HideOrganization)
+                    if (this.appliedJobs[i].VisOrganization === true && !this.HideOrganization)
                       this.HideOrganization = true;
                     //console.log(this.HideOrganization);
 
-                    if (this.appliedJobs[i].VisJobCode === false && !this.HideJobCode)
+                    if (this.appliedJobs[i].VisJobCode === true && !this.HideJobCode)
                       this.HideJobCode = true;
 
-                    if (this.appliedJobs[i].VisTotalPositions === false && !this.HideTotalPositions)
+                    if (this.appliedJobs[i].VisTotalPositions === true && !this.HideTotalPositions)
                       this.HideTotalPositions = true;
 
                     //if (this.appliedJobs[i].JobAttributeName != "" && this.appliedJobs[i].JobAttributeName.trim().toUpperCase() !== "N/A" && !this.HideJobAttributeName)
