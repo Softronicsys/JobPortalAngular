@@ -67,6 +67,7 @@ export class ChangePasswordComponent implements OnInit {
         });
 
         this.Email = localStorage.getItem('Email');
+        this.resetToken = sessionStorage.getItem('PasswordResetToken') || "";
     }
 
     forgotPasswordChangePassword() {
@@ -183,6 +184,8 @@ export class ChangePasswordComponent implements OnInit {
 
                 console.log(response);
                 if (!isNullOrUndefined(response) && response.IsValid == true) {
+                    sessionStorage.removeItem('PasswordResetToken');
+                    localStorage.removeItem('Email');
                     this.passwordChangeSucceeded = true;
                     $("#myModal").modal("show");
                     this.message = response.Message;
@@ -226,7 +229,12 @@ export class ChangePasswordComponent implements OnInit {
             this.CompanyIdService.CompanyName = response.CompanyName;
             this.CompanyIdService.RedirectPath = response.RedirectPath;
             this.CompanyIdService.CompanyLogoBase64 = response.CompanyLogoBase64;
-            this.forgotPasswordClickBtn(this.key1, this.key2);
+            if (!isNullOrUndefined(this.key1) && this.key1 != "" && !isNullOrUndefined(this.key2) && this.key2 != "") {
+                this.forgotPasswordClickBtn(this.key1, this.key2);
+            }
+            else if (this.Email == null || this.Email == '' || this.resetToken == null || this.resetToken == '') {
+                this.notAppropriate = true;
+            }
             this.getJobPortalConfiguration();
             this.Color();
             this.HideSpinner();

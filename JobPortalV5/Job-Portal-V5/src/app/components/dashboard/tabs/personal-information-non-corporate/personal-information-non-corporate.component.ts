@@ -1047,6 +1047,20 @@ export class PersonalInformationNonCorporateComponent implements OnInit {
     this.isFileSizeOfDoc = '';
     this.isFileSizeCheck = false;
     this.SelectAtleastOneFile = false;
+    this.urlFile = '';
+    this.blob = null;
+    this.uniqueImgName = '';
+    this.checkForDocAtt = false;
+    this.otherDocumentType = "-1";
+    this.documentTitle = "";
+    this.ClearFileInputById('attachmentFileInput');
+  }
+
+  private ClearFileInputById(inputId: string) {
+    const fileInput = document.getElementById(inputId) as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
   }
 
 
@@ -1626,6 +1640,7 @@ export class PersonalInformationNonCorporateComponent implements OnInit {
   EducationalDocuments: string = "Educational Documents";
   lblDocumentType: string = "Document Type";
   DocumentTitle: string = "Document Title";
+  documentTitle: string = "";
   lblDocumnetAttachment: string = "Attachment";
   OtherDocuments: string = "Other Documents";
  

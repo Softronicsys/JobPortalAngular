@@ -246,6 +246,10 @@ export class ChatboxComponent implements OnInit {
       .subscribe((response: any) => {
 
         this.appliedJobs = response.Data;
+        this.HideOrganization = false;
+        this.HideJobCode = false;
+        this.HideTotalPositions = false;
+        this.HideJobAttributeName = false;
 
         //console.log(response.Data);
         //console.log(this.appliedJobs);
@@ -280,20 +284,20 @@ export class ChatboxComponent implements OnInit {
               this.ModalHeading = "Rescind Letter";
             }
 
-            if (this.appliedJobs[i].VisOrganization != "" && !this.HideOrganization)
+            if (this.appliedJobs[i].VisOrganization === true && !this.HideOrganization)
               this.HideOrganization = true;
             //console.log(this.HideOrganization);
 
-            if (this.appliedJobs[i].VisJobCode != "" && !this.HideJobCode)
+            if (this.appliedJobs[i].VisJobCode === true && !this.HideJobCode)
               this.HideJobCode = true;
 
-            if (this.appliedJobs[i].VisTotalPositions != "" && !this.HideTotalPositions)
+            if (this.appliedJobs[i].VisTotalPositions === true && !this.HideTotalPositions)
               this.HideTotalPositions = true;
 
             //if (this.appliedJobs[i].JobAttributeName != "" && this.appliedJobs[i].JobAttributeName.trim().toUpperCase() !== "N/A" && !this.HideJobAttributeName)
             //  this.HideJobAttributeName = true;
 
-            if (this.appliedJobs[i].AdditionalFilter != "" && !this.HideJobAttributeName)
+            if (this.appliedJobs[i].AdditionalFilter === true && !this.HideJobAttributeName)
               this.HideJobAttributeName = true;
 
             for (let i = 0; i < this.appliedJobs.length; i++) {
