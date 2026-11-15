@@ -46,6 +46,17 @@
         <div *ngIf="state === 'recording'" class="air-rec">
           <span class="air-dot"></span>{{ isTimed ? (secondsLeft + 's left') : 'Recording' }}
         </div>
+
+        <!-- Silence prompt.
+
+             The alert itself is SPOKEN - someone who has stopped talking is
+             not reading the screen. This is its companion, and its whole
+             substitute on a browser with no speech synthesis or with the
+             volume down, which is why it is shown every time rather than
+             only when speaking fails. -->
+        <div *ngIf="state === 'recording' && silenceNotice" class="air-silence">
+          {{ silenceNotice }}
+        </div>
       </div>
 
       <!-- ---- before the interview starts ---- -->
@@ -178,12 +189,26 @@
         <div class="air-question">{{ currentQuestion?.QuestionText }}</div>
 
         <div class="air-actions">
-          <button *ngIf="state === 'ready'" class="air-start air-start-on" (click)="startRecording()">
+          <!-- The button is for the FIRST question only: nothing records
+               until the applicant has deliberately begun. Afterwards the
+               interview carries itself, and this reappears only for someone
+               who reconnected mid-sitting. -->
+          <button *ngIf="state === 'ready' && !autoStartIn" class="air-start air-start-on" (click)="startRecording()">
             START ANSWERING
           </button>
-          <button *ngIf="state === 'recording'" class="air-start air-start-stop" (click)="stopRecording()">
-            STOP AND SUBMIT ANSWER
+
+          <!-- The lead-in. Visible, so an answer never begins unannounced. -->
+          <button *ngIf="state === 'ready' && autoStartIn" class="air-start" disabled>
+            RECORDING STARTS IN {{ autoStartIn }}…
           </button>
+
+          <!-- Says what it will actually do. On the last question there is
+               no next one, and promising otherwise would be a small lie at
+               the worst moment. -->
+          <button *ngIf="state === 'recording'" class="air-start air-start-stop" (click)="stopRecording()">
+            {{ isLastQuestion ? 'FINISH AND SUBMIT' : 'GO TO THE NEXT QUESTION' }}
+          </button>
+
           <button *ngIf="state === 'uploading'" class="air-start" disabled>
             UPLOADING…
           </button>
@@ -191,7 +216,8 @@
 
         <p class="air-hint">
           <span *ngIf="isTimed">{{ currentQuestion?.TimeLimitSeconds }} seconds for this answer — recording stops on its own.</span>
-          <span *ngIf="!isTimed">Take as long as you need — stop when you have finished answering.</span>
+          <span *ngIf="!isTimed && !isLastQuestion">Take as long as you need — move on when you have finished answering.</span>
+          <span *ngIf="!isTimed && isLastQuestion">Take as long as you need — this is the last question.</span>
           <a *ngIf="state === 'ready'" href="javascript:void(0)" (click)="finish()">Finish and submit now</a>
         </p>
       </div>

@@ -9,6 +9,8 @@ import {
     ScreeningTheme
 } from '@app/Service/ai-screening.service';
 import { applyScreeningTheme } from '../screening-theme';
+import { SpeechMonitor, playSilenceCue } from '../speech-monitor';
+import { PoseTracker } from '../pose-tracker';
 
 /* MediaRecorder is absent from the DOM typings shipped with TypeScript 2.7,
    which is what this project builds with. */
@@ -98,6 +100,28 @@ export class AiScreeningRoomComponent implements OnInit, OnDestroy, AfterViewChe
     private chunks: any[] = [];
     private tickHandle: any = null;
     private startedAt = 0;
+
+    /* What the room observes while an answer is recorded. Both are
+       best-effort: either can fail to start and the interview carries on
+       without its numbers. See speech-monitor.ts and pose-tracker.ts. */
+    private speech: SpeechMonitor = new SpeechMonitor(30);
+    private pose: PoseTracker = new PoseTracker();
+    private poseActive = false;
+
+    /* Shown when the applicant is prompted for silence, as a companion to
+       the spoken alert - and as the whole alert on a browser with no speech
+       synthesis, which is the case on some Android builds. */
+    silenceNotice = '';
+
+    /* The lead-in before an auto-started answer, in seconds. 0 means no
+       countdown is running. */
+    autoStartIn = 0;
+    private leadInHandle: any = null;
+
+    /* Negotiated once per recording. Safari produces MP4 and cannot produce
+       WebM; Chrome and Firefox do the opposite. Recording with a hardcoded
+       container is how an iPhone ends up uploading a zero-byte file. */
+    private recordingMime = '';
     /* The <video> lives inside an *ngIf, so it does not exist while the camera
        is being opened. This tracks whether the live stream has actually been
        attached to it; see ngAfterViewChecked. */
@@ -167,7 +191,9 @@ export class AiScreeningRoomComponent implements OnInit, OnDestroy, AfterViewChe
 
     ngOnDestroy() {
         this.stopTicking();
+        this.cancelLeadIn();
         this.stopMicMeter();
+        this.stopObservers();
         this.releaseCamera();
     }
 
@@ -421,18 +447,35 @@ export class AiScreeningRoomComponent implements OnInit, OnDestroy, AfterViewChe
 
     startRecording() {
         if (this.state !== 'ready' || !this.mediaStream) { return; }
+        this.cancelLeadIn();
 
         var q = this.currentQuestion;
         if (!q) { return; }
 
         this.chunks = [];
         this.errorMsg = '';
+        this.silenceNotice = '';
+
+        /* Ask the browser what it can actually produce rather than assuming.
+           An empty string means "no opinion" - we hand MediaRecorder no
+           mimeType at all and take whatever it gives us, which is the right
+           behaviour on a browser too old to answer the question. */
+        this.recordingMime = this.pickRecordingMime();
 
         try {
-            this.recorder = new MediaRecorder(this.mediaStream);
+            this.recorder = this.recordingMime
+                ? new MediaRecorder(this.mediaStream, { mimeType: this.recordingMime })
+                : new MediaRecorder(this.mediaStream);
         } catch (e) {
-            this.errorMsg = 'This browser cannot record video. Please use a recent Chrome, Edge or Firefox.';
-            return;
+            /* A browser can advertise a type and still refuse it. Falling
+               back to no options is better than failing the interview. */
+            try {
+                this.recordingMime = '';
+                this.recorder = new MediaRecorder(this.mediaStream);
+            } catch (e2) {
+                this.errorMsg = 'This browser cannot record video. Please use a recent Chrome, Edge, Firefox or Safari.';
+                return;
+            }
         }
 
         this.recorder.ondataavailable = (e: any) => {
@@ -448,6 +491,8 @@ export class AiScreeningRoomComponent implements OnInit, OnDestroy, AfterViewChe
         this.recorder.start();
         this.startedAt = Date.now();
         this.state = 'recording';
+
+        this.startObservers();
 
         /* A limit of 0 - or a missing one - means the applicant answers for as
            long as they need and stops when they are ready. No countdown is
@@ -465,6 +510,10 @@ export class AiScreeningRoomComponent implements OnInit, OnDestroy, AfterViewChe
     stopRecording() {
         if (this.state !== 'recording') { return; }
         this.stopTicking();
+        this.silenceNotice = '';
+        /* Observers stop BEFORE the recorder, so the summaries describe the
+           answer and not the pause afterwards while the upload runs. */
+        this.stopObservers();
         try { this.recorder.stop(); } catch (e) { /* already stopped */ }
     }
 
@@ -482,6 +531,131 @@ export class AiScreeningRoomComponent implements OnInit, OnDestroy, AfterViewChe
         if (this.tickHandle) { clearInterval(this.tickHandle); this.tickHandle = null; }
     }
 
+    /* ---- what the room observes ------------------------------------------- */
+
+    /* Both observers are started together and neither is allowed to stop the
+       interview. The pose model in particular has to be fetched from a CDN,
+       so on a blocked or slow network it simply never becomes available -
+       the applicant notices nothing, and the answer is recorded as always. */
+    private startObservers() {
+        var self = this;
+
+        this.speech.start(this.mediaStream, function () {
+            /* The chime is the prompt. The on-screen line is its companion,
+               and its substitute for anyone with the volume down or no Web
+               Audio - which is why the notice shows either way rather than
+               only when the sound fails. */
+            playSilenceCue();
+            self.zone.run(function () {
+                self.silenceNotice = 'Still recording — carry on, or move to the next question when you are done.';
+            });
+        }, function () {
+            /* They started talking again, so the prompt has done its job.
+               Leaving it up would sit over the video for the rest of the
+               answer, still telling someone who is mid-sentence that we are
+               waiting for them. */
+            self.zone.run(function () { self.silenceNotice = ''; });
+        });
+
+        this.poseActive = false;
+        var videoEl = this.preview && this.preview.nativeElement
+            ? this.preview.nativeElement
+            : null;
+
+        this.pose.start(videoEl).then(function (ok) {
+            self.poseActive = ok;
+        }, function () {
+            self.poseActive = false;
+        });
+    }
+
+    private stopObservers() {
+        try { this.speech.stop(); } catch (e) { /* nothing to stop */ }
+        try { this.pose.stop(); } catch (e) { /* nothing to stop */ }
+    }
+
+    /* Sends what was observed, after the answer itself is safely stored.
+
+       ORDER MATTERS AND SO DOES NOT WAITING
+       This is fired once the upload has succeeded, and the room advances
+       without waiting for it. Metrics are a side-observation: an applicant
+       must never be held on a question, or shown an error, because a
+       stability score failed to save. Failures go to the console and
+       nowhere else.
+
+       Absent measurements are omitted rather than sent as zero. A browser
+       that could not load the pose model reports its speech numbers alone,
+       and HR sees a blank where the head data would be instead of a
+       confident claim that nobody was ever facing the camera. */
+    private sendMetrics(attemptQuestionId: number) {
+        var speechSummary = this.speech.summary();
+        var poseSummary = this.pose.summary();
+        var hasPose = this.poseActive && this.pose.hasData;
+
+        var metrics: any = {
+            Source: hasPose ? 'browser-mediapipe' : 'browser',
+            SampleCount: hasPose ? poseSummary.sampleCount : speechSummary.sampleCount,
+            SpeakingPercent: speechSummary.speakingPercent,
+            LongestSilenceSeconds: speechSummary.longestSilenceSeconds,
+            SilenceAlertCount: speechSummary.silenceAlertCount
+        };
+
+        if (hasPose) {
+            metrics.FaceVisiblePercent = poseSummary.faceVisiblePercent;
+            metrics.StabilityScore = poseSummary.stabilityScore;
+            metrics.LookAwayCount = poseSummary.lookAwayCount;
+            metrics.LookAwaySeconds = poseSummary.lookAwaySeconds;
+            metrics.MeanAbsYawDegrees = poseSummary.meanAbsYawDegrees;
+            metrics.MeanAbsPitchDegrees = poseSummary.meanAbsPitchDegrees;
+            metrics.MaxAbsYawDegrees = poseSummary.maxAbsYawDegrees;
+            metrics.MaxAbsPitchDegrees = poseSummary.maxAbsPitchDegrees;
+        }
+
+        this.api.saveQuestionMetrics(this.token, this.access.AttemptId,
+                                     attemptQuestionId, metrics)
+            .subscribe(function () { /* recorded */ },
+                       function () { /* see the comment above */ });
+    }
+
+    /* What this browser can actually produce.
+
+       Chrome, Edge and Firefox give WebM; Safari, on both macOS and iOS,
+       gives MP4 and cannot give WebM. Asking rather than assuming is the
+       difference between an iPhone recording an interview and an iPhone
+       producing a file nothing can play. */
+    private pickRecordingMime(): string {
+        var MR: any = (window as any).MediaRecorder;
+        if (!MR || !MR.isTypeSupported) { return ''; }
+
+        var candidates = [
+            'video/webm;codecs=vp8,opus',
+            'video/webm',
+            'video/mp4;codecs=h264,aac',
+            'video/mp4'
+        ];
+
+        for (var i = 0; i < candidates.length; i++) {
+            try {
+                if (MR.isTypeSupported(candidates[i])) { return candidates[i]; }
+            } catch (e) { /* ask about the next one */ }
+        }
+        return '';
+    }
+
+    /* The container actually used, for the Blob and the file name. The
+       recorder is the authority - it may have chosen something other than
+       what was asked for - and only falls back to our pick, then to WebM. */
+    private get effectiveMime(): string {
+        if (this.recorder && this.recorder.mimeType) { return this.recorder.mimeType; }
+        return this.recordingMime || 'video/webm';
+    }
+
+    private extensionFor(mime: string): string {
+        return mime.indexOf('mp4') >= 0 ? '.mp4'
+             : mime.indexOf('ogg') >= 0 ? '.ogg'
+             : '.webm';
+    }
+
     /* ---- upload ----------------------------------------------------------- */
 
     private uploadCurrent() {
@@ -489,16 +663,26 @@ export class AiScreeningRoomComponent implements OnInit, OnDestroy, AfterViewChe
         if (!q) { return; }
 
         var seconds = Math.max(1, Math.round((Date.now() - this.startedAt) / 1000));
-        var blob = new Blob(this.chunks, { type: 'video/webm' });
+
+        /* The container the recorder actually used, not an assumption.
+           Labelling a Safari MP4 as WebM would store a file that HR's player
+           refuses, and the mislabelling would only surface weeks later when
+           somebody tried to watch it. */
+        var mime = this.effectiveMime;
+        var blob = new Blob(this.chunks, { type: mime });
+        var fileName = 'answer-' + q.AttemptQuestionId + this.extensionFor(mime);
         this.chunks = [];
         this.state = 'uploading';
 
         this.api.uploadAnswer(this.token, this.access.AttemptId, q.AttemptQuestionId,
-                              seconds, blob, 'answer-' + q.AttemptQuestionId + '.webm').subscribe(
+                              seconds, blob, fileName).subscribe(
             () => {
                 if (this.answeredIds.indexOf(q.AttemptQuestionId) < 0) {
                     this.answeredIds.push(q.AttemptQuestionId);
                 }
+                /* Only once the answer is safely stored. Metrics for a
+                   recording that never arrived would describe nothing. */
+                this.sendMetrics(q.AttemptQuestionId);
                 this.advance();
             },
             err => {
@@ -517,6 +701,60 @@ export class AiScreeningRoomComponent implements OnInit, OnDestroy, AfterViewChe
         this.currentIndex = next;
         this.notice = '';
         this.state = 'ready';
+        this.beginLeadIn();
+    }
+
+    /* After the first answer, the interview carries itself: the next
+       question starts recording on its own and the applicant's only decision
+       is when to move on.
+
+       WHY A FEW SECONDS AND NOT INSTANTLY
+       The question appears and the recording begins in the same instant
+       otherwise, so the first thing on the tape is somebody reading. The
+       count is visible, so nobody is surprised by it.
+
+       ONLY WITHIN A SITTING
+       This runs from advance(), which means it follows an answer the
+       applicant just gave. Someone who reconnects mid-interview lands on
+       'ready' through the loading path instead and still gets a button -
+       being dropped straight into a recording you did not ask for, moments
+       after your connection came back, would be alarming. */
+    private beginLeadIn() {
+        this.cancelLeadIn();
+
+        /* The first question keeps its button: nothing should record before
+           the applicant has deliberately begun. */
+        if (this.answeredIds.length === 0) { return; }
+
+        var self = this;
+        this.autoStartIn = 3;
+
+        this.leadInHandle = setInterval(function () {
+            self.zone.run(function () {
+                self.autoStartIn--;
+                if (self.autoStartIn > 0) { return; }
+
+                self.cancelLeadIn();
+                /* Only if nothing else moved in the meantime - they may have
+                   pressed finish, or an error may have landed. */
+                if (self.state === 'ready') { self.startRecording(); }
+            });
+        }, 1000);
+    }
+
+    private cancelLeadIn() {
+        if (this.leadInHandle) { clearInterval(this.leadInHandle); this.leadInHandle = null; }
+        this.autoStartIn = 0;
+    }
+
+    /* Whether moving on from here ends the interview rather than opening
+       another question. The button says what it will actually do. */
+    get isLastQuestion(): boolean {
+        var remaining = 0;
+        for (var i = 0; i < this.questions.length; i++) {
+            if (this.answeredIds.indexOf(this.questions[i].AttemptQuestionId) < 0) { remaining++; }
+        }
+        return remaining <= 1;
     }
 
     private firstUnansweredIndex(): number {
@@ -532,6 +770,7 @@ export class AiScreeningRoomComponent implements OnInit, OnDestroy, AfterViewChe
        partial rather than discarded, and it still counts as Conducted - the
        applicant reached the end of their session. */
     finish() {
+        this.cancelLeadIn();
         this.state = 'loading';
         this.api.completeInterview(this.token, this.access.AttemptId).subscribe(
             () => {
@@ -551,6 +790,8 @@ export class AiScreeningRoomComponent implements OnInit, OnDestroy, AfterViewChe
 
     private fail(message: string) {
         this.stopTicking();
+        this.cancelLeadIn();
+        this.stopObservers();
         this.releaseCamera();
         this.state = 'error';
         this.errorMsg = message;

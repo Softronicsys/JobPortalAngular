@@ -444,5 +444,82 @@
   .air-app { padding: 20px 14px 32px; }
   .air-panel { padding: 20px 16px; }
   .air-stage { min-height: 220px; }
-  .air-devices select { flex: 1 1 100%; margin-right: 0; }
+  .air-devicerow select { flex: 1 1 100%; margin-right: 0; }
+}
+
+/* ---------------------------------------------------------------------------
+   The silence prompt.
+
+   Sits over the bottom of the video rather than in the page flow, so it
+   cannot push the controls down and move the Stop button out from under a
+   thumb that is already travelling towards it.
+   --------------------------------------------------------------------------- */
+.air-silence {
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  background: rgba(17, 17, 17, 0.88);
+  color: #ffffff;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 14px;
+  line-height: 1.45;
+  text-align: center;
+}
+
+/* ---------------------------------------------------------------------------
+   Phones.
+
+   Two separate problems, and the second is the one that actually breaks
+   interviews:
+
+   1. Space. A 375px iPhone has room for the video and one control, so the
+      recording pill shrinks and the prompt gets the full width.
+
+   2. The browser chrome that is not there. Safari on iOS measures 100vh as
+      the viewport WITHOUT its address bar, so a full-height layout is
+      overlapped by it until the user scrolls. The stage is therefore sized
+      from its own aspect ratio rather than from viewport height, which is
+      also what keeps the Stop button reachable one-handed.
+   --------------------------------------------------------------------------- */
+@media (max-width: 600px) {
+  .air-stage {
+    /* A portrait-friendly frame that does not depend on vh. */
+    min-height: 0;
+    aspect-ratio: 3 / 4;
+  }
+
+  /* Browsers without aspect-ratio - which includes Safari before 15 - fall
+     back to a fixed frame rather than collapsing to nothing. */
+  @supports not (aspect-ratio: 3 / 4) {
+    .air-stage { min-height: 320px; }
+  }
+
+  .air-video { object-fit: cover; }
+
+  .air-rec {
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+
+  .air-silence {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    font-size: 13px;
+    padding: 9px 11px;
+  }
+
+  /* Touch targets. 44px is the smallest reliably hittable control on a
+     phone, and the primary action in this room is one someone may be
+     reaching for in a hurry. */
+  .air-grant,
+  .air-start,
+  .air-testbtn,
+  .air-devicerow select {
+    min-height: 44px;
+  }
 }

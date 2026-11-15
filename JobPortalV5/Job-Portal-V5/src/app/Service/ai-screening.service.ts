@@ -31,6 +31,32 @@ export interface ScreeningQuestion {
     TimeLimitSeconds: number;
 }
 
+/* What the room observed while one answer was being recorded.
+
+   Every field is optional on purpose. The two measurements are independent:
+   speech comes from the microphone meter and always works, head pose needs a
+   model that may not load on an older phone. One failing must not take the
+   other's numbers with it, so each is sent if and only if it was measured. */
+export interface ScreeningQuestionMetrics {
+    Source: string;
+    SampleCount?: number;
+
+    /* head pose */
+    FaceVisiblePercent?: number;
+    StabilityScore?: number;
+    LookAwayCount?: number;
+    LookAwaySeconds?: number;
+    MeanAbsYawDegrees?: number;
+    MeanAbsPitchDegrees?: number;
+    MaxAbsYawDegrees?: number;
+    MaxAbsPitchDegrees?: number;
+
+    /* speech */
+    SpeakingPercent?: number;
+    LongestSilenceSeconds?: number;
+    SilenceAlertCount?: number;
+}
+
 /* The company's portal colours, served with both landing payloads.
 
    These pages open from an emailed link with no portal session, so the usual
@@ -237,6 +263,40 @@ export class AiScreeningService {
         return this.http.post<any>(
             this.url('api/AIScreeningRoom/UploadAnswer'),
             form,
+            { headers: this.roomHeaders(roomToken) });
+    }
+
+    /* What the room observed while one answer was recorded.
+
+       Fired after the answer itself is safely uploaded, and deliberately not
+       waited on: a stability score is a side-observation of the interview,
+       and nobody's interview should stall - let alone fail - because a
+       metrics row did not save. The caller subscribes and ignores the result
+       either way. */
+    saveQuestionMetrics(roomToken: string, attemptId: number,
+                        attemptQuestionId: number, metrics: ScreeningQuestionMetrics): Observable<any> {
+        var body: any = {
+            AttemptId: attemptId,
+            AttemptQuestionId: attemptQuestionId,
+            Source: metrics.Source
+        };
+
+        /* Only send what was actually measured. A browser with no pose model
+           sends its speech numbers alone, and the absent fields stay null in
+           the database rather than arriving as a confident zero. */
+        var keys = ['SampleCount', 'FaceVisiblePercent', 'StabilityScore',
+                    'LookAwayCount', 'LookAwaySeconds',
+                    'MeanAbsYawDegrees', 'MeanAbsPitchDegrees',
+                    'MaxAbsYawDegrees', 'MaxAbsPitchDegrees',
+                    'SpeakingPercent', 'LongestSilenceSeconds', 'SilenceAlertCount'];
+        for (var i = 0; i < keys.length; i++) {
+            var v = (metrics as any)[keys[i]];
+            if (v !== null && v !== undefined && !isNaN(v)) { body[keys[i]] = v; }
+        }
+
+        return this.http.post<any>(
+            this.url('api/AIScreeningRoom/SaveQuestionMetrics'),
+            body,
             { headers: this.roomHeaders(roomToken) });
     }
 
