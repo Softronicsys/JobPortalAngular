@@ -729,7 +729,7 @@
 
 
       <div class="row lineHeight">
-        <div class="col-lg-11" style="padding-left: 0px !important;">
+        <div class="col-lg-11 basic-info-id-fields" style="padding-left: 0px !important;">
 
           <div class="col-lg-4">
             <div class="form-group ">
@@ -748,6 +748,21 @@
 
 
           <!--New fields added by Usama -->
+          <div class="col-lg-4" *ngIf="isFF === true">
+            <div class="form-group">
+              <p class="BlackTxtClr">ID Card Issuance</p>
+              <label *ngIf="!isBasicInformation2" class="mar" [style.color]="ThemeFontColor ? ThemeFontColor : DefaultFontColor">
+                {{ IDCardIssuance ? (IDCardIssuance | date:'dd/MMM/yyyy':'UTC') : 'N/A' }}
+              </label>
+              <div *ngIf="isBasicInformation2">
+                <div style="width: 272px; height: 36px;">
+                  <date-picker [defaultValue]="idCardIssuanceDefault" (pickerChange)="idCardIssuanceChanged($event)"></date-picker>
+                </div>
+                <p *ngIf="invalidIDCardIssuance" class="text-danger">Enter a valid ID Card Issuance date.</p>
+              </div>
+            </div>
+          </div>
+
           <div class="col-lg-4" *ngIf="VisIDCardExpiry == true">
             <div class="form-group">
               <p class="BlackTxtClr"><span *ngIf="showMandatory2 == true && MndIDCardExpiry" style="color:red" class="mandatoryStar">*</span><!--IDCardExpiry--> {{ lblIDCardExpiry }}</p>
@@ -793,13 +808,6 @@
             </div>
           </div>
 
-        </div>
-
-      </div>
-
-
-      <div class="row lineHeight">
-        <div class="col-lg-11" style="padding-left: 0px !important;">
           <!--<div class="col-lg-4">
           <div class="form-group ">
             <p>No. of Dependents</p>
@@ -1872,9 +1880,10 @@
                       </div>
                       <div class="col-sm-4">
                         <div class="form-group">
-                          <label for="phoneNoCell" class="fntWght fontSize12">{{PhoneNoCell}}</label>
+                          <label for="phoneNoCell" class="fntWght fontSize12"><span *ngIf="isNextOfKinPhoneRequired" style="color:red; font-size:13px; margin-left: -5px !important;">*</span>{{PhoneNoCell}}</label>
                           <input type="tel"
-                                 [ngClass]="{'BorderColor': showPhoneNumberError && NextOfKinPhonecell.trim() !== ''}"
+                                 [required]="isNextOfKinPhoneRequired"
+                                 [ngClass]="{'BorderColor': (showPhoneNumberError && !isNextOfKinPhoneBlank) || (isNextofKin && isNextOfKinPhoneRequired && isNextOfKinPhoneBlank)}"
                                  maxlength="12"
                                  minlength="12"
                                  class="form-control fontSize12"

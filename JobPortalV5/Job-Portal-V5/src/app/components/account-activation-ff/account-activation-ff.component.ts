@@ -52,6 +52,7 @@ export class AccountActivationFFComponent implements OnInit {
   wrong: boolean = false;
   regenerateLink: boolean = false;
   ViewProfile: boolean = false;
+  activationError = '';
 
   // for backgrouud color // 
 
@@ -85,6 +86,7 @@ export class AccountActivationFFComponent implements OnInit {
   IsAssessmentScheduled: boolean = false;
 
   ActivateAccountFF() {
+    this.activationError = '';
     let RequestObject = {
 
       Guid: this.key,
@@ -142,6 +144,9 @@ export class AccountActivationFFComponent implements OnInit {
           this.PersonalInfoFF();
 
         }
+        if (!this.ViewProfile) {
+          this.activationError = 'This activation link could not open your profile. Contact support for help with your account.';
+        }
         if (response.IsAccountCreated == false && response.IsValid == false && response.IsViewProfile == false) {
 
           this.wrong = true;
@@ -195,6 +200,8 @@ export class AccountActivationFFComponent implements OnInit {
 
       }, (error: any) => {
         console.log(error);
+        this.HideSpinner();
+        this.activationError = 'We could not verify your activation link. Please reload this page or contact support.';
       });
   }
 
@@ -417,7 +424,8 @@ export class AccountActivationFFComponent implements OnInit {
         }
       }, (error: any) => {
         console.error(error);
-        this.HideSpinner(); // Make sure to hide spinner on error as well
+        this.HideSpinner();
+        this.activationError = 'We could not load your profile. Please contact support if this continues.';
       });
   }
       
@@ -430,6 +438,8 @@ export class AccountActivationFFComponent implements OnInit {
     this.http.get(getCompanyParameter, { headers: this.dataService.headers }).subscribe((response: any) => {
 
       if (response.CompanyId == 0) {
+        this.HideSpinner();
+        this.activationError = 'We could not find the company for this activation link.';
         $("#myModalWrongURL").modal("toggle");
         this.WrongUrl = false;
         localStorage.removeItem(this._config.environment.CompanyGroupID);
@@ -462,6 +472,9 @@ export class AccountActivationFFComponent implements OnInit {
       //this.CompanyLogoBase64 = response.CompanyLogoBase64;
       //Constants.CompanyLogoBase64 = this.CompanyLogoBase64;
 
+    }, () => {
+      this.HideSpinner();
+      this.activationError = 'We could not load the company settings. Please reload this page or contact support.';
     });
 
   }

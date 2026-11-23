@@ -570,8 +570,33 @@ video {
 }
 
 
-.displayVideo {
-  display: block;
+.profile-contact-value {
+  max-width: 170px;
+  overflow-wrap: break-word;
+}
+
+@media screen and (max-width: 767px) {
+  .profile-details {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 12px;
+    margin: 0 0 12px;
+    overflow-wrap: anywhere;
+  }
+
+  .profile-details .ml-25 {
+    margin-left: 0;
+  }
+
+  .profile-details .click-to-top {
+    display: block;
+    max-width: 100%;
+  }
+
+  .profile-details .click-to-top a,
+  .profile-details-spacer {
+    display: none;
+  }
 }
 
 @media screen and (min-width: 300px) and (max-width: 500px) {

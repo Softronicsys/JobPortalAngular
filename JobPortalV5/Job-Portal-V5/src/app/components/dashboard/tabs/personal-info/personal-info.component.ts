@@ -366,6 +366,10 @@ export class PersonalInfoComponent implements OnInit {
     ExpectedSalaryType: string = "";
     PreviousExpectedSalaryTo: string = "";
     IDCardExpiry: string = "";
+    IDCardIssuance: string = "";
+    txtIDCardIssuance: string = "";
+    idCardIssuanceDefault: string = "";
+    invalidIDCardIssuance = false;
     CNICEXpry: string = "";
     //BloodGroup: string = "";
     DrivingLicenseNo: string = "";
@@ -1143,6 +1147,9 @@ export class PersonalInfoComponent implements OnInit {
 
         //Newly added
         this.idcardexp = this.getControlDate(this.IDCardExpiry);
+        this.txtIDCardIssuance = this.IDCardIssuance;
+        this.idCardIssuanceDefault = this.IDCardIssuance.split('-').reverse().join('-');
+        this.invalidIDCardIssuance = false;
         this.DrivingLicenseExp = this.getControlDate(this.DrivingLicenseExpiry);
 
         this.selectedBloodGroup = (isNullOrUndefined(this.BloodGroup) || this.BloodGroup == '') ? this.GetBloodGroup[0] : this.GetBloodGroup.find(bloodGroup => bloodGroup.Name == this.BloodGroup) || null;
@@ -1659,19 +1666,27 @@ export class PersonalInfoComponent implements OnInit {
 
     isNextofKin: boolean = false;
 
+    get isNextOfKinPhoneRequired(): boolean {
+      return this.isFF === true && this.MndNextOfKinInfo === true;
+    }
+
+    get isNextOfKinPhoneBlank(): boolean {
+      return this.safeTrim(this.NextOfKinPhonecell) === "";
+    }
+
     SaveNextofkinInfo() {
       debugger;
 
       if (navigator.onLine) {
 
-        //let NextOfKinPhonecell = this.nextofkininformationGrid.find(x => x.Id == this.NextOfKinPhonecell);
-        if (this.NextOfKinPhonecell.trim() !== "" && !this.validatePhoneNumber(this.NextOfKinPhonecell)) {
-          this.showPhoneNumberError = true;
+        this.showPhoneNumberError = !this.isNextOfKinPhoneBlank && !this.validatePhoneNumber(this.NextOfKinPhonecell);
+        if (this.showPhoneNumberError) {
           this.isNextofKin = false;
           return;
         }
 
-        if (this.NextOfKinName.trim() == "" || this.Relationship1 == null || this.Relationship1.Name == "N/A"){
+        if (this.NextOfKinName.trim() == "" || this.Relationship1 == null || this.Relationship1.Name == "N/A" ||
+            (this.isNextOfKinPhoneRequired && this.isNextOfKinPhoneBlank)) {
           this.isNextofKin = true;
           this.DisconnectInternet = false;
           return;
@@ -3909,6 +3924,7 @@ export class PersonalInfoComponent implements OnInit {
                 //console.log(this.CNICEXpry);
 
                 this.IDCardExpiry = this.getFormattedDateString(row.CNICExpiryDate);
+                this.IDCardIssuance = row.CNICIssuanceDate ? row.CNICIssuanceDate.slice(0, 10) : "";
                 //console.log(this.IDCardExpiry);
 
                 this.DrivingLicenseExpiry = this.getFormattedDateString(row.DrivingLicenseExpiryDate);
@@ -5018,6 +5034,9 @@ export class PersonalInfoComponent implements OnInit {
     Mandatory: boolean = false;
     UpdateApplicantDataBasicInformation2_click() {
       debugger;
+      if (this.isFF === true && this.invalidIDCardIssuance) {
+        return;
+      }
        
             this.formSubmitted = true; 
 
@@ -5188,6 +5207,7 @@ export class PersonalInfoComponent implements OnInit {
                     isAnyPhysicalDisability: this.DisabilitySelect.Id,
                     PhysicalDisabilityDetails: this.DisabilitySelect.Id == true ? this.DisabilityDetail : '',
                     CNICExpDate: this.txtIDCardExpiry,
+                    CNICIssuanceDate: this.isFF === true ? this.txtIDCardIssuance : undefined,
                     DrivingLicenseExpiry: this.txtDrivingLicenseExpiry,
 
                     isFieldForceApplicant: this.isFF,
@@ -6141,6 +6161,14 @@ export class PersonalInfoComponent implements OnInit {
     txtdateOfExitinKSA1: string = "";
     forDateVlaidation;
     DOBValidate: boolean = false;
+
+    idCardIssuanceChanged(event: { isValid: boolean; day: string; month: string; year: string }) {
+      const valid = event.isValid && Number(event.year) > 0;
+      this.invalidIDCardIssuance = !valid && !!(event.day || Number(event.month) || event.year);
+      this.txtIDCardIssuance = valid
+        ? event.year + '-' + String(event.month).padStart(2, '0') + '-' + String(event.day).padStart(2, '0')
+        : '';
+    }
 
     datePickerChanged(eventData: any, controlID: string) {
       debugger;
