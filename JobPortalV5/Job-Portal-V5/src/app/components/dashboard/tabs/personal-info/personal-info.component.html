@@ -822,35 +822,6 @@
         </div>-->
 
 
-          <div class="col-lg-4" *ngIf="VisDrivingLicenseNo == true">
-            <div class="form-group">
-              <p class="BlackTxtClr"><span *ngIf="showMandatory2 == true && MndDrivingLicenseNo" style="color:red" class="mandatoryStar">*</span> {{lblDrivingLicenseNo}}</p>
-              <div *ngIf="isBasicInformation2 == false">
-                <label class="mar" [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]">{{ LabelDrivingLicenseNo || 'N/A' }}</label>
-              </div>
-              <div *ngIf="isBasicInformation2 == true">
-                <input type="text" appBlockCopyPaste maxlength="20" [ngClass]="{'BorderColor': Mandatory && DrivingLicenseNo == ''}"  class="form-control fontSize12" placeholder="Enter Your Driving License Number." style="border-radius:0px;" [(ngModel)]="DrivingLicenseNo" name="drivingLicenseNumber">
-              </div>
-            </div>
-          </div>
-
-
-          <div class="col-lg-4" *ngIf="VisDrivingLicenseExpiry == true">
-            <div class="form-group">
-              <p class="BlackTxtClr"><span *ngIf="showMandatory2 == true && MndDrivingLicenseExpiry" style="color:red" class="mandatoryStar">*</span> {{ lblDrivingLicenseExpiry }}</p>
-              <div *ngIf="isBasicInformation2 == false">
-                <label class="mar" [style.color]="ThemeFontColor ? ThemeFontColor : DefaultFontColor">{{ DrivingLicenseExpiry || 'N/A' }}</label>
-              </div>
-              <div *ngIf="isBasicInformation2 == true">
-                <div [ngClass]="{'BorderColor':MndDrivingLicenseExpiry && txtDrivingLicenseExpiry == ''}" style="width: 272px; height: 36px;">
-                  <date-picker [defaultValue]="DrivingLicenseExp" (pickerChange)="datePickerChanged($event, 'drivinglicenseexpiry')"></date-picker>
-                </div>
-              </div>
-              </div>
-          </div>
-
-
-
           <!--<div class="col-lg-4">
           <div class="form-group">
             <p class="BlackTxtClr"><span style="color:red" class="mandatoryStar">*</span>{{lblSpouseName}}</p>
@@ -1662,7 +1633,7 @@
     </div>
 
 
-    <form action="/action_page.php" *ngIf="VisConveyanceInfo == true" style="font-size:12px;" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
+    <form action="/action_page.php" *ngIf="VisConveyanceInfo == true || VisDrivingLicenseNo == true || VisDrivingLicenseExpiry == true" style="font-size:12px;" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]">
 
       <br />
 
@@ -1693,7 +1664,7 @@
         </div>
       </div>
 
-      <div class="row lineHeight">
+      <div class="row lineHeight" *ngIf="VisConveyanceInfo == true">
         <div class="col-lg-12" style="padding-left: 0px !important;">
 
           <div class="col-lg-3">
@@ -1790,6 +1761,33 @@
                 <input type="text" maxlength="8" [(ngModel)]="ConveyancemakeRegNo" [ngClass]="{'BorderColor':isConveyanceInfo && !this.ConveyancemakeRegNo }" name="ConveyancemakeRegNo" id="registrationNumber" class="form-control fontSize12" placeholder="e.g. ABC-123 ">
               </div>
             </div>
+          </div>
+
+          <div class="col-lg-3" *ngIf="selectedConveyance?.Id == true && VisDrivingLicenseNo == true">
+            <div class="form-group">
+              <p class="BlackTxtClr"><span *ngIf="isBasicInformation25 == true" style="color:red" class="mandatoryStar">*</span> {{lblDrivingLicenseNo}}</p>
+              <div *ngIf="isBasicInformation25 == false">
+                <label class="mar" [style.color]="[ThemeFontColor ? ThemeFontColor : DefaultFontColor]">{{ LabelDrivingLicenseNo || 'N/A' }}</label>
+              </div>
+              <div *ngIf="isBasicInformation25 == true">
+                <input type="text" appBlockCopyPaste maxlength="20" [ngClass]="{'BorderColor': isConveyanceInfo && !DrivingLicenseNo.trim()}"  class="form-control fontSize12" placeholder="Enter Your Driving License Number." style="border-radius:0px;" [(ngModel)]="DrivingLicenseNo" name="drivingLicenseNumber" required>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="col-lg-3" *ngIf="selectedConveyance?.Id == true && VisDrivingLicenseExpiry == true">
+            <div class="form-group">
+              <p class="BlackTxtClr"><span *ngIf="isBasicInformation25 == true" style="color:red" class="mandatoryStar">*</span> {{ lblDrivingLicenseExpiry }}</p>
+              <div *ngIf="isBasicInformation25 == false">
+                <label class="mar" [style.color]="ThemeFontColor ? ThemeFontColor : DefaultFontColor">{{ DrivingLicenseExpiry || 'N/A' }}</label>
+              </div>
+              <div *ngIf="isBasicInformation25 == true">
+                <div [ngClass]="{'BorderColor':isConveyanceInfo && !txtDrivingLicenseExpiry}" style="width: 272px; height: 36px;">
+                  <date-picker [alignCalendarRight]="true" [defaultValue]="DrivingLicenseExp" (pickerChange)="datePickerChanged($event, 'drivinglicenseexpiry')"></date-picker>
+                </div>
+              </div>
+              </div>
           </div>
 
         </div>
