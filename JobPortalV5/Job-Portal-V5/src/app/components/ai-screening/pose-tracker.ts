@@ -68,6 +68,16 @@ export interface PoseSummary {
 const MEDIAPIPE_BASE = 'https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh@0.4.1633559619/';
 const MEDIAPIPE_SCRIPT = MEDIAPIPE_BASE + 'face_mesh.js';
 
+/* SHA-384 of face_mesh.js at the pinned version above, computed from the
+   bytes the CDN serves. If the version in MEDIAPIPE_BASE changes, this must
+   be recomputed or the script will be blocked and pose tracking will go
+   quiet:
+
+     curl -sS <the MEDIAPIPE_SCRIPT url> | openssl dgst -sha384 -binary | openssl base64 -A
+*/
+const MEDIAPIPE_SCRIPT_SRI =
+    'sha384-nKiz5QrpRlMQLw5nrZcprT7N9vmmAcIgV8TuGuep4x91V4JIPsXa+D44Wxj0guoa';
+
 /* Landmark indices in MediaPipe's 468-point mesh. */
 const LM_NOSE_TIP = 1;
 const LM_FOREHEAD = 10;
@@ -88,6 +98,22 @@ function loadMediaPipe(): Promise<boolean> {
         var el = document.createElement('script');
         el.src = MEDIAPIPE_SCRIPT;
         el.async = true;
+
+        /* Subresource Integrity. The browser hashes what the CDN returns
+           and refuses to run it unless it matches, so a compromised or
+           substituted file fails closed rather than executing on a page
+           that holds camera and microphone permissions and an interview
+           token. crossOrigin is required for the check to happen at all.
+
+           Pinning the version stops silent upgrades; it does not verify
+           content, which is what this does.
+
+           NOTE: this covers face_mesh.js only. The library fetches its own
+           wasm and model files at runtime through locateFile, and those
+           are not integrity-checked - the browser offers no mechanism for
+           it. Vendoring the package and serving it from the application is
+           the way to close that remainder. */
+        el.integrity = MEDIAPIPE_SCRIPT_SRI;
         el.crossOrigin = 'anonymous';
 
         /* A model that never arrives must not hang the interview. Ten

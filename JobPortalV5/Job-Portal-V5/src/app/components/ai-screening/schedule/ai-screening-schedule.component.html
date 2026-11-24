@@ -23,47 +23,96 @@
 
     <!-- the form -->
     <div *ngIf="state === 'ready' || state === 'saving'" class="ais-card">
-      <h3 class="ais-title">{{ invite?.IsScheduled ? 'Change your interview time' : 'Schedule AI Interview' }}</h3>
-      <p class="ais-sub">Select a date and time for your interview with People.Partners AI.</p>
-
-      <!-- Already booked. Shown rather than hidden so a returning applicant
-           sees what they chose before changing it. -->
-      <div *ngIf="invite?.IsScheduled" class="ais-note">
-        Currently booked for
-        <strong>{{ invite?.ScheduledStartAt | date:'EEEE d MMMM y, HH:mm' }}</strong>.
-        Submitting a new time replaces it, and the previous interview link stops working.
-      </div>
+      <h3 class="ais-title">{{ invite?.IsScheduled ? 'Change your interview time' : 'Schedule your AI interview' }}</h3>
+      <p class="ais-sub">Choose when you would like to sit your interview with People.Partners AI.</p>
 
       <div class="ais-facts">
         <!-- RoleName first, then JobTitle. JobTitle is the requisition's own
              label and is often a territory - "West Africa" - rather than the
-             role applied for, and this field is labelled Role. The 343/344
+             role applied for, and this field is labelled Role. The 34/35
              emails resolve it the same way round, so the page and the inbox
              agree. RoleName is "" rather than null when absent, which is
              falsy, so the fallback still works. -->
         <div><span>Role</span><strong>{{ invite?.RoleName || invite?.JobTitle }}</strong></div>
-        <div><span>Duration</span><strong>{{ invite?.DurationMinutes }} min</strong></div>
+        <div><span>Length</span><strong>{{ invite?.DurationMinutes }} min</strong></div>
         <div><span>Questions</span><strong>{{ invite?.QuestionCount }}</strong></div>
-        <div><span>Respond by</span><strong>{{ invite?.InviteExpiresAt | date:'d MMM, HH:mm' }}</strong></div>
+      </div>
+
+      <!-- Already booked. Shown rather than hidden so a returning applicant
+           sees what they chose before changing it. -->
+      <div *ngIf="invite?.IsScheduled" class="ais-booked">
+        <span class="ais-booked-tag">Booked</span>
+        <strong>{{ fullDate(invite?.ScheduledStartAt) }}</strong>
+        <strong>{{ clock(invite?.ScheduledStartAt) }} – {{ clock(invite?.ScheduledEndAt) }}</strong>
+      </div>
+
+      <!-- THE RULES, stated before the form rather than discovered through it.
+           Each line answers a question an applicant otherwise has to guess:
+           how far ahead may I book, how long have I got to decide, can I
+           change my mind, and when does the link actually work. -->
+      <div class="ais-rules">
+        <div class="ais-rule">
+          <span class="ais-rule-label">Slot range</span>
+          <span class="ais-rule-value">
+            {{ windowText }}
+            <em>Your interview must start somewhere inside this window.</em>
+          </span>
+        </div>
+
+        <div class="ais-rule">
+          <span class="ais-rule-label">Book by</span>
+          <span class="ais-rule-value">
+            {{ respondByText }}
+            <em>If you have not booked by then, this invitation lapses and HR will need to send a new one.</em>
+          </span>
+        </div>
+
+        <div class="ais-rule">
+          <span class="ais-rule-label">Changes</span>
+          <span class="ais-rule-value">
+            {{ changesText }}
+            <em *ngIf="invite?.IsScheduled && invite?.RescheduleLimit > 0">
+              Used {{ invite?.ReschedulesUsed }} of {{ invite?.RescheduleLimit }}.
+            </em>
+          </span>
+        </div>
+
+        <div class="ais-rule">
+          <span class="ais-rule-label">On the day</span>
+          <span class="ais-rule-value">{{ accessText }}</span>
+        </div>
+      </div>
+
+      <!-- Spending the last change is worth a warning, not a surprise. -->
+      <div *ngIf="isLastChange" class="ais-warn">
+        This is your final change. After this your interview time cannot be moved again.
       </div>
 
       <form class="ais-fields" (ngSubmit)="submit()" #slotForm="ngForm" novalidate>
         <div class="ais-field">
-          <label>Date</label>
-          <input type="date" name="pickedDate" [(ngModel)]="pickedDate"
-                 [min]="minDate" [max]="maxDate" required [disabled]="state === 'saving'">
+          <label for="aisDate">Date</label>
+          <!-- A list of the days inside the window, not a free date field:
+               the format is ours (day before month) rather than the browser's,
+               and an invalid day cannot be picked at all. -->
+          <select id="aisDate" name="pickedDate" [(ngModel)]="pickedDate"
+                  (ngModelChange)="onDateChange()" required [disabled]="state === 'saving'">
+            <option *ngFor="let d of availableDates" [value]="d.value">{{ d.label }}</option>
+          </select>
         </div>
 
         <div class="ais-field">
-          <label>Time</label>
-          <input type="time" name="pickedTime" [(ngModel)]="pickedTime" required
-                 [disabled]="state === 'saving'">
+          <label for="aisTime">Time</label>
+          <input id="aisTime" type="time" name="pickedTime" [(ngModel)]="pickedTime" required
+                 [min]="minTime" [max]="maxTime" [disabled]="state === 'saving'">
+          <span class="ais-field-note" *ngIf="minTime">Must start at or after {{ displayTime(minTime) }} on this day.</span>
+          <span class="ais-field-note" *ngIf="maxTime">Must start at or before {{ displayTime(maxTime) }} on this day.</span>
         </div>
 
-        <p class="ais-hint">
-          Any time between {{ invite?.EarliestStartAt | date:'d MMM, HH:mm' }}
-          and {{ invite?.LatestStartAt | date:'d MMM y' }}.
-        </p>
+        <!-- What is actually about to be booked, spelled out. -->
+        <div class="ais-selected" *ngIf="selectedSlotText">
+          <span class="ais-selected-label">You are booking</span>
+          <strong>{{ selectedSlotText }}</strong>
+        </div>
 
         <div *ngIf="errorMsg" class="ais-error">{{ errorMsg }}</div>
 
@@ -73,6 +122,31 @@
       </form>
     </div>
 
+    <!-- booked, and out of changes: no picker, because the server would
+         refuse one anyway -->
+    <div *ngIf="state === 'locked'" class="ais-card">
+      <h3 class="ais-title">Your interview is booked</h3>
+
+      <div class="ais-booked">
+        <span class="ais-booked-tag">Confirmed</span>
+        <strong>{{ fullDate(invite?.ScheduledStartAt) }}</strong>
+        <strong>{{ clock(invite?.ScheduledStartAt) }} – {{ clock(invite?.ScheduledEndAt) }}</strong>
+      </div>
+
+      <div class="ais-rules">
+        <div class="ais-rule">
+          <span class="ais-rule-label">Changes</span>
+          <span class="ais-rule-value">{{ changesText }}</span>
+        </div>
+        <div class="ais-rule">
+          <span class="ais-rule-label">On the day</span>
+          <span class="ais-rule-value">{{ accessText }}</span>
+        </div>
+      </div>
+
+      <p class="ais-hint">If you cannot attend at this time, please contact HR.</p>
+    </div>
+
     <!-- booked -->
     <div *ngIf="state === 'done'" class="ais-card">
       <h3 class="ais-title">You're booked</h3>
@@ -80,8 +154,19 @@
 
       <div class="ais-confirmed">
         <span>Your interview</span>
-        <strong>{{ confirmedStart | date:'EEEE d MMMM y' }}</strong>
-        <strong>{{ confirmedStart | date:'HH:mm' }} – {{ confirmedEnd | date:'HH:mm' }}</strong>
+        <strong>{{ fullDate(confirmedStart) }}</strong>
+        <strong>{{ clock(confirmedStart) }} – {{ clock(confirmedEnd) }}</strong>
+      </div>
+
+      <div class="ais-rules">
+        <div class="ais-rule">
+          <span class="ais-rule-label">On the day</span>
+          <span class="ais-rule-value">{{ accessText }}</span>
+        </div>
+        <div class="ais-rule">
+          <span class="ais-rule-label">Changes</span>
+          <span class="ais-rule-value">{{ changesText }}</span>
+        </div>
       </div>
 
       <!-- TEMPORARY - REMOVE WHEN THE INTERVIEW EMAIL IS WIRED.
@@ -94,7 +179,7 @@
         <input class="ais-link" type="text" readonly [value]="interviewUrl" onclick="this.select()">
       </div>
 
-      <p class="ais-hint">
+      <p class="ais-hint" *ngIf="invite?.ReschedulesRemaining > 0">
         Need a different time?
         <a href="javascript:void(0)" (click)="changeSlot()">Change your booking</a>
       </p>

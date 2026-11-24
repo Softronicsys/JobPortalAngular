@@ -117,6 +117,18 @@ export interface ScreeningInviteLanding {
     IsScheduled: boolean;
     ScheduledStartAt: string;
     ScheduledEndAt: string;
+
+    /* The reschedule allowance. Limit 0 means the first slot is final.
+       Remaining is already clamped at 0 by the API. */
+    RescheduleLimit: number;
+    ReschedulesUsed: number;
+    ReschedulesRemaining: number;
+
+    /* When the room link starts and stops working, either side of the
+       booked slot, in minutes. */
+    LinkAccessBeforeMinutes: number;
+    LinkAccessAfterMinutes: number;
+
     SupportContactName: string;
     SupportContactChannel: string;
     Theme: ScreeningTheme;

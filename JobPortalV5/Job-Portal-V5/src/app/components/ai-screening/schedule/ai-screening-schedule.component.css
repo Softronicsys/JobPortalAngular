@@ -291,3 +291,168 @@
   .ais-facts > div { flex: 1 1 100%; border-right: 0; border-bottom: 1px solid var(--ais-line); }
   .ais-facts > div:last-child { border-bottom: 0; }
 }
+
+/* ---------------------------------------------------------------------------
+   THE RULES BLOCK
+
+   Added so the booking window, the response deadline, the reschedule
+   allowance and the link's access window are stated up front instead of
+   being discovered by hitting a refusal.
+
+   Label / value rows rather than prose: an applicant scanning for "how long
+   have I got" should find it without reading a paragraph.
+   --------------------------------------------------------------------------- */
+.ais-rules {
+  border: 1px solid var(--ais-line);
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 0 0 20px 0;
+}
+
+.ais-rule {
+  display: flex;
+  gap: 14px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--ais-line);
+  background: var(--ais-panel);
+}
+
+.ais-rule:last-child { border-bottom: 0; }
+
+.ais-rule-label {
+  flex: 0 0 104px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ais-muted);
+  padding-top: 2px;
+}
+
+.ais-rule-value {
+  flex: 1 1 auto;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--ais-ink);
+}
+
+/* The qualifying sentence under a value - the consequence, not the fact. */
+.ais-rule-value em {
+  display: block;
+  margin-top: 2px;
+  font-style: normal;
+  font-size: 12px;
+  color: var(--ais-muted);
+}
+
+/* ---- the existing booking, when there is one ---------------------------- */
+.ais-booked {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+  padding: 12px 14px;
+  margin: 0 0 16px 0;
+  border: 1px solid var(--ais-line);
+  border-left: 3px solid var(--ais-accent);
+  border-radius: 6px;
+  background: var(--ais-panel);
+}
+
+.ais-booked-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ais-page);
+  background: var(--ais-accent);
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+
+.ais-booked strong {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ais-ink);
+}
+
+/* ---- spending the last change ------------------------------------------- */
+.ais-warn {
+  padding: 10px 14px;
+  margin: 0 0 18px 0;
+  border: 1px solid #ffd591;
+  border-left: 3px solid #fa8c16;
+  border-radius: 6px;
+  background: #fff8ec;
+  color: #8a5300;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ---- the slot about to be booked ---------------------------------------- */
+.ais-selected {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 14px;
+  margin: 0 0 18px 0;
+  border: 1px dashed var(--ais-line);
+  border-radius: 6px;
+}
+
+.ais-selected-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ais-muted);
+}
+
+.ais-selected strong {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ais-ink);
+}
+
+/* ---- the date select ----------------------------------------------------
+   Matched to the existing inputs rather than left to the browser, so the two
+   controls on this form do not look like they came from different pages. */
+.ais-field select {
+  width: 100%;
+  padding: 11px 12px;
+  background: var(--ais-page);
+  border: 1px solid var(--ais-line);
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--ais-ink);
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='%236b7280' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 34px;
+}
+
+.ais-field select:focus {
+  outline: none;
+  border-color: var(--ais-accent);
+}
+
+.ais-field select[disabled] {
+  background-color: var(--ais-panel);
+  color: var(--ais-muted);
+}
+
+.ais-field-note {
+  display: block;
+  margin-top: 5px;
+  font-size: 12px;
+  color: var(--ais-muted);
+}
+
+@media (max-width: 560px) {
+  .ais-rule { flex-direction: column; gap: 2px; }
+  .ais-rule-label { flex: none; padding-top: 0; }
+}
