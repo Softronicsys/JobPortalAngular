@@ -328,3 +328,14 @@ div.click-to-top {
   font-size: 11px;
   line-height: 1.2;
 }
+@media (min-width: 1200px) {
+  .basic-info-id-fields {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .basic-info-id-fields > .col-lg-4 {
+    float: none;
+    width: auto;
+  }
+}
