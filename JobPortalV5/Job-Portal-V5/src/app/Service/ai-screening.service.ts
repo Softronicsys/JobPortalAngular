@@ -204,6 +204,15 @@ export class AiScreeningService {
        No header is set here - jobportal-auth.interceptor attaches the Bearer
        token to every HttpClient request, and the session IS the credential for
        this one call. */
+    /* One status per vacancy the applicant has applied for.
+
+       "Vacancies I have applied for" is a list, so the status beside each
+       row has to be one too. MyScreening (singular) still answers with the
+       most actionable one, for the page that shows a single status. */
+    getMyScreenings(): Observable<ScreeningMyStatus[]> {
+        return this.http.get<ScreeningMyStatus[]>(this.url('api/AIScreeningAttempt/MyScreenings'));
+    }
+
     getMyScreening(): Observable<ScreeningMyStatus> {
         return this.http.get<ScreeningMyStatus>(this.url('api/AIScreeningAttempt/MyScreening'));
     }

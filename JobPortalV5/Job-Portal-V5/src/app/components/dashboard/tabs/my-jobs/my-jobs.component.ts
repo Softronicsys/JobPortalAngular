@@ -98,69 +98,98 @@ export class MyJobsComponent implements OnInit {
        One call, not one per row: an applicant has at most one live screening,
        and the row is matched on JobCode. A failure is silent - this is an
        extra affordance on a page that has to keep working without it. */
-    aiScreening: ScreeningMyStatus = null;
+    /* One per vacancy, keyed by JobCode.
+
+       This was a single screening and a single call. An applicant with two
+       AI-screened applications therefore saw a status on one row and nothing
+       on the other, because the server returned whichever attempt was newest
+       and only that row could match it. */
+    aiScreenings: ScreeningMyStatus[] = [];
 
     private loadAiScreening() {
-        this.aiApi.getMyScreening().subscribe(
-            status => { this.aiScreening = status; },
-            () => { this.aiScreening = null; });
+        this.aiApi.getMyScreenings().subscribe(
+            list => { this.aiScreenings = list || []; },
+            () => { this.aiScreenings = []; });
     }
 
-    /* The button's label, or '' when this row has no AI interview to offer.
-       Which of the three it is comes from the server: Stage, and IsRoomOpen
-       for the one decision that depends on the clock - a browser running a
-       few minutes fast must not offer "Start Interview" to someone the room
-       is about to turn away. */
-    aiScreeningLabel(item: any): string {
-        if (!this.aiScreening) { return ''; }
+    /* The screening belonging to this row, or null.
 
-        /* Only on the vacancy the screening belongs to. Compared trimmed
-           because the grid and the attempt row come from different queries
-           and one of them pads the code. */
+       Compared trimmed because the grid and the attempt row come from
+       different queries and one of them pads the code. */
+    private screeningFor(item: any): ScreeningMyStatus {
         var rowJob = ('' + (item && item.JobCode ? item.JobCode : '')).trim();
-        var mineJob = ('' + (this.aiScreening.JobCode || '')).trim();
-        if (!rowJob || rowJob !== mineJob) { return ''; }
+        if (!rowJob) { return null; }
 
-        /* Applied, but no recruiter has sent the invite yet. Shown so the
-           applicant knows the AI interview is coming and that the wait is
-           not theirs to act on - it is the one state here with no token and
-           nowhere to click. */
-        if (this.aiScreening.Stage === 'AwaitingHR') { return 'Waiting for HR Approval'; }
+        for (var i = 0; i < this.aiScreenings.length; i++) {
+            var s = this.aiScreenings[i];
+            if (('' + (s.JobCode || '')).trim() === rowJob) { return s; }
+        }
+        return null;
+    }
 
-        /* Everything below needs somewhere to go. */
-        if (!this.aiScreening.Token) { return ''; }
+    /* What this row says about its AI interview, or '' for a vacancy that
+       has none.
 
-        if (this.aiScreening.Stage === 'Schedule') { return 'Schedule Your Interview'; }
+       Every stage now says something. Completed used to return '' - "there
+       is nowhere useful to send them, and a dead button is worse than none"
+       - but that left an applicant who had just finished their interview
+       looking at a row with no acknowledgement anywhere that they had sat
+       it, which is the one moment they most want confirming. A flat,
+       unclickable status is not a dead button; it is the answer. */
+    aiScreeningLabel(item: any): string {
+        var s = this.screeningFor(item);
+        if (!s) { return ''; }
 
-        if (this.aiScreening.Stage === 'Interview') {
-            return this.aiScreening.IsRoomOpen ? 'Start Interview' : 'Wait in the Interview Room';
+        if (s.Stage === 'AwaitingHR') { return 'Waiting for HR Approval'; }
+        if (s.Stage === 'Completed') { return 'Interview Submitted'; }
+        if (s.Stage === 'Expired') { return 'Interview Closed'; }
+
+        /* The two that need somewhere to go. */
+        if (!s.Token) { return ''; }
+
+        if (s.Stage === 'Schedule') { return 'Schedule Your Interview'; }
+
+        if (s.Stage === 'Interview') {
+            /* IsRoomOpen comes from the server, not the browser: a clock a
+               few minutes fast must not offer "Start Interview" to someone
+               the room is about to turn away. */
+            return s.IsRoomOpen ? 'Start Interview' : 'Wait in the Interview Room';
         }
 
-        /* Completed and Expired get no button: there is nowhere useful to
-           send them, and a dead button is worse than none. */
         return '';
     }
 
-    /* Whether the button does anything. The waiting state is a status, not an
-       action, so it renders flat and ignores clicks rather than looking
-       pressable and doing nothing. */
-    aiScreeningIsActionable(): boolean {
-        return !!this.aiScreening
-            && !!this.aiScreening.Token
-            && this.aiScreening.Stage !== 'AwaitingHR';
+    /* Whether this row's label does anything. The waiting, submitted and
+       closed states are statuses, not actions, so they render flat and
+       ignore clicks rather than looking pressable and doing nothing. */
+    aiScreeningIsActionable(item: any): boolean {
+        var s = this.screeningFor(item);
+        return !!s
+            && !!s.Token
+            && s.Stage !== 'AwaitingHR'
+            && s.Stage !== 'Completed'
+            && s.Stage !== 'Expired';
     }
 
-    openAiScreening(event: any) {
+    /* The sentence under the label - the server's own wording, so the portal
+       and the emails say the same thing. */
+    aiScreeningMessage(item: any): string {
+        var s = this.screeningFor(item);
+        return s ? (s.Message || '') : '';
+    }
+
+    openAiScreening(event: any, item: any) {
         /* The row itself opens the job-details modal on click. */
         if (event) { event.stopPropagation(); }
 
-        if (!this.aiScreeningIsActionable()) { return; }
+        if (!this.aiScreeningIsActionable(item)) { return; }
 
-        var path = this.aiScreening.Stage === 'Schedule'
+        var s = this.screeningFor(item);
+        var path = s.Stage === 'Schedule'
             ? '/ai-screening/schedule'
             : '/ai-screening/interview';
 
-        this.router.navigate([path], { queryParams: { token: this.aiScreening.Token } });
+        this.router.navigate([path], { queryParams: { token: s.Token } });
     }
 
     SaveGridViewStyle(IsNormalView) {

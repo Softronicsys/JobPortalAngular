@@ -209,9 +209,16 @@
             {{ isLastQuestion ? 'FINISH AND SUBMIT' : 'GO TO THE NEXT QUESTION' }}
           </button>
 
-          <button *ngIf="state === 'uploading'" class="air-start" disabled>
-            UPLOADING…
-          </button>
+          <!-- No button while the answer uploads.
+
+               There used to be a disabled "UPLOADING…" one here, and it was
+               removed on the client's request: between questions it flashes
+               up for a moment and reads as a control rather than progress.
+
+               The uploading STATE stays - it is what stops a second
+               recording starting mid-upload, and what sends the applicant
+               back to the same question with an error if the upload fails
+               rather than silently dropping the answer. -->
         </div>
 
         <p class="air-hint">
