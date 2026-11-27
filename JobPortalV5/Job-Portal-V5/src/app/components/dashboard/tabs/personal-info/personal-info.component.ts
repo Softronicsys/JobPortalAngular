@@ -366,6 +366,10 @@ export class PersonalInfoComponent implements OnInit {
     ExpectedSalaryType: string = "";
     PreviousExpectedSalaryTo: string = "";
     IDCardExpiry: string = "";
+    IDCardIssuance: string = "";
+    txtIDCardIssuance: string = "";
+    idCardIssuanceDefault: string = "";
+    invalidIDCardIssuance = false;
     CNICEXpry: string = "";
     //BloodGroup: string = "";
     DrivingLicenseNo: string = "";
@@ -1071,6 +1075,10 @@ export class PersonalInfoComponent implements OnInit {
     LblchangeToTextBoxInfo25_Click() {  //Conveyance information
       debugger;
       this.isBasicInformation25 = true;
+      this.DrivingLicenseNo = this.LabelDrivingLicenseNo || '';
+      this.DrivingLicenseExp = this.getControlDate(this.DrivingLicenseExpiry);
+      this.txtDrivingLicenseExpiry = this.DrivingLicenseExp;
+      this.isConveyanceInfo = false;
       this.isBtnHide25 = true;
       this.DisconnectInternet1 = false;
 
@@ -1143,7 +1151,9 @@ export class PersonalInfoComponent implements OnInit {
 
         //Newly added
         this.idcardexp = this.getControlDate(this.IDCardExpiry);
-        this.DrivingLicenseExp = this.getControlDate(this.DrivingLicenseExpiry);
+        this.txtIDCardIssuance = this.IDCardIssuance;
+        this.idCardIssuanceDefault = this.IDCardIssuance.split('-').reverse().join('-');
+        this.invalidIDCardIssuance = false;
 
         this.selectedBloodGroup = (isNullOrUndefined(this.BloodGroup) || this.BloodGroup == '') ? this.GetBloodGroup[0] : this.GetBloodGroup.find(bloodGroup => bloodGroup.Name == this.BloodGroup) || null;
         this.spouseEmployed = (isNullOrUndefined(this.IsSpouseEmployed) || this.IsSpouseEmployed == '') ? this.spouseEmploymentStatuses[0] : this.spouseEmploymentStatuses.find(sp => sp.Name == this.IsSpouseEmployed) || null;
@@ -1152,7 +1162,6 @@ export class PersonalInfoComponent implements OnInit {
 
         this.txtNICNo = this.NICNo;
         this.txtIdRemarks = this.IdCardRemarks;
-        this.DrivingLicenseNo = this.LabelDrivingLicenseNo;
         this.OtherSourceofIncomeDetail = this.LabelOtherSourceofIncomeDetail;
         this.DisabilityDetail = this.LabelDisabilityDetail;
 
@@ -1659,19 +1668,27 @@ export class PersonalInfoComponent implements OnInit {
 
     isNextofKin: boolean = false;
 
+    get isNextOfKinPhoneRequired(): boolean {
+      return this.isFF === true && this.MndNextOfKinInfo === true;
+    }
+
+    get isNextOfKinPhoneBlank(): boolean {
+      return this.safeTrim(this.NextOfKinPhonecell) === "";
+    }
+
     SaveNextofkinInfo() {
       debugger;
 
       if (navigator.onLine) {
 
-        //let NextOfKinPhonecell = this.nextofkininformationGrid.find(x => x.Id == this.NextOfKinPhonecell);
-        if (this.NextOfKinPhonecell.trim() !== "" && !this.validatePhoneNumber(this.NextOfKinPhonecell)) {
-          this.showPhoneNumberError = true;
+        this.showPhoneNumberError = !this.isNextOfKinPhoneBlank && !this.validatePhoneNumber(this.NextOfKinPhonecell);
+        if (this.showPhoneNumberError) {
           this.isNextofKin = false;
           return;
         }
 
-        if (this.NextOfKinName.trim() == "" || this.Relationship1 == null || this.Relationship1.Name == "N/A"){
+        if (this.NextOfKinName.trim() == "" || this.Relationship1 == null || this.Relationship1.Name == "N/A" ||
+            (this.isNextOfKinPhoneRequired && this.isNextOfKinPhoneBlank)) {
           this.isNextofKin = true;
           this.DisconnectInternet = false;
           return;
@@ -3909,6 +3926,7 @@ export class PersonalInfoComponent implements OnInit {
                 //console.log(this.CNICEXpry);
 
                 this.IDCardExpiry = this.getFormattedDateString(row.CNICExpiryDate);
+                this.IDCardIssuance = row.CNICIssuanceDate ? row.CNICIssuanceDate.slice(0, 10) : "";
                 //console.log(this.IDCardExpiry);
 
                 this.DrivingLicenseExpiry = this.getFormattedDateString(row.DrivingLicenseExpiryDate);
@@ -5018,6 +5036,9 @@ export class PersonalInfoComponent implements OnInit {
     Mandatory: boolean = false;
     UpdateApplicantDataBasicInformation2_click() {
       debugger;
+      if (this.isFF === true && this.invalidIDCardIssuance) {
+        return;
+      }
        
             this.formSubmitted = true; 
 
@@ -5056,11 +5077,6 @@ export class PersonalInfoComponent implements OnInit {
                   return; 
 
               }
-              if (this.MndDrivingLicenseNo && this.DrivingLicenseNo.trim() == '') {
-                this.Mandatory = true;  
-                this.isBtnHide2 = true; 
-                return; 
-              }
               if (this.MndIsSpouseEmployed == true && (this.spouseEmployed.Id == null || this.spouseEmployed.Name == "N/A")) {
                 this.MndIsSpouseEmployed = true;
                 this.isBtnHide2 = true;
@@ -5068,11 +5084,6 @@ export class PersonalInfoComponent implements OnInit {
 
               }
 
-              if (this.MndDrivingLicenseExpiry == true && (!this.txtDrivingLicenseExpiry || this.txtDrivingLicenseExpiry == '')) {
-                this.MndDrivingLicenseExpiry = true;
-                this.isBtnHide2 = true;
-                return;
-              }
 
               if (this.MndIDCardExpiry == true && (!this.txtIDCardExpiry || this.txtIDCardExpiry == '')) {
                 this.MndIDCardExpiry = true;
@@ -5179,7 +5190,6 @@ export class PersonalInfoComponent implements OnInit {
                     NICNo: this.dataService.ReplaceApostropheWthTelda(this.txtNICNo),
                     IdCardRemarks: this.dataService.ReplaceApostropheWthTelda(this.txtIdRemarks),
                     bldId: this.selectedBloodGroup.Id,    // Usama
-                    DrivingLicenseNo: this.DrivingLicenseNo,    
                     SpouseNam: this.SpouseName,
                     isSpouseEmployed: this.spouseEmployed.Id,
                     //ResidStatus: this.selectedResidentialStatus.Name,
@@ -5188,7 +5198,7 @@ export class PersonalInfoComponent implements OnInit {
                     isAnyPhysicalDisability: this.DisabilitySelect.Id,
                     PhysicalDisabilityDetails: this.DisabilitySelect.Id == true ? this.DisabilityDetail : '',
                     CNICExpDate: this.txtIDCardExpiry,
-                    DrivingLicenseExpiry: this.txtDrivingLicenseExpiry,
+                    CNICIssuanceDate: this.isFF === true ? this.txtIDCardIssuance : undefined,
 
                     isFieldForceApplicant: this.isFF,
 
@@ -5966,7 +5976,17 @@ export class PersonalInfoComponent implements OnInit {
 
       if (navigator.onLine) {
 
-        if (this.selectedConveyance.Id &&(this.selectedConveyance.Name == "N/A" || this.selectedConveyanceType.Name == 'N/A' || !this.Conveyancemake ||  !this.ConveyanceModal || !this.ConveyanceYear || !this.ConveyancemakeRegNo )) { 
+        if (this.selectedConveyance && this.selectedConveyance.Id == true &&
+            ((this.VisDrivingLicenseNo && this.safeTrim(this.DrivingLicenseNo) === '') ||
+             (this.VisDrivingLicenseExpiry && !this.txtDrivingLicenseExpiry))) {
+          this.isConveyanceInfo = true;
+          this.isBtnHide25 = true;
+          return;
+        }
+
+        if (this.VisConveyanceInfo && this.selectedConveyance && this.selectedConveyance.Id &&
+            (this.selectedConveyance.Name == "N/A" || !this.selectedConveyanceType || this.selectedConveyanceType.Name == 'N/A' ||
+             !this.Conveyancemake || !this.ConveyanceModal || !this.ConveyanceYear || !this.ConveyancemakeRegNo)) {
           this.isConveyanceInfo = true;
           this.isBtnHide25 = true;
           return;
@@ -5993,15 +6013,17 @@ export class PersonalInfoComponent implements OnInit {
 
           CompanyId: this.CompanyIdService.CompanyId,
 
-          Conveyance: this.selectedConveyance.Id,
-          ConveyanceType: this.selectedConveyance.Id == true ? this.selectedConveyanceType.Id : null,
-          ConveyanceMake: this.selectedConveyance.Id == true ? this.Conveyancemake : null,
-          ConveyModal: this.selectedConveyance.Id == true ? this.ConveyanceModal : null,
-          ConveyYear: this.selectedConveyance.Id == true ? this.ConveyanceYear : null,
-          ConveyRegNo: this.selectedConveyance.Id == true ? this.ConveyancemakeRegNo : null,
+          Conveyance: this.selectedConveyance ? this.selectedConveyance.Id : null,
+          ConveyanceType: this.selectedConveyance && this.selectedConveyance.Id == true ? this.selectedConveyanceType.Id : null,
+          ConveyanceMake: this.selectedConveyance && this.selectedConveyance.Id == true ? this.Conveyancemake : null,
+          ConveyModal: this.selectedConveyance && this.selectedConveyance.Id == true ? this.ConveyanceModal : null,
+          ConveyYear: this.selectedConveyance && this.selectedConveyance.Id == true ? this.ConveyanceYear : null,
+          ConveyRegNo: this.selectedConveyance && this.selectedConveyance.Id == true ? this.ConveyancemakeRegNo : null,
 
           isFieldForceApplicant: this.isFF,
 
+          DrivingLicenseNo: this.selectedConveyance && this.selectedConveyance.Id == true ? this.DrivingLicenseNo : undefined,
+          DrivingLicenseExpiry: this.selectedConveyance && this.selectedConveyance.Id == true ? this.txtDrivingLicenseExpiry : undefined,
           ApplicantEmail: localStorage.getItem('Email'),
           Index: "25"
 
@@ -6141,6 +6163,14 @@ export class PersonalInfoComponent implements OnInit {
     txtdateOfExitinKSA1: string = "";
     forDateVlaidation;
     DOBValidate: boolean = false;
+
+    idCardIssuanceChanged(event: { isValid: boolean; day: string; month: string; year: string }) {
+      const valid = event.isValid && Number(event.year) > 0;
+      this.invalidIDCardIssuance = !valid && !!(event.day || Number(event.month) || event.year);
+      this.txtIDCardIssuance = valid
+        ? event.year + '-' + String(event.month).padStart(2, '0') + '-' + String(event.day).padStart(2, '0')
+        : '';
+    }
 
     datePickerChanged(eventData: any, controlID: string) {
       debugger;

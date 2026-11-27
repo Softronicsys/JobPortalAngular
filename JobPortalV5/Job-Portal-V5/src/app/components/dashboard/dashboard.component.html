@@ -1049,8 +1049,8 @@ text-align: left !important;" [innerHTML]="tooltipName"></span>
 
 
   <div class="row">
-    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 displayVideo">
-      <div class="profile" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]" *ngIf="isProfileCompletion">
+    <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+      <div class="profile displayVideo" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]" *ngIf="isProfileCompletion">
 
         <p class="GreyClr" style="font-size:16px !important;">
           <!--Profile Completion-->{{lblProfileCompletion}}
@@ -1078,7 +1078,7 @@ text-align: left !important;" [innerHTML]="tooltipName"></span>
 
       <!-- Profile Image -->
 
-      <div style="margin: 15px -15px 0px -15px; text-align: center;" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]" *ngIf="isProfileImage">
+      <div class="displayVideo" style="margin: 15px -15px 0px -15px; text-align: center;" [style.borderBottom]="[BorderColor ? BorderColor : DefaultBorderColor]" *ngIf="isProfileImage">
 
         <div class="hover-figure">
           <img _ngcontent-c2="" (click)="isDeleteButton()" class="profile-img" [src]="updateImg ? url : ProfileImg" role="dialog" data-keyboard="false" data-backdrop="static" data-toggle="modal" data-target="#myModalChangePicture" style=" border-radius: 100%; width: 150px; height: 150px; cursor:pointer;"><br />
@@ -1112,12 +1112,12 @@ text-align: left !important;" [innerHTML]="tooltipName"></span>
 
 
 
-      <div class="ml-25 displayVideo" style="font-size: 12px; font-weight:400" *ngIf="isSideBar == false;">
+      <div class="ml-25 profile-details" style="font-size: 12px; font-weight:400" *ngIf="isSideBar == false;">
         <div class="mt-10">
           <a>
             <img src="assets/images/MobileIcon1.png" style="width: 8px;  margin: 0px 2px 4px 2px; height: 12px;" />
           </a>&nbsp;&nbsp; <!--Mobile Number-->{{lblMobileNumber}} <br />
-          <div class="ml-25 fntWght2 GreyClr" style="font-weight:600 !important; width: 170px;">
+          <div class="ml-25 fntWght2 GreyClr profile-contact-value" style="font-weight:600 !important;">
             {{TelMobile}}
           </div>
         </div>
@@ -1126,7 +1126,7 @@ text-align: left !important;" [innerHTML]="tooltipName"></span>
           <a>
             <img src="assets/images/EmailIcon1.png" style="width: 14px; margin: 0px -2px 3px -2px; height: 10px;" />
           </a>&nbsp;&nbsp; <!--Email Address-->{{EmailAddress}} <br />
-          <div class="ml-25 fntWght2 GreyClr" style="font-weight:600 !important; width: 170px !important; overflow-wrap: break-word;">
+          <div class="ml-25 fntWght2 GreyClr profile-contact-value" style="font-weight:600 !important;">
             <!--{{Email}}-->
             <div class="click-to-top">
               <label class="username setWidth col-lg-12 col-md-9 col-sm-12 col-xs-12" style="margin-bottom: -5px;padding: 0px; max-width: unset; font-weight: 600;">{{Email}}</label>
@@ -1224,13 +1224,13 @@ text-align: left !important;" [innerHTML]="tooltipName"></span>
           </div>
         </div>-->
 
-        <br />
+        <br class="profile-details-spacer" />
 
 
       </div>
 
-      <div id="divLoader">
-        <div class="loader" *ngIf="isSideBar"></div>
+      <div id="divLoader" *ngIf="isSideBar">
+        <div class="loader"></div>
       </div>
 
 

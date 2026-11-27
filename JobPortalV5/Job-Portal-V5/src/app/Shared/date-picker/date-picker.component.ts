@@ -25,6 +25,9 @@ export class DatePickerComponent implements OnInit {
 
     @Output() pickerChange = new EventEmitter<any>();
     @Input() isRequired: boolean = false;
+    @Input() set alignCalendarRight(value: boolean) {
+        this.myOptions = { ...this.myOptions, alignSelectorRight: value };
+    }
     // TODO 
     @Input() inValidDate: boolean = false;
     @Input() isDisabled: boolean = false;
